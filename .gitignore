@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Styio benchmark generated artifacts
+/async-runtime/reports/*
+!/async-runtime/reports/20260505-async-runtime-baseline/
+!/async-runtime/reports/20260505-async-runtime-baseline/**
+/reports/*
+!/reports/README.md
+!/reports/20260429T032953Z-native-extern-raw/
+!/reports/20260429T032953Z-native-extern-raw/**
+/regressions/*
+!/regressions/README.md

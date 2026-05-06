@@ -1,0 +1,13 @@
+id	title	status	duration_s	log_path	note
+configure	configure (build/native-extern-baseline)	skip	0		existing_cmake_cache
+build	build (build/native-extern-baseline)	pass	21	logs/build.log
+compiler_stage_benchmark	compiler stage benchmark	pass	9	logs/compiler_stage_benchmark.log
+compiler_micro_benchmark	compiler micro benchmark	pass	23	logs/compiler_micro_benchmark.log
+full_stack_workload_matrix	full-stack workload matrix	pass	1	logs/full_stack_workload_matrix.log
+compiler_error_path_benchmark	compiler error-path benchmark	pass	1	logs/compiler_error_path_benchmark.log
+parser_engine_suite	parser engine suite	pass	1	logs/parser_engine_suite.log
+pipeline_guard_rail	pipeline guard rail	pass	0	logs/pipeline_guard_rail.log
+parser_security_guard_rail	parser/security guard rail	pass	0	logs/parser_security_guard_rail.log
+parser_shadow_gates	parser shadow gates	pass	1	logs/parser_shadow_gates.log
+soak_smoke	soak smoke	pass	1	logs/soak_smoke.log
+soak_deep	soak deep	skip	0		RUN_DEEP_SOAK=0;QUICK_MODE=0

@@ -1,0 +1,19 @@
+[project]
+name = "styio-benchmark"
+version = "0.1.0"
+description = "Black-box benchmark and performance report routes for Styio."
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+test = [
+  "pytest>=8",
+]
+
+[tool.pytest.ini_options]
+testpaths = [
+  "async-runtime",
+]
+python_files = [
+  "test_*.py",
+]

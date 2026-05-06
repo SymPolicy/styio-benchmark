@@ -1,0 +1,24 @@
+{
+  "benchmark_root": "<styio-benchmark>",
+  "bootstrap_toolchains": true,
+  "case": "baseline",
+  "case_description": "median performance comparison against C++ stackless coroutine, goroutine, and Tokio",
+  "framework": "pytest-compatible black-box runner",
+  "host": "linux-aarch64",
+  "interface": "subprocess",
+  "noop_tasks": 100000,
+  "repeats": 5,
+  "required_runtimes": [],
+  "run_id": "20260506T022543Z-async-runtime",
+  "runtimes": [
+    "styio",
+    "cpp",
+    "go",
+    "rust"
+  ],
+  "sleep_ms": 160,
+  "styio_build_dir": "<styio-root>/build/async-runtime-release",
+  "styio_root": "<styio-root>",
+  "tasks": 4,
+  "workers": 4
+}

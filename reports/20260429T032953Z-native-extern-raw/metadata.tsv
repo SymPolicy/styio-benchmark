@@ -1,0 +1,26 @@
+key	value
+run_dir	<styio-benchmark>/reports/20260429T032953Z-native-extern-raw
+root	<styio-root>
+build_dir	build/native-extern-baseline
+build_dir_abs	<styio-root>/build/native-extern-baseline
+phase_iters	5000
+micro_iters	5000
+execute_iters	20
+error_iters	50
+skip_build	0
+quick_mode	0
+deep_soak	0
+label	native-extern-raw
+command	tools/perf-route.sh --styio-root <styio-root> --build-dir build/native-extern-baseline --label native-extern-raw --phase-iters 5000 --micro-iters 5000 --execute-iters 20 --error-iters 50
+started_at_utc	2026-04-29T03:29:53Z
+hostname	styio-dev
+uname	Linux 6.19.13-orbstack-gbd1dc07b8cf4 aarch64
+cpu_model	unknown
+jobs	10
+git_head	5f4bdfd
+git_branch	nightly
+git_dirty	true
+finished_at_utc	2026-04-29T03:30:51Z
+overall_status	success
+script_exit_code	0
+failed_sections
