@@ -73,6 +73,7 @@ def collect_benchmarks(run_dir: Path, sections: list[dict[str, str]]) -> dict[st
         "stage": [],
         "micro": [],
         "full_stack": [],
+        "native_cpp": [],
         "error": [],
     }
     for section in sections:
@@ -90,7 +91,23 @@ def collect_benchmarks(run_dir: Path, sections: list[dict[str, str]]) -> dict[st
                 record["section_id"] = section.get("id", "")
                 record["log_path"] = log_path
                 grouped[record["group"]].append(record)
+    grouped["native_cpp"].extend(collect_native_cpp_benchmarks(run_dir))
     return grouped
+
+
+def collect_native_cpp_benchmarks(run_dir: Path) -> list[dict[str, Any]]:
+    path = run_dir / "native-cpp" / "benchmarks.csv"
+    if not path.exists():
+        return []
+    records: list[dict[str, Any]] = []
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            record: dict[str, Any] = {"group": "native_cpp", "kind": "native-cpp-bench"}
+            for key, value in row.items():
+                record[key] = coerce_value(value or "")
+            records.append(record)
+    return records
 
 
 def write_results_json(path: Path, payload: dict[str, Any]) -> None:
@@ -125,6 +142,13 @@ def iter_flat_metrics(grouped: dict[str, list[dict[str, Any]]]) -> list[dict[str
         "full_stack": [
             "cli_wall_us",
         ],
+        "native_cpp": [
+            "median_s",
+            "min_s",
+            "p95_s",
+            "throughput_mib_s",
+            "relative_x",
+        ],
         "error": [
             "error_us",
             "exit_code",
@@ -134,7 +158,7 @@ def iter_flat_metrics(grouped: dict[str, list[dict[str, Any]]]) -> list[dict[str
 
     for group, records in grouped.items():
         for record in records:
-            name = str(record.get("name", record.get("label", "")))
+            name = str(record.get("name", record.get("implementation", record.get("label", ""))))
             for metric in metrics_by_group.get(group, []):
                 if metric not in record:
                     continue
@@ -142,8 +166,8 @@ def iter_flat_metrics(grouped: dict[str, list[dict[str, Any]]]) -> list[dict[str
                     {
                         "group": group,
                         "name": name,
-                        "module": record.get("module", ""),
-                        "label": record.get("label", ""),
+                        "module": record.get("module", record.get("case", "")),
+                        "label": record.get("label", record.get("route", "")),
                         "metric": metric,
                         "value": record[metric],
                     }
@@ -224,6 +248,38 @@ def write_summary_md(
             ]
         )
 
+    native_cpp_rows = []
+    for record in sorted(
+        grouped["native_cpp"],
+        key=lambda item: (str(item.get("route", "")), str(item.get("case", "")), str(item.get("implementation", ""))),
+    ):
+        if record.get("status") == "pass":
+            native_cpp_rows.append(
+                [
+                    record.get("route", ""),
+                    record.get("case", ""),
+                    record.get("implementation", ""),
+                    record.get("status", ""),
+                    fmt_num(record.get("median_s", ""), 6),
+                    fmt_num(record.get("throughput_mib_s", ""), 2),
+                    f"{fmt_num(record.get('relative_x', ''), 2)}x",
+                    "",
+                ]
+            )
+        else:
+            native_cpp_rows.append(
+                [
+                    record.get("route", ""),
+                    record.get("case", ""),
+                    record.get("implementation", ""),
+                    record.get("status", ""),
+                    "",
+                    "",
+                    "",
+                    record.get("reason", ""),
+                ]
+            )
+
     micro_rows = []
     for record in sorted(grouped["micro"], key=lambda item: float(item.get("focus_us", 0)), reverse=True):
         micro_rows.append(
@@ -289,6 +345,17 @@ def write_summary_md(
         lines.append(markdown_table(["Module", "Label", "CLI Wall us"], full_stack_rows))
     else:
         lines.append("_No full-stack benchmark records found._")
+    lines.append("")
+
+    lines.append("## Native C++ Comparison")
+    lines.append("")
+    if native_cpp_rows:
+        lines.append(markdown_table(
+            ["Route", "Case", "Implementation", "Status", "Median s", "Throughput MiB/s", "Relative", "Note"],
+            native_cpp_rows,
+        ))
+    else:
+        lines.append("_No native C++ comparison records found._")
     lines.append("")
 
     lines.append("## Micro Benchmarks")

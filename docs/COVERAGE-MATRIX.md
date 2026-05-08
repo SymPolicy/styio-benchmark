@@ -68,6 +68,13 @@ Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进�
 - `Async runtime matrix`
   - 覆盖 `Styio task scheduler / C++ stackless coroutine / Go goroutine / Rust Tokio`
   - 当前冻结 `sleep` 阻塞任务并发收敛与 `noop` fanout 调度开销，报告入口为 `async-runtime/run-async-bench.py`
+- `Native C++ comparison`
+  - 覆盖 Styio 语言程序与手写原生 C++ 的黑盒性能对照
+  - 当前第一组 workload 是 `stdin_echo`，对照 `@stdin >> #(line) => { line -> @stdout }` 与 `std::getline` / `std::cout` 循环
+  - 标准路线固定为 `full-cli / cached-jit / runtime-only`
+  - `cached-jit` 在 Styio 暴露可复用编译/JIT 产物执行入口前必须报告为 `unsupported`
+  - `runtime-only` 当前使用 Styio 选定 build 的导出 C runtime ABI，先隔离标准流 helper 成本
+  - 报告入口为 `native-cpp/run-native-cpp-bench.py`，并由 `tools/perf-route.sh` 的 `native_cpp_comparison` section 纳入总报告；输出 `results.json / benchmarks.csv / summary.md`，按每条 route 的最快实测实现归一化为 `1.00x`
 - `Error-path matrix`
   - 覆盖 `lex / parse / type / runtime` 失败路径
   - 当前覆盖 `lex.unterminated_block_comment`、`parse.empty_match_cases`、`type.final_then_flex_i64`、`runtime.read_missing_file`
@@ -198,8 +205,15 @@ Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进�
    - `tools/perf-route.sh` 现在会生成 `metadata.tsv / sections.tsv / results.json / benchmarks.csv / summary.md`
 6. 已完成异步运行时横向基准
    - `async-runtime/run-async-bench.py` 生成 Styio / C++ stackless coroutine / Go goroutine / Rust Tokio 对比报告，并支持在 `build/async-runtime-toolchains` 下本地 bootstrap Go/Rust
-7. 下一批优先项
+7. 已完成第一组原生 C++ 横向基准
+   - `native-cpp/run-native-cpp-bench.py` 生成 Styio / native C++ 的 stdin echo 黑盒对比报告
+   - 三条标准路线已嵌入 `tools/perf-route.sh`：`full-cli`、`cached-jit`、`runtime-only`
+   - `full-cli` Styio 侧包含 source read、parse、lowering、LLVM/JIT 与执行成本
+   - `cached-jit` 当前明确报告 `unsupported`，直到 Styio 提供真实缓存执行入口
+   - `runtime-only` 当前对比 native C++ 与 Styio runtime helper harness，隔离标准流 helper 成本
+8. 下一批优先项
    - 新增 `small / medium / large` 规模 sweep
+   - 扩展 native C++ 对照到 compute-heavy workload，补真实 cached-JIT 执行入口
    - 扩 error-path benchmark 子类
    - 增加 benchmark catalog / baseline diff 自动校验
 

@@ -57,6 +57,7 @@
 - compiler stage benchmark matrix（`tokenize/parse/type/lower/llvm_ir`）
 - compiler micro benchmark matrix（`lexer/parser/type/lower/llvm` 热点切面）
 - full-stack workload matrix（CLI wall-clock）
+- native C++ comparison routes（`full-cli/cached-jit/runtime-only`）
 - compiler error-path benchmark matrix（`lex/parse/type/runtime` 失败路径）
 - parser engine 回归
 - pipeline guard rail
@@ -206,6 +207,34 @@ STYIO_SOAK_MICRO_BENCH_ITERS=5000 \
 - `rss_growth_kib`
 
 [`tools/perf-route.sh`](../tools/perf-route.sh) 默认也会跑这一组；如果不传 `--micro-iters`，它默认继承 `--phase-iters`。
+
+## Native C++ Comparison
+
+Styio 与手写原生 C++ 的对照基准由本仓库维护，不放回 Styio 主仓库：
+
+```bash
+native-cpp/run-native-cpp-bench.py \
+  --styio-root /path/to/styio \
+  --routes all \
+  --line-count 100000 \
+  --line-bytes 48 \
+  --repeats 5 \
+  --out-dir reports/native-cpp-stdin-echo
+```
+
+三条标准路线：
+
+- `full-cli`
+  - Styio CLI vs `-O3 -std=c++20` 原生 C++
+  - Styio 侧包含 source read、parse、lowering、LLVM/JIT 和执行
+- `cached-jit`
+  - 预留给未来可复用编译/JIT 产物执行入口
+  - 当前报告为 `unsupported`，不能用 full CLI 冒充
+- `runtime-only`
+  - 原生 C++ vs 直接调用 Styio 导出 C runtime ABI 的 harness
+  - 当前用于隔离标准流 runtime helper 成本，不等同于生成后的 Styio 程序执行
+
+[`tools/perf-route.sh`](../tools/perf-route.sh) 默认会把这三条路线作为 `native_cpp_comparison` section 跑入总报告目录，并把结果并入 `summary.md / benchmarks.csv / results.json`。
 
 ## 测试面
 

@@ -14,6 +14,17 @@ Options:
   --micro-iters <n>     Compiler micro benchmark iterations (default: phase-iters, 0 to skip)
   --execute-iters <n>   Full-stack benchmark iterations (default: derived from phase-iters, 0 to skip)
   --error-iters <n>     Error-path benchmark iterations (default: derived from phase-iters, 0 to skip)
+  --native-cpp-lines <n>
+                         Native C++ comparison input line count (default: 100000)
+  --native-cpp-line-bytes <n>
+                         Native C++ comparison generated line width (default: 48)
+  --native-cpp-repeats <n>
+                         Native C++ comparison measured repeats (default: 5)
+  --native-cpp-warmups <n>
+                         Native C++ comparison warmup runs (default: 1)
+  --native-cpp-routes <routes>
+                         Native C++ comparison routes (default: all)
+  --skip-native-cpp     Skip Styio/native C++ comparison route
   --skip-build          Skip cmake configure/build
   --deep-soak           Run soak_deep in addition to soak_smoke
   --quick               Skip parser shadow gates and soak_deep
@@ -24,12 +35,13 @@ This script runs the current parser/compiler performance route:
   2. Compiler stage benchmark matrix
   3. Compiler micro benchmark matrix
   4. Full-stack workload matrix
-  5. Compiler error-path benchmark matrix
-  6. Parser engine regression suite
-  7. Pipeline guard rail
-  8. Parser/security guard rail
-  9. Parser shadow gates
-  10. Soak smoke, and optionally soak_deep
+  5. Styio/native C++ comparison routes (full-cli, cached-jit, runtime-only)
+  6. Compiler error-path benchmark matrix
+  7. Parser engine regression suite
+  8. Pipeline guard rail
+  9. Parser/security guard rail
+  10. Parser shadow gates
+  11. Soak smoke, and optionally soak_deep
 
 Artifacts:
   - metadata.tsv        Run metadata and environment snapshot
@@ -197,6 +209,12 @@ PHASE_ITERS="5000"
 MICRO_ITERS=""
 EXECUTE_ITERS=""
 ERROR_ITERS=""
+NATIVE_CPP_LINES="100000"
+NATIVE_CPP_LINE_BYTES="48"
+NATIVE_CPP_REPEATS="5"
+NATIVE_CPP_WARMUPS="1"
+NATIVE_CPP_ROUTES="all"
+SKIP_NATIVE_CPP=0
 SKIP_BUILD=0
 RUN_DEEP_SOAK=0
 QUICK_MODE=0
@@ -234,6 +252,30 @@ while [[ $# -gt 0 ]]; do
     --error-iters)
       ERROR_ITERS="$2"
       shift 2
+      ;;
+    --native-cpp-lines)
+      NATIVE_CPP_LINES="$2"
+      shift 2
+      ;;
+    --native-cpp-line-bytes)
+      NATIVE_CPP_LINE_BYTES="$2"
+      shift 2
+      ;;
+    --native-cpp-repeats)
+      NATIVE_CPP_REPEATS="$2"
+      shift 2
+      ;;
+    --native-cpp-warmups)
+      NATIVE_CPP_WARMUPS="$2"
+      shift 2
+      ;;
+    --native-cpp-routes)
+      NATIVE_CPP_ROUTES="$2"
+      shift 2
+      ;;
+    --skip-native-cpp)
+      SKIP_NATIVE_CPP=1
+      shift
       ;;
     --skip-build)
       SKIP_BUILD=1
@@ -299,6 +341,12 @@ if ! [[ "$ERROR_ITERS" =~ ^[0-9]+$ ]]; then
   echo "--error-iters must be an integer" >&2
   exit 2
 fi
+for native_numeric in NATIVE_CPP_LINES NATIVE_CPP_LINE_BYTES NATIVE_CPP_REPEATS NATIVE_CPP_WARMUPS; do
+  if ! [[ "${!native_numeric}" =~ ^[0-9]+$ ]]; then
+    echo "--$(echo "$native_numeric" | tr '[:upper:]_' '[:lower:]-') must be an integer" >&2
+    exit 2
+  fi
+done
 
 STYIO_ROOT="$(cd "$STYIO_ROOT" && pwd)"
 if [[ ! -f "${STYIO_ROOT}/CMakeLists.txt" ]]; then
@@ -337,6 +385,12 @@ meta_row "phase_iters" "$PHASE_ITERS"
 meta_row "micro_iters" "$MICRO_ITERS"
 meta_row "execute_iters" "$EXECUTE_ITERS"
 meta_row "error_iters" "$ERROR_ITERS"
+meta_row "native_cpp_lines" "$NATIVE_CPP_LINES"
+meta_row "native_cpp_line_bytes" "$NATIVE_CPP_LINE_BYTES"
+meta_row "native_cpp_repeats" "$NATIVE_CPP_REPEATS"
+meta_row "native_cpp_warmups" "$NATIVE_CPP_WARMUPS"
+meta_row "native_cpp_routes" "$NATIVE_CPP_ROUTES"
+meta_row "skip_native_cpp" "$SKIP_NATIVE_CPP"
 meta_row "skip_build" "$SKIP_BUILD"
 meta_row "quick_mode" "$QUICK_MODE"
 meta_row "deep_soak" "$RUN_DEEP_SOAK"
@@ -403,6 +457,23 @@ if [[ "$EXECUTE_ITERS" -gt 0 ]]; then
       --gtest_filter=StyioSoakSingleThread.FullStackWorkloadMatrixReport
 else
   record_skip_section "full_stack_workload_matrix" "full-stack workload matrix" "EXECUTE_ITERS=0"
+fi
+
+if [[ "$SKIP_NATIVE_CPP" -eq 0 ]]; then
+  run_logged_section \
+    "native_cpp_comparison" \
+    "Styio/native C++ comparison routes" \
+    "${BENCHMARK_ROOT}/native-cpp/run-native-cpp-bench.py" \
+      --styio-root "$STYIO_ROOT" \
+      --build-dir "$BUILD_DIR_ABS" \
+      --routes "$NATIVE_CPP_ROUTES" \
+      --line-count "$NATIVE_CPP_LINES" \
+      --line-bytes "$NATIVE_CPP_LINE_BYTES" \
+      --repeats "$NATIVE_CPP_REPEATS" \
+      --warmups "$NATIVE_CPP_WARMUPS" \
+      --out-dir "$RUN_DIR/native-cpp"
+else
+  record_skip_section "native_cpp_comparison" "Styio/native C++ comparison routes" "SKIP_NATIVE_CPP=1"
 fi
 
 if [[ "$ERROR_ITERS" -gt 0 ]]; then
