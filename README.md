@@ -4,14 +4,17 @@ Black-box benchmark and performance evidence routes for Styio.
 
 This repository intentionally keeps benchmark orchestration outside the Styio
 compiler source tree. Runners treat Styio as an external checkout selected by
-`--styio-root` or `STYIO_ROOT`; benchmark code here should not include Styio
-private C++ headers or link against internal CMake targets directly.
+`--styio-root` or `STYIO_ROOT`. The only source-level coupling allowed here is
+`styio-probes/`, which stores migrated C++ probe sources that are compiled by a
+matching Styio checkout; other benchmark routes should stay black-box.
 
 ## Layout
 
 - `async-runtime/`: cross-runtime async scheduler comparison for Styio, C++20
   stackless coroutine, Go goroutine, and Rust Tokio.
 - `native-cpp/`: Styio vs hand-written native C++ black-box comparison routes.
+- `styio-probes/`: migrated C++ probe sources for Styio-owned benchmark target
+  names.
 - `tools/`: shell and Python route helpers migrated from the Styio in-tree
   benchmark surface.
 - `reports/`: curated historical benchmark reports.
@@ -71,10 +74,10 @@ without storing the benchmark in the Styio source tree.
 
 ## Boundary
 
-Styio may still provide compiled benchmark probes such as
-`styio_task_scheduler_perf_test` and `styio_soak_test`. This repository owns the
-performance workloads, runners, report contract, baselines, native C++
-harnesses, and cross-runtime harness. Treat Styio as a tested checkout selected
-with `--styio-root`; do not add new benchmark runners or stored performance
-reports to the Styio source tree. That split keeps the benchmark route portable
-while avoiding private source-level coupling.
+Styio still provides compiled benchmark target names such as
+`styio_task_scheduler_perf_test` and `styio_soak_test`, but their migrated source
+files live under `styio-probes/` in this repository. This repository owns the
+performance workloads, runners, report contract, baselines, native C++ harnesses,
+cross-runtime harness, and probe source inventory. Treat Styio as a tested
+checkout selected with `--styio-root`; do not add new benchmark runners or stored
+performance reports to the Styio source tree.

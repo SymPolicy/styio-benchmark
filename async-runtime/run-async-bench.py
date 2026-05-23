@@ -818,7 +818,15 @@ def ensure_styio_release_build(build_dir: Path, styio_root: Path) -> str | None:
     if clang_error:
         return clang_error
     proc = run(
-        ["cmake", "-S", str(styio_root), "-B", str(build_dir), "-DCMAKE_BUILD_TYPE=Release"],
+        [
+            "cmake",
+            "-S",
+            str(styio_root),
+            "-B",
+            str(build_dir),
+            "-DCMAKE_BUILD_TYPE=Release",
+            f"-DSTYIO_BENCHMARK_ROOT={BENCHMARK_ROOT}",
+        ],
         cwd=styio_root,
         env=env,
         timeout=300,

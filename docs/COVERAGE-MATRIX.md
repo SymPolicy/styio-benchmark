@@ -55,7 +55,7 @@ Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进�
 ### 已有
 
 - `Tokenize`
-  - 长输入摄入循环：Styio 主仓库 `benchmark/styio_soak_test.cpp`
+  - 长输入摄入循环：`styio-probes/styio_soak_test.cpp`
 - `Compiler stage matrix`
   - `tokenize / parse / typeInfer / styioIR / llvmIR`
   - 覆盖 `Scalar / Bindings / Functions / ControlFlow / Collections / Resources / Streams / StateAndSeries / Topology / Mixed`

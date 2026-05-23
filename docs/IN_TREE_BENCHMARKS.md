@@ -5,14 +5,17 @@
 约束很简单：
 
 - 这里是性能编排、报告与回归工件的唯一权威入口
-- Styio 内部 C++ probe target 仍由 Styio 主仓库提供
+- Styio 内部 C++ probe target 名称仍由 Styio 主仓库注册，probe 源文件由
+  `styio-probes/` 维护
 - 其他文档只保留摘要与跳转，不重复维护 workload 细节
 - 变更 benchmark 覆盖面或执行路线时，只更新这里和 [COVERAGE-MATRIX.md](./COVERAGE-MATRIX.md)
 
 ## 目录
 
 - Styio 主仓库的 `styio_soak_test`
-  - 基准与单线程 soak 测试 probe
+  - 基准与单线程 soak 测试 probe；源文件在 `styio-probes/`
+- Styio 主仓库的 `styio_task_scheduler_perf_test`
+  - task scheduler probe；源文件在 `styio-probes/`
 - `tools/perf-route.sh`
   - 一键性能路线 + 结果归档
 - `tools/perf-report.py`

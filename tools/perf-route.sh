@@ -416,7 +416,8 @@ if [[ "$SKIP_BUILD" -eq 0 ]]; then
     run_logged_section \
       "configure" \
       "configure (${BUILD_DIR})" \
-      cmake -S "$STYIO_ROOT" -B "$BUILD_DIR_ABS"
+      cmake -S "$STYIO_ROOT" -B "$BUILD_DIR_ABS" \
+        -DSTYIO_BENCHMARK_ROOT="$BENCHMARK_ROOT"
   else
     record_skip_section "configure" "configure (${BUILD_DIR})" "existing_cmake_cache"
   fi
