@@ -15,6 +15,7 @@ matching Styio checkout; other benchmark routes should stay black-box.
 - `native-cpp/`: Styio vs hand-written native C++ black-box comparison routes.
 - `styio-probes/`: migrated C++ probe sources for Styio-owned benchmark target
   names.
+- `workloads/core/`: deterministic core Styio workloads and their JSON runner.
 - `tools/`: shell and Python route helpers migrated from the Styio in-tree
   benchmark surface.
 - `reports/`: curated historical benchmark reports.
@@ -54,23 +55,54 @@ async-runtime/run-async-bench.py \
   --out-dir async-runtime/reports/<run-id>
 ```
 
-Run the native C++ standard comparison routes:
+Run the canonical Styio/C++ parity evidence route:
 
 ```bash
-native-cpp/run-native-cpp-bench.py \
+python3 tools/parity_gate.py run \
+  --contract workloads/parity-v1/contract.json \
   --styio-root /path/to/styio \
-  --routes all \
-  --line-count 100000 \
-  --line-bytes 48 \
-  --repeats 5 \
-  --out-dir reports/native-cpp-stdin-echo
+  --build-dir /path/to/styio/build/perf-parity \
+  --out-dir reports/perf-parity/run \
+  --sizes small --warmups 3 --repetitions 11
 ```
 
-`full-cli` measures Styio CLI wall-clock cost against a hand-written C++
-binary. `cached-jit` is reported as `unsupported` until Styio exposes a real
-reusable compiled/JIT artifact execution entrypoint. `runtime-only` uses Styio's
-exported C runtime ABI from the selected Styio build to isolate helper overhead
-without storing the benchmark in the Styio source tree.
+The runner measures only the three frozen catalog routes: fresh optimized
+native build plus execution for compile-and-run, fresh native build, and
+execution of artifacts built outside the timed region. Short cells use one
+equal calibrated batch count for both implementations and retain normalized
+samples (the faster side sets a 500 ms minimum-time floor). With eleven
+repetitions, bounded whole-cell retries select the first complete attempt below
+the fixed 5% CV gate and preserve every rejected attempt as privacy-safe audit
+evidence; no sample is discarded. It validates both outputs against the
+independent catalog digest before retaining paired samples. `run` writes
+evidence only; parity thresholds are applied separately:
+
+```bash
+python3 tools/parity_gate.py verify \
+  --contract workloads/parity-v1/contract.json \
+  --report reports/perf-parity/run/results.json \
+  --mode final --privacy strict --require-all
+```
+
+Reports contain stable workload, toolchain-version, sample, RSS, phase
+provenance, calibration, focus-budget, and statistic fields only. Paths,
+commands, host identity, environment values, URLs, and raw subprocess text are
+rejected recursively before serialization. The phase sweep uses one isolated
+probe pass and one Clang time trace per sample/tier, shared by all five phase
+cells.
+
+Run the benchmark-owned core corpus through a Styio compiler:
+
+```bash
+python3 workloads/core/run-core.py \
+  --styio /path/to/styio \
+  --iterations 3 \
+  --output reports/core/local.json
+```
+
+To compile the C++ probes against a Styio checkout, configure that checkout with
+an explicit `-DSTYIO_BENCHMARK_ROOT=/path/to/styio-benchmark`. Standalone Styio
+builds do not discover this repository implicitly.
 
 ## Boundary
 

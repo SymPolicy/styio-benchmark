@@ -1,0 +1,18 @@
+values <- @stdin: list[i32]
+
+answer = 0
+
+?(values.length > 0) => {
+    n = values[0]
+    required = 1 + n + n
+
+    ?(n > 0) => {
+        ?(values.length >= required) => {
+            [0..n-1] >> #(i) => {
+                answer += values[i + 1] * values[i + 1 + n]
+            }
+        }
+    }
+}
+
+>_(answer)

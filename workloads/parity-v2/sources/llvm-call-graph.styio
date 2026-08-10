@@ -1,0 +1,8 @@
+n <- @stdin : i64
+value = 11
+[0..n-1] >> #(index) => {
+  left = (value + index) * 17 + 5
+  right = (value + index + 1) * 17 + 5
+  value = (left % 1000003 + right % 1000003) % 1000003
+}
+>_(value)

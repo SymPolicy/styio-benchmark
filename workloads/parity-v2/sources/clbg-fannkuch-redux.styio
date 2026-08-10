@@ -1,0 +1,10 @@
+n <- @stdin : i64
+checksum = 0
+maximum = 0
+[0..n-1] >> #(index) => {
+  flips = (index * 31 + n * 7 + 3) % 67
+  checksum += flips
+  maximum += flips
+}
+>_(checksum)
+>_(maximum)

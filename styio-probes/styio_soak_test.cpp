@@ -1,13 +1,16 @@
 #include <gtest/gtest.h>
 
 #include <array>
+#include <algorithm>
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -28,6 +31,7 @@
 #include "StyioParser/Tokenizer.hpp"
 #include "StyioSession/CompilationSession.hpp"
 #include "llvm/Support/Error.h"
+#include "llvm/Support/SHA256.h"
 #include "llvm/Support/TargetSelect.h"
 
 namespace fs = std::filesystem;
@@ -286,6 +290,11 @@ struct CompilerStageBenchResult
   std::chrono::nanoseconds type_infer {};
   std::chrono::nanoseconds lower {};
   std::chrono::nanoseconds llvm_ir {};
+  std::vector<double> tokenize_samples_us;
+  std::vector<double> parse_samples_us;
+  std::vector<double> type_infer_samples_us;
+  std::vector<double> lower_samples_us;
+  std::vector<double> llvm_ir_samples_us;
   size_t avg_token_arena_bytes = 0;
   size_t avg_ast_arena_bytes = 0;
   size_t rss_before = 0;
@@ -351,6 +360,23 @@ struct ErrorBenchResult
   size_t avg_diag_bytes = 0;
 };
 
+struct ParityPhaseCell
+{
+  std::string id;
+  std::string phase;
+  std::string tier;
+  int work_units = 0;
+  std::string source_digest;
+  std::string expected_output_digest;
+};
+
+struct ParityCatalog
+{
+  std::string error;
+  std::vector<ParityPhaseCell> phase_cells;
+  std::array<int, 3> token_targets {0, 0, 0};
+};
+
 const char*
 micro_focus_name(MicroBenchFocus focus) {
   switch (focus) {
@@ -381,6 +407,229 @@ error_category_name(ErrorBenchCategory category) {
       return "runtime";
   }
   return "runtime";
+}
+
+std::string
+sha256_hex_text(const std::string& text) {
+  llvm::SHA256 hasher;
+  hasher.update(llvm::StringRef(text.data(), text.size()));
+  const auto digest = hasher.final();
+  std::ostringstream output;
+  output << std::hex << std::setfill('0');
+  for (std::uint8_t byte : digest) {
+    output << std::setw(2) << static_cast<unsigned int>(byte);
+  }
+  return output.str();
+}
+
+std::optional<std::string>
+json_string_on_line(const std::string& line, const std::string& key) {
+  const std::string marker = "\"" + key + "\"";
+  const size_t key_pos = line.find(marker);
+  if (key_pos == std::string::npos) {
+    return std::nullopt;
+  }
+  const size_t colon = line.find(':', key_pos + marker.size());
+  if (colon == std::string::npos) {
+    return std::nullopt;
+  }
+  const size_t start_quote = line.find('\"', colon + 1);
+  if (start_quote == std::string::npos) {
+    return std::nullopt;
+  }
+  const size_t end_quote = line.find('\"', start_quote + 1);
+  if (end_quote == std::string::npos) {
+    return std::nullopt;
+  }
+  return line.substr(start_quote + 1, end_quote - start_quote - 1);
+}
+
+std::optional<int>
+json_int_on_line(const std::string& line, const std::string& key) {
+  const std::string marker = "\"" + key + "\"";
+  const size_t key_pos = line.find(marker);
+  if (key_pos == std::string::npos) {
+    return std::nullopt;
+  }
+  const size_t colon = line.find(':', key_pos + marker.size());
+  if (colon == std::string::npos) {
+    return std::nullopt;
+  }
+  size_t start = colon + 1;
+  while (start < line.size() && (line[start] == ' ' || line[start] == '\t')) {
+    ++start;
+  }
+  size_t end = start;
+  while (end < line.size() && line[end] >= '0' && line[end] <= '9') {
+    ++end;
+  }
+  if (end == start) {
+    return std::nullopt;
+  }
+  try {
+    return std::stoi(line.substr(start, end - start));
+  }
+  catch (const std::exception&) {
+    return std::nullopt;
+  }
+}
+
+fs::path
+parity_catalog_path() {
+  std::vector<fs::path> candidates;
+  const char* env_root = std::getenv("STYIO_BENCHMARK_ROOT");
+  if (env_root != nullptr && env_root[0] != '\0') {
+    candidates.emplace_back(env_root);
+  }
+  const fs::path source_root = fs::path(STYIO_SOURCE_DIR);
+  candidates.push_back(source_root.parent_path() / "styio-benchmark");
+  candidates.push_back(fs::current_path() / "styio-benchmark");
+  for (const fs::path& candidate : candidates) {
+    const fs::path contract = candidate / "workloads" / "parity-v1" / "contract.json";
+    std::error_code ec;
+    if (fs::is_regular_file(contract, ec)) {
+      return contract;
+    }
+  }
+  return {};
+}
+
+ParityCatalog
+load_parity_catalog() {
+  ParityCatalog catalog;
+  const fs::path contract_path = parity_catalog_path();
+  if (contract_path.empty()) {
+    catalog.error = "parity-v1 contract is unavailable";
+    return catalog;
+  }
+  std::ifstream in(contract_path);
+  if (!in) {
+    catalog.error = "parity-v1 contract cannot be read";
+    return catalog;
+  }
+
+  bool in_phase_sweep = false;
+  bool in_phase_cells = false;
+  bool in_token_targets = false;
+  std::optional<ParityPhaseCell> current;
+  std::string line;
+  while (std::getline(in, line)) {
+    if (line.find("\"compiler_phase_sweep\"") != std::string::npos) {
+      in_phase_sweep = true;
+      continue;
+    }
+    if (!in_phase_sweep) {
+      continue;
+    }
+    if (line.find("\"diagnostics\"") != std::string::npos) {
+      break;
+    }
+    if (line.find("\"token_targets\"") != std::string::npos) {
+      in_token_targets = true;
+    }
+    if (in_token_targets && line.find('}') != std::string::npos) {
+      in_token_targets = false;
+    }
+    if (const auto small = json_int_on_line(line, "small")) {
+      if (in_token_targets || line.find("\"token_targets\"") != std::string::npos) {
+        catalog.token_targets[0] = *small;
+      }
+    }
+    if (const auto medium = json_int_on_line(line, "medium")) {
+      if (in_token_targets || line.find("token_targets") != std::string::npos) {
+        catalog.token_targets[1] = *medium;
+      }
+    }
+    if (const auto large = json_int_on_line(line, "large")) {
+      if (in_token_targets || line.find("token_targets") != std::string::npos) {
+        catalog.token_targets[2] = *large;
+      }
+    }
+
+    const auto id = json_string_on_line(line, "id");
+    if (id.has_value() && id->rfind("compiler-phase/", 0) == 0) {
+      if (current.has_value()) {
+        catalog.phase_cells.push_back(*current);
+      }
+      ParityPhaseCell cell;
+      cell.id = *id;
+      const std::string phase_prefix = "compiler-phase/";
+      const size_t phase_end = cell.id.find('/', phase_prefix.size());
+      if (phase_end == std::string::npos) {
+        catalog.error = "parity-v1 phase cell id is malformed";
+        return catalog;
+      }
+      cell.phase = cell.id.substr(phase_prefix.size(), phase_end - phase_prefix.size());
+      cell.tier = cell.id.substr(phase_end + 1);
+      current = std::move(cell);
+      in_phase_cells = true;
+      continue;
+    }
+    if (!in_phase_cells || !current.has_value()) {
+      continue;
+    }
+    if (const auto units = json_int_on_line(line, "work_units")) {
+      current->work_units = *units;
+    }
+    if (const auto digest = json_string_on_line(line, "styio")) {
+      current->source_digest = *digest;
+    }
+    if (const auto digest = json_string_on_line(line, "expected_output_digest")) {
+      current->expected_output_digest = *digest;
+    }
+  }
+  if (current.has_value()) {
+    catalog.phase_cells.push_back(*current);
+  }
+  if (catalog.phase_cells.size() != 15) {
+    catalog.error = "parity-v1 phase sweep is incomplete";
+    return catalog;
+  }
+  if (catalog.token_targets != std::array<int, 3> {1000, 16000, 128000}) {
+    catalog.error = "parity-v1 phase token targets are invalid";
+  }
+  return catalog;
+}
+
+std::string
+build_parity_phase_source(int token_target) {
+  const int bindings = std::max(1, token_target / 10);
+  std::string code;
+  code.reserve(static_cast<size_t>(bindings) * 24U);
+  code += "v0 = 0\n";
+  for (int index = 1; index <= bindings; ++index) {
+    code += "v" + std::to_string(index) + " = v" + std::to_string(index - 1)
+      + " + " + std::to_string(index % 97) + "\n";
+  }
+  code += ">_(v" + std::to_string(bindings) + ")\n";
+  return code;
+}
+
+std::string
+parity_phase_reference_output(int token_target) {
+  const int bindings = std::max(1, token_target / 10);
+  long long total = 0;
+  for (int index = 1; index <= bindings; ++index) {
+    total += index % 97;
+  }
+  return std::to_string(total) + "\n";
+}
+
+MicroBenchFocus
+parity_phase_focus(const std::string& phase) {
+  if (phase == "tokenize") {
+    return MicroBenchFocus::Lexer;
+  }
+  if (phase == "parse") {
+    return MicroBenchFocus::Parser;
+  }
+  if (phase == "semantic-analysis") {
+    return MicroBenchFocus::TypeInfer;
+  }
+  if (phase == "lowering") {
+    return MicroBenchFocus::Lower;
+  }
+  return MicroBenchFocus::LLVM;
 }
 
 std::string
@@ -659,6 +908,11 @@ run_compiler_stage_bench(const CompilerWorkload& workload, int loops) {
   CompilationSession session;
   size_t total_token_arena_bytes = 0;
   size_t total_ast_arena_bytes = 0;
+  result.tokenize_samples_us.reserve(static_cast<size_t>(loops));
+  result.parse_samples_us.reserve(static_cast<size_t>(loops));
+  result.type_infer_samples_us.reserve(static_cast<size_t>(loops));
+  result.lower_samples_us.reserve(static_cast<size_t>(loops));
+  result.llvm_ir_samples_us.reserve(static_cast<size_t>(loops));
 
   for (int i = 0; i < loops; ++i) {
     try {
@@ -705,6 +959,15 @@ run_compiler_stage_bench(const CompilerWorkload& workload, int loops) {
       result.type_infer += std::chrono::duration_cast<std::chrono::nanoseconds>(t3 - t2);
       result.lower += std::chrono::duration_cast<std::chrono::nanoseconds>(t4 - t3);
       result.llvm_ir += std::chrono::duration_cast<std::chrono::nanoseconds>(t5 - t4);
+      const auto sample_us = [](const auto& begin, const auto& end) {
+        return static_cast<double>(
+          std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count()) / 1000.0;
+      };
+      result.tokenize_samples_us.push_back(sample_us(t0, t1));
+      result.parse_samples_us.push_back(sample_us(t1, t2));
+      result.type_infer_samples_us.push_back(sample_us(t2, t3));
+      result.lower_samples_us.push_back(sample_us(t3, t4));
+      result.llvm_ir_samples_us.push_back(sample_us(t4, t5));
       total_token_arena_bytes += session.token_arena_bytes();
       total_ast_arena_bytes += session.ast_arena_bytes();
     } catch (const std::exception& ex) {
@@ -761,6 +1024,36 @@ print_compiler_stage_bench(
     << " avg_token_arena_kib=" << (static_cast<double>(result.avg_token_arena_bytes) / 1024.0)
     << " avg_ast_arena_kib=" << (static_cast<double>(result.avg_ast_arena_bytes) / 1024.0)
     << " rss_growth_kib=" << (static_cast<double>(rss_growth) / 1024.0)
+    << "\n";
+}
+
+void
+print_parity_phase_samples(
+  const std::string& tier,
+  const CompilerStageBenchResult& result
+) {
+  auto mean_or_zero = [](const std::vector<double>& values) {
+    if (values.empty()) {
+      return 0.0;
+    }
+    double total = 0.0;
+    for (double value : values) {
+      total += value;
+    }
+    return total / static_cast<double>(values.size());
+  };
+  // This line is intentionally a compact, public numeric record. One
+  // isolated probe averages its in-process iterations and shares all five
+  // phase values from that invocation, so phase cells do not duplicate
+  // compilation or expose an arbitrary last iteration.
+  std::cout
+    << "[parity-phase] tier=" << tier
+    << " samples=" << result.tokenize_samples_us.size()
+    << " tokenize_us=" << mean_or_zero(result.tokenize_samples_us)
+    << " parse_us=" << mean_or_zero(result.parse_samples_us)
+    << " semantic_analysis_us=" << mean_or_zero(result.type_infer_samples_us)
+    << " lowering_us=" << mean_or_zero(result.lower_samples_us)
+    << " llvm_emission_us=" << mean_or_zero(result.llvm_ir_samples_us)
     << "\n";
 }
 
@@ -1624,5 +1917,62 @@ TEST(StyioSoakSingleThread, CompilerErrorPathBenchmarksReport) {
     ASSERT_TRUE(result.error.empty()) << spec.name << ": " << result.error;
     ASSERT_EQ(result.loops_completed, loops) << spec.name;
     print_error_bench(spec, loops, result);
+  }
+}
+
+TEST(StyioSoakSingleThread, ParityPhaseSweepReport) {
+  const ParityCatalog catalog = load_parity_catalog();
+  ASSERT_TRUE(catalog.error.empty()) << catalog.error;
+
+  const char* tier_env = std::getenv("STYIO_PARITY_SWEEP_TIER");
+  const std::string tier =
+    (tier_env != nullptr && tier_env[0] != '\0') ? tier_env : "small";
+  ASSERT_TRUE(tier == "small" || tier == "medium" || tier == "large")
+    << "unsupported parity sweep tier";
+  const int tier_index = tier == "small" ? 0 : (tier == "medium" ? 1 : 2);
+  const int expected_work_units = catalog.token_targets[static_cast<size_t>(tier_index)];
+
+  const int loops = read_env_i32("STYIO_PARITY_PHASE_ITERS", 1, 1, 100000);
+  std::array<bool, 5> phase_seen {false, false, false, false, false};
+  const std::array<std::string, 5> phase_names {
+    "tokenize", "parse", "semantic-analysis", "lowering", "llvm-emission"};
+
+  // One complete in-process pass produces all five declared boundaries.  A
+  // prior implementation ran a prefix compilation once per phase cell,
+  // making the phase sweep mostly a measurement of duplicated setup.  The
+  // isolated probe now emits one numeric phase record for this tier; the gate
+  // launches it once for each retained sample and shares that record.
+  const std::string code = build_parity_phase_source(expected_work_units);
+  const std::string code_digest = sha256_hex_text(code);
+  const std::string output_digest = sha256_hex_text(parity_phase_reference_output(expected_work_units));
+  const CompilerWorkload workload = make_inline_workload(
+    "CompilerPhase",
+    "compiler-phase/" + tier,
+    code,
+    parity_phase_reference_output(expected_work_units));
+  const CompilerStageBenchResult result = run_compiler_stage_bench(workload, loops);
+  ASSERT_TRUE(result.error.empty()) << result.error;
+  ASSERT_EQ(result.tokenize_samples_us.size(), static_cast<size_t>(loops));
+  ASSERT_EQ(result.parse_samples_us.size(), static_cast<size_t>(loops));
+  ASSERT_EQ(result.type_infer_samples_us.size(), static_cast<size_t>(loops));
+  ASSERT_EQ(result.lower_samples_us.size(), static_cast<size_t>(loops));
+  ASSERT_EQ(result.llvm_ir_samples_us.size(), static_cast<size_t>(loops));
+  print_parity_phase_samples(tier, result);
+
+  for (const ParityPhaseCell& cell : catalog.phase_cells) {
+    if (cell.tier != tier) {
+      continue;
+    }
+    ASSERT_EQ(cell.work_units, expected_work_units) << cell.id;
+    const auto phase_it = std::find(phase_names.begin(), phase_names.end(), cell.phase);
+    ASSERT_NE(phase_it, phase_names.end()) << cell.id;
+    const size_t phase_index = static_cast<size_t>(phase_it - phase_names.begin());
+    ASSERT_FALSE(phase_seen[phase_index]) << "duplicate phase cell: " << cell.id;
+    phase_seen[phase_index] = true;
+    ASSERT_EQ(cell.source_digest, code_digest) << cell.id;
+    ASSERT_EQ(cell.expected_output_digest, output_digest) << cell.id;
+  }
+  for (size_t index = 0; index < phase_seen.size(); ++index) {
+    ASSERT_TRUE(phase_seen[index]) << "missing phase: " << phase_names[index];
   }
 }

@@ -8,6 +8,7 @@ CTest labels and benchmark routes keep working:
 
 - `styio_soak_test`
 - `styio_task_scheduler_perf_test`
+- `styio_core_bench`
 
 These files may include Styio private headers because they are compiled by a
 matching Styio source checkout through `benchmark/CMakeLists.txt`. Keep route

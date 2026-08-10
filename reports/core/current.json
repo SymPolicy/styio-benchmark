@@ -1,0 +1,23 @@
+{
+  "schema": "styio.benchmark.v1",
+  "git_sha": "8ef5720",
+  "build_type": "Debug",
+  "timestamp": 1782603417,
+  "samples": [
+    {"phase": "lex", "label": "large_file_10k", "duration_ns": 15206400},
+    {"phase": "parse", "label": "many_stmts_1k", "duration_ns": 44646000},
+    {"phase": "parse", "label": "deep_expr_200", "duration_ns": 974300},
+    {"phase": "sema", "label": "name_resolution_5k", "duration_ns": 6380522000},
+    {"phase": "type", "label": "typed_bindings_1k", "duration_ns": 133660100},
+    {"phase": "topology", "label": "resource_dag_200", "duration_ns": 60645500},
+    {"phase": "diag", "label": "many_errors_100", "duration_ns": 561300},
+    {"phase": "runtime", "label": "task_spawn_1k_nop", "duration_ns": 700},
+    {"phase": "route_cache", "label": "many_stmts_1k", "duration_ns": 0, "route_cache_scan_count": 1000, "route_cache_hit_count": 0, "route_cache_miss_count": 1000, "route_cache_disabled_count": 0},
+    {"phase": "route_cache", "label": "deep_expr_200", "duration_ns": 0, "route_cache_scan_count": 1, "route_cache_hit_count": 0, "route_cache_miss_count": 1, "route_cache_disabled_count": 0},
+    {"phase": "route_cache", "label": "name_resolution_5k", "duration_ns": 0, "route_cache_scan_count": 10001, "route_cache_hit_count": 0, "route_cache_miss_count": 10001, "route_cache_disabled_count": 0},
+    {"phase": "route_cache", "label": "typed_bindings_1k", "duration_ns": 0, "route_cache_scan_count": 1200, "route_cache_hit_count": 0, "route_cache_miss_count": 1200, "route_cache_disabled_count": 0},
+    {"phase": "route_cache", "label": "resource_dag_200", "duration_ns": 0, "route_cache_scan_count": 600, "route_cache_hit_count": 0, "route_cache_miss_count": 600, "route_cache_disabled_count": 0},
+    {"phase": "ir_alloc", "label": "factory_smoke", "duration_ns": 0, "ir_arena_allocations": 0, "ir_raw_allocations": 1, "ir_bytes_allocated": 8, "ir_node_count": 1, "ir_max_node_count": 1, "ir_destructor_calls": 1},
+    {"phase": "scheduler", "label": "task_queue_mode", "duration_ns": 0, "task_scheduler_queue_kind": 0, "task_scheduler_worker_count": 0}
+  ]
+}

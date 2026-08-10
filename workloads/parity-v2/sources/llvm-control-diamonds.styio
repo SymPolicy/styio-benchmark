@@ -1,0 +1,15 @@
+n <- @stdin : i64
+score = 0
+[0..n-1] >> #(index) => {
+  index % 2 ?= {
+    0 => { score += index * 3 + 1 }
+    _ => {
+      index % 3 ?= {
+        0 => { score -= index * 2 + 5 }
+        _ => { score += index + 7 }
+      }
+    }
+  }
+  index % 11 ?= { 0 => { score += index } _ => { score += 0 } }
+}
+>_(score)

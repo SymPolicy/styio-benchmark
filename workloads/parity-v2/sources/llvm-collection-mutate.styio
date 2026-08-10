@@ -1,0 +1,8 @@
+n <- @stdin : i64
+value = 0
+total = 0
+[0..n-1] >> #(index) => {
+  value = (value + index * 3 + 1) % 100003
+  total = (total + value) % 1000000007
+}
+>_(total)

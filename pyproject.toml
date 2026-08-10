@@ -12,6 +12,7 @@ test = [
 
 [tool.pytest.ini_options]
 testpaths = [
+  "tests",
   "async-runtime",
 ]
 python_files = [

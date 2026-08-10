@@ -1,0 +1,1088 @@
+{
+  "schema": "styio.parity.catalog.v1",
+  "catalog_id": "parity-v1",
+  "catalog_version": 1,
+  "digest_algorithm": "sha256",
+  "canonical_encoding": "utf-8",
+  "generator": "generators.py",
+  "routes": [
+    {
+      "id": "compile-and-run",
+      "boundary": {
+        "start": "source-read",
+        "stop": "validated-stdout",
+        "timed_region": "fresh-compile-and-run",
+        "artifact_policy": "none"
+      }
+    },
+    {
+      "id": "native-build",
+      "boundary": {
+        "start": "source-read",
+        "stop": "native-artifact-ready",
+        "timed_region": "fresh-native-build",
+        "artifact_policy": "discard-after-sample"
+      }
+    },
+    {
+      "id": "native-run",
+      "boundary": {
+        "start": "prebuilt-artifact",
+        "stop": "validated-stdout",
+        "timed_region": "execution-only",
+        "artifact_policy": "built-outside-timing"
+      }
+    }
+  ],
+  "workloads": [
+    {
+      "id": "scalar-compute",
+      "algorithm_id": "scalar_compute.modular_accumulator.v1",
+      "work_unit": "logical_iterations",
+      "source": {
+        "styio": "sources/scalar_compute.styio",
+        "cpp": "sources/scalar_compute.cpp",
+        "source_digest": {
+          "styio": "0bfe0c9cfe3e93efa3e1f264c021232be72e6c5a8ff2650e59c57326d22234c3",
+          "cpp": "21d175422de12d7f1ca24f20413e402b29c8010ea628523a09649cac705e5354"
+        }
+      },
+      "input": {
+        "generator": "generators.py:scalar_compute_input",
+        "format": "ascii-decimal-lines",
+        "sha256_by_size": {
+          "10000": "876e13f4e07bb39705302c01f445ffd2d2c3b180a207e4d959d6b671c67da09b",
+          "250000": "ac2795dfce1a5189ce03123a72a11bd8fdb98fd282aa25ebee55e25c72dc1a7a",
+          "5000000": "a3ee977aa98830c6d545a83f6a0e756983f823ae7621f9224e39cb1d3ed1b66b"
+        }
+      },
+      "sizes": [
+        10000,
+        250000,
+        5000000
+      ],
+      "cells": [
+        {
+          "id": "scalar-compute/small/compile-and-run",
+          "tier": "small",
+          "size": 10000,
+          "algorithm_id": "scalar_compute.modular_accumulator.v1",
+          "work_units": 10000,
+          "route": "compile-and-run",
+          "source_digest": {
+            "styio": "0bfe0c9cfe3e93efa3e1f264c021232be72e6c5a8ff2650e59c57326d22234c3",
+            "cpp": "21d175422de12d7f1ca24f20413e402b29c8010ea628523a09649cac705e5354"
+          },
+          "input_digest": "876e13f4e07bb39705302c01f445ffd2d2c3b180a207e4d959d6b671c67da09b",
+          "expected_output_digest": "854aec1acb4f44e05aacc5771e61c5098b36ddcde57603c3fbd8f00328ed140a",
+          "reference_output_digest": "854aec1acb4f44e05aacc5771e61c5098b36ddcde57603c3fbd8f00328ed140a",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "scalar-compute/small/native-build",
+          "tier": "small",
+          "size": 10000,
+          "algorithm_id": "scalar_compute.modular_accumulator.v1",
+          "work_units": 10000,
+          "route": "native-build",
+          "source_digest": {
+            "styio": "0bfe0c9cfe3e93efa3e1f264c021232be72e6c5a8ff2650e59c57326d22234c3",
+            "cpp": "21d175422de12d7f1ca24f20413e402b29c8010ea628523a09649cac705e5354"
+          },
+          "input_digest": "876e13f4e07bb39705302c01f445ffd2d2c3b180a207e4d959d6b671c67da09b",
+          "expected_output_digest": "854aec1acb4f44e05aacc5771e61c5098b36ddcde57603c3fbd8f00328ed140a",
+          "reference_output_digest": "854aec1acb4f44e05aacc5771e61c5098b36ddcde57603c3fbd8f00328ed140a",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          }
+        },
+        {
+          "id": "scalar-compute/small/native-run",
+          "tier": "small",
+          "size": 10000,
+          "algorithm_id": "scalar_compute.modular_accumulator.v1",
+          "work_units": 10000,
+          "route": "native-run",
+          "source_digest": {
+            "styio": "0bfe0c9cfe3e93efa3e1f264c021232be72e6c5a8ff2650e59c57326d22234c3",
+            "cpp": "21d175422de12d7f1ca24f20413e402b29c8010ea628523a09649cac705e5354"
+          },
+          "input_digest": "876e13f4e07bb39705302c01f445ffd2d2c3b180a207e4d959d6b671c67da09b",
+          "expected_output_digest": "854aec1acb4f44e05aacc5771e61c5098b36ddcde57603c3fbd8f00328ed140a",
+          "reference_output_digest": "854aec1acb4f44e05aacc5771e61c5098b36ddcde57603c3fbd8f00328ed140a",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "scalar-compute/medium/compile-and-run",
+          "tier": "medium",
+          "size": 250000,
+          "algorithm_id": "scalar_compute.modular_accumulator.v1",
+          "work_units": 250000,
+          "route": "compile-and-run",
+          "source_digest": {
+            "styio": "0bfe0c9cfe3e93efa3e1f264c021232be72e6c5a8ff2650e59c57326d22234c3",
+            "cpp": "21d175422de12d7f1ca24f20413e402b29c8010ea628523a09649cac705e5354"
+          },
+          "input_digest": "ac2795dfce1a5189ce03123a72a11bd8fdb98fd282aa25ebee55e25c72dc1a7a",
+          "expected_output_digest": "4e8d23378c8f572f7382468701c9dd53178330b1d49f63dc7a84afdac0a15def",
+          "reference_output_digest": "4e8d23378c8f572f7382468701c9dd53178330b1d49f63dc7a84afdac0a15def",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "scalar-compute/medium/native-build",
+          "tier": "medium",
+          "size": 250000,
+          "algorithm_id": "scalar_compute.modular_accumulator.v1",
+          "work_units": 250000,
+          "route": "native-build",
+          "source_digest": {
+            "styio": "0bfe0c9cfe3e93efa3e1f264c021232be72e6c5a8ff2650e59c57326d22234c3",
+            "cpp": "21d175422de12d7f1ca24f20413e402b29c8010ea628523a09649cac705e5354"
+          },
+          "input_digest": "ac2795dfce1a5189ce03123a72a11bd8fdb98fd282aa25ebee55e25c72dc1a7a",
+          "expected_output_digest": "4e8d23378c8f572f7382468701c9dd53178330b1d49f63dc7a84afdac0a15def",
+          "reference_output_digest": "4e8d23378c8f572f7382468701c9dd53178330b1d49f63dc7a84afdac0a15def",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          }
+        },
+        {
+          "id": "scalar-compute/medium/native-run",
+          "tier": "medium",
+          "size": 250000,
+          "algorithm_id": "scalar_compute.modular_accumulator.v1",
+          "work_units": 250000,
+          "route": "native-run",
+          "source_digest": {
+            "styio": "0bfe0c9cfe3e93efa3e1f264c021232be72e6c5a8ff2650e59c57326d22234c3",
+            "cpp": "21d175422de12d7f1ca24f20413e402b29c8010ea628523a09649cac705e5354"
+          },
+          "input_digest": "ac2795dfce1a5189ce03123a72a11bd8fdb98fd282aa25ebee55e25c72dc1a7a",
+          "expected_output_digest": "4e8d23378c8f572f7382468701c9dd53178330b1d49f63dc7a84afdac0a15def",
+          "reference_output_digest": "4e8d23378c8f572f7382468701c9dd53178330b1d49f63dc7a84afdac0a15def",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "scalar-compute/large/compile-and-run",
+          "tier": "large",
+          "size": 5000000,
+          "algorithm_id": "scalar_compute.modular_accumulator.v1",
+          "work_units": 5000000,
+          "route": "compile-and-run",
+          "source_digest": {
+            "styio": "0bfe0c9cfe3e93efa3e1f264c021232be72e6c5a8ff2650e59c57326d22234c3",
+            "cpp": "21d175422de12d7f1ca24f20413e402b29c8010ea628523a09649cac705e5354"
+          },
+          "input_digest": "a3ee977aa98830c6d545a83f6a0e756983f823ae7621f9224e39cb1d3ed1b66b",
+          "expected_output_digest": "21e1587fb5d50d1f027f52032e78049ce3045c84639370914614c2ad8ccc34cb",
+          "reference_output_digest": "21e1587fb5d50d1f027f52032e78049ce3045c84639370914614c2ad8ccc34cb",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "scalar-compute/large/native-build",
+          "tier": "large",
+          "size": 5000000,
+          "algorithm_id": "scalar_compute.modular_accumulator.v1",
+          "work_units": 5000000,
+          "route": "native-build",
+          "source_digest": {
+            "styio": "0bfe0c9cfe3e93efa3e1f264c021232be72e6c5a8ff2650e59c57326d22234c3",
+            "cpp": "21d175422de12d7f1ca24f20413e402b29c8010ea628523a09649cac705e5354"
+          },
+          "input_digest": "a3ee977aa98830c6d545a83f6a0e756983f823ae7621f9224e39cb1d3ed1b66b",
+          "expected_output_digest": "21e1587fb5d50d1f027f52032e78049ce3045c84639370914614c2ad8ccc34cb",
+          "reference_output_digest": "21e1587fb5d50d1f027f52032e78049ce3045c84639370914614c2ad8ccc34cb",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          }
+        },
+        {
+          "id": "scalar-compute/large/native-run",
+          "tier": "large",
+          "size": 5000000,
+          "algorithm_id": "scalar_compute.modular_accumulator.v1",
+          "work_units": 5000000,
+          "route": "native-run",
+          "source_digest": {
+            "styio": "0bfe0c9cfe3e93efa3e1f264c021232be72e6c5a8ff2650e59c57326d22234c3",
+            "cpp": "21d175422de12d7f1ca24f20413e402b29c8010ea628523a09649cac705e5354"
+          },
+          "input_digest": "a3ee977aa98830c6d545a83f6a0e756983f823ae7621f9224e39cb1d3ed1b66b",
+          "expected_output_digest": "21e1587fb5d50d1f027f52032e78049ce3045c84639370914614c2ad8ccc34cb",
+          "reference_output_digest": "21e1587fb5d50d1f027f52032e78049ce3045c84639370914614c2ad8ccc34cb",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          }
+        }
+      ]
+    },
+    {
+      "id": "collection-reduce",
+      "algorithm_id": "collection_reduce.weighted_modular_sum.v1",
+      "work_unit": "elements",
+      "source": {
+        "styio": "sources/collection_reduce.styio",
+        "cpp": "sources/collection_reduce.cpp",
+        "source_digest": {
+          "styio": "06c0d22ab32461f3753c8c2cfc86d40b3b8c9c93264ee87d0322c88d9169f520",
+          "cpp": "bc2607d01d43019d69e2ca2a465632c1a9ffa692745e3923d940781da70c86d4"
+        }
+      },
+      "input": {
+        "generator": "generators.py:collection_reduce_input",
+        "format": "ascii-styio-list-literal",
+        "sha256_by_size": {
+          "256": "1d3ee205d063eabbc34e0c451f04372c6f7472175d914284b9ba8f0eded3dfe0",
+          "4096": "8b8cd845d44acc653fe9aa602125bf31b75630516d38b68255e9e757d421a73f",
+          "65536": "25c179ed521e1c54db2cf01a7a397730767537723c054f7a88fcefa2b43220f4"
+        }
+      },
+      "sizes": [
+        256,
+        4096,
+        65536
+      ],
+      "cells": [
+        {
+          "id": "collection-reduce/small/compile-and-run",
+          "tier": "small",
+          "size": 256,
+          "algorithm_id": "collection_reduce.weighted_modular_sum.v1",
+          "work_units": 256,
+          "route": "compile-and-run",
+          "source_digest": {
+            "styio": "06c0d22ab32461f3753c8c2cfc86d40b3b8c9c93264ee87d0322c88d9169f520",
+            "cpp": "bc2607d01d43019d69e2ca2a465632c1a9ffa692745e3923d940781da70c86d4"
+          },
+          "input_digest": "1d3ee205d063eabbc34e0c451f04372c6f7472175d914284b9ba8f0eded3dfe0",
+          "expected_output_digest": "ee985ccc9690646ac01d46d4f052d590619245d678454b0f850fe56996d6ed88",
+          "reference_output_digest": "ee985ccc9690646ac01d46d4f052d590619245d678454b0f850fe56996d6ed88",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "collection-reduce/small/native-build",
+          "tier": "small",
+          "size": 256,
+          "algorithm_id": "collection_reduce.weighted_modular_sum.v1",
+          "work_units": 256,
+          "route": "native-build",
+          "source_digest": {
+            "styio": "06c0d22ab32461f3753c8c2cfc86d40b3b8c9c93264ee87d0322c88d9169f520",
+            "cpp": "bc2607d01d43019d69e2ca2a465632c1a9ffa692745e3923d940781da70c86d4"
+          },
+          "input_digest": "1d3ee205d063eabbc34e0c451f04372c6f7472175d914284b9ba8f0eded3dfe0",
+          "expected_output_digest": "ee985ccc9690646ac01d46d4f052d590619245d678454b0f850fe56996d6ed88",
+          "reference_output_digest": "ee985ccc9690646ac01d46d4f052d590619245d678454b0f850fe56996d6ed88",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          }
+        },
+        {
+          "id": "collection-reduce/small/native-run",
+          "tier": "small",
+          "size": 256,
+          "algorithm_id": "collection_reduce.weighted_modular_sum.v1",
+          "work_units": 256,
+          "route": "native-run",
+          "source_digest": {
+            "styio": "06c0d22ab32461f3753c8c2cfc86d40b3b8c9c93264ee87d0322c88d9169f520",
+            "cpp": "bc2607d01d43019d69e2ca2a465632c1a9ffa692745e3923d940781da70c86d4"
+          },
+          "input_digest": "1d3ee205d063eabbc34e0c451f04372c6f7472175d914284b9ba8f0eded3dfe0",
+          "expected_output_digest": "ee985ccc9690646ac01d46d4f052d590619245d678454b0f850fe56996d6ed88",
+          "reference_output_digest": "ee985ccc9690646ac01d46d4f052d590619245d678454b0f850fe56996d6ed88",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "collection-reduce/medium/compile-and-run",
+          "tier": "medium",
+          "size": 4096,
+          "algorithm_id": "collection_reduce.weighted_modular_sum.v1",
+          "work_units": 4096,
+          "route": "compile-and-run",
+          "source_digest": {
+            "styio": "06c0d22ab32461f3753c8c2cfc86d40b3b8c9c93264ee87d0322c88d9169f520",
+            "cpp": "bc2607d01d43019d69e2ca2a465632c1a9ffa692745e3923d940781da70c86d4"
+          },
+          "input_digest": "8b8cd845d44acc653fe9aa602125bf31b75630516d38b68255e9e757d421a73f",
+          "expected_output_digest": "5990affd1201e23b184569c1ce2c20d960b880a2a4659b28efbeb75ec2e941dd",
+          "reference_output_digest": "5990affd1201e23b184569c1ce2c20d960b880a2a4659b28efbeb75ec2e941dd",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "collection-reduce/medium/native-build",
+          "tier": "medium",
+          "size": 4096,
+          "algorithm_id": "collection_reduce.weighted_modular_sum.v1",
+          "work_units": 4096,
+          "route": "native-build",
+          "source_digest": {
+            "styio": "06c0d22ab32461f3753c8c2cfc86d40b3b8c9c93264ee87d0322c88d9169f520",
+            "cpp": "bc2607d01d43019d69e2ca2a465632c1a9ffa692745e3923d940781da70c86d4"
+          },
+          "input_digest": "8b8cd845d44acc653fe9aa602125bf31b75630516d38b68255e9e757d421a73f",
+          "expected_output_digest": "5990affd1201e23b184569c1ce2c20d960b880a2a4659b28efbeb75ec2e941dd",
+          "reference_output_digest": "5990affd1201e23b184569c1ce2c20d960b880a2a4659b28efbeb75ec2e941dd",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          }
+        },
+        {
+          "id": "collection-reduce/medium/native-run",
+          "tier": "medium",
+          "size": 4096,
+          "algorithm_id": "collection_reduce.weighted_modular_sum.v1",
+          "work_units": 4096,
+          "route": "native-run",
+          "source_digest": {
+            "styio": "06c0d22ab32461f3753c8c2cfc86d40b3b8c9c93264ee87d0322c88d9169f520",
+            "cpp": "bc2607d01d43019d69e2ca2a465632c1a9ffa692745e3923d940781da70c86d4"
+          },
+          "input_digest": "8b8cd845d44acc653fe9aa602125bf31b75630516d38b68255e9e757d421a73f",
+          "expected_output_digest": "5990affd1201e23b184569c1ce2c20d960b880a2a4659b28efbeb75ec2e941dd",
+          "reference_output_digest": "5990affd1201e23b184569c1ce2c20d960b880a2a4659b28efbeb75ec2e941dd",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "collection-reduce/large/compile-and-run",
+          "tier": "large",
+          "size": 65536,
+          "algorithm_id": "collection_reduce.weighted_modular_sum.v1",
+          "work_units": 65536,
+          "route": "compile-and-run",
+          "source_digest": {
+            "styio": "06c0d22ab32461f3753c8c2cfc86d40b3b8c9c93264ee87d0322c88d9169f520",
+            "cpp": "bc2607d01d43019d69e2ca2a465632c1a9ffa692745e3923d940781da70c86d4"
+          },
+          "input_digest": "25c179ed521e1c54db2cf01a7a397730767537723c054f7a88fcefa2b43220f4",
+          "expected_output_digest": "3bb1b992225a1d7dabbb85c36179cf90f36b9b795f881ea162139567abab81dd",
+          "reference_output_digest": "3bb1b992225a1d7dabbb85c36179cf90f36b9b795f881ea162139567abab81dd",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "collection-reduce/large/native-build",
+          "tier": "large",
+          "size": 65536,
+          "algorithm_id": "collection_reduce.weighted_modular_sum.v1",
+          "work_units": 65536,
+          "route": "native-build",
+          "source_digest": {
+            "styio": "06c0d22ab32461f3753c8c2cfc86d40b3b8c9c93264ee87d0322c88d9169f520",
+            "cpp": "bc2607d01d43019d69e2ca2a465632c1a9ffa692745e3923d940781da70c86d4"
+          },
+          "input_digest": "25c179ed521e1c54db2cf01a7a397730767537723c054f7a88fcefa2b43220f4",
+          "expected_output_digest": "3bb1b992225a1d7dabbb85c36179cf90f36b9b795f881ea162139567abab81dd",
+          "reference_output_digest": "3bb1b992225a1d7dabbb85c36179cf90f36b9b795f881ea162139567abab81dd",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          }
+        },
+        {
+          "id": "collection-reduce/large/native-run",
+          "tier": "large",
+          "size": 65536,
+          "algorithm_id": "collection_reduce.weighted_modular_sum.v1",
+          "work_units": 65536,
+          "route": "native-run",
+          "source_digest": {
+            "styio": "06c0d22ab32461f3753c8c2cfc86d40b3b8c9c93264ee87d0322c88d9169f520",
+            "cpp": "bc2607d01d43019d69e2ca2a465632c1a9ffa692745e3923d940781da70c86d4"
+          },
+          "input_digest": "25c179ed521e1c54db2cf01a7a397730767537723c054f7a88fcefa2b43220f4",
+          "expected_output_digest": "3bb1b992225a1d7dabbb85c36179cf90f36b9b795f881ea162139567abab81dd",
+          "reference_output_digest": "3bb1b992225a1d7dabbb85c36179cf90f36b9b795f881ea162139567abab81dd",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stream-I/O",
+      "algorithm_id": "stream_io.byte_preserving_echo.v1",
+      "work_unit": "input_bytes",
+      "source": {
+        "styio": "sources/stream_io.styio",
+        "cpp": "sources/stream_io.cpp",
+        "source_digest": {
+          "styio": "d860717e43954ff52f46804f6953e78c745329ed8df5764ed1c6436d2886057e",
+          "cpp": "27900997d104f5e57159ff4218c8aed380b38eb434df082dbb7594c6eb86fd98"
+        }
+      },
+      "input": {
+        "generator": "generators.py:stream_io_input",
+        "format": "ascii-newline-records",
+        "record_bytes": 64,
+        "sha256_by_size": {
+          "65536": "81706c8a6590c4228109fcccf06e55ce6000e42b8f326aa176630f3736806a8f",
+          "4194304": "5085204fd730157a51267cea2d47bf56b5a73ff093414c8bc7bf45944c55cf5c",
+          "33554432": "5956ff743e337f049e18eb5b313667bd3fc19ff770c69415c4768803c72fadfd"
+        }
+      },
+      "sizes": [
+        65536,
+        4194304,
+        33554432
+      ],
+      "cells": [
+        {
+          "id": "stream-I/O/small/compile-and-run",
+          "tier": "small",
+          "size": 65536,
+          "algorithm_id": "stream_io.byte_preserving_echo.v1",
+          "work_units": 65536,
+          "route": "compile-and-run",
+          "source_digest": {
+            "styio": "d860717e43954ff52f46804f6953e78c745329ed8df5764ed1c6436d2886057e",
+            "cpp": "27900997d104f5e57159ff4218c8aed380b38eb434df082dbb7594c6eb86fd98"
+          },
+          "input_digest": "81706c8a6590c4228109fcccf06e55ce6000e42b8f326aa176630f3736806a8f",
+          "expected_output_digest": "81706c8a6590c4228109fcccf06e55ce6000e42b8f326aa176630f3736806a8f",
+          "reference_output_digest": "81706c8a6590c4228109fcccf06e55ce6000e42b8f326aa176630f3736806a8f",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "stream-I/O/small/native-build",
+          "tier": "small",
+          "size": 65536,
+          "algorithm_id": "stream_io.byte_preserving_echo.v1",
+          "work_units": 65536,
+          "route": "native-build",
+          "source_digest": {
+            "styio": "d860717e43954ff52f46804f6953e78c745329ed8df5764ed1c6436d2886057e",
+            "cpp": "27900997d104f5e57159ff4218c8aed380b38eb434df082dbb7594c6eb86fd98"
+          },
+          "input_digest": "81706c8a6590c4228109fcccf06e55ce6000e42b8f326aa176630f3736806a8f",
+          "expected_output_digest": "81706c8a6590c4228109fcccf06e55ce6000e42b8f326aa176630f3736806a8f",
+          "reference_output_digest": "81706c8a6590c4228109fcccf06e55ce6000e42b8f326aa176630f3736806a8f",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          }
+        },
+        {
+          "id": "stream-I/O/small/native-run",
+          "tier": "small",
+          "size": 65536,
+          "algorithm_id": "stream_io.byte_preserving_echo.v1",
+          "work_units": 65536,
+          "route": "native-run",
+          "source_digest": {
+            "styio": "d860717e43954ff52f46804f6953e78c745329ed8df5764ed1c6436d2886057e",
+            "cpp": "27900997d104f5e57159ff4218c8aed380b38eb434df082dbb7594c6eb86fd98"
+          },
+          "input_digest": "81706c8a6590c4228109fcccf06e55ce6000e42b8f326aa176630f3736806a8f",
+          "expected_output_digest": "81706c8a6590c4228109fcccf06e55ce6000e42b8f326aa176630f3736806a8f",
+          "reference_output_digest": "81706c8a6590c4228109fcccf06e55ce6000e42b8f326aa176630f3736806a8f",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "stream-I/O/medium/compile-and-run",
+          "tier": "medium",
+          "size": 4194304,
+          "algorithm_id": "stream_io.byte_preserving_echo.v1",
+          "work_units": 4194304,
+          "route": "compile-and-run",
+          "source_digest": {
+            "styio": "d860717e43954ff52f46804f6953e78c745329ed8df5764ed1c6436d2886057e",
+            "cpp": "27900997d104f5e57159ff4218c8aed380b38eb434df082dbb7594c6eb86fd98"
+          },
+          "input_digest": "5085204fd730157a51267cea2d47bf56b5a73ff093414c8bc7bf45944c55cf5c",
+          "expected_output_digest": "5085204fd730157a51267cea2d47bf56b5a73ff093414c8bc7bf45944c55cf5c",
+          "reference_output_digest": "5085204fd730157a51267cea2d47bf56b5a73ff093414c8bc7bf45944c55cf5c",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "stream-I/O/medium/native-build",
+          "tier": "medium",
+          "size": 4194304,
+          "algorithm_id": "stream_io.byte_preserving_echo.v1",
+          "work_units": 4194304,
+          "route": "native-build",
+          "source_digest": {
+            "styio": "d860717e43954ff52f46804f6953e78c745329ed8df5764ed1c6436d2886057e",
+            "cpp": "27900997d104f5e57159ff4218c8aed380b38eb434df082dbb7594c6eb86fd98"
+          },
+          "input_digest": "5085204fd730157a51267cea2d47bf56b5a73ff093414c8bc7bf45944c55cf5c",
+          "expected_output_digest": "5085204fd730157a51267cea2d47bf56b5a73ff093414c8bc7bf45944c55cf5c",
+          "reference_output_digest": "5085204fd730157a51267cea2d47bf56b5a73ff093414c8bc7bf45944c55cf5c",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          }
+        },
+        {
+          "id": "stream-I/O/medium/native-run",
+          "tier": "medium",
+          "size": 4194304,
+          "algorithm_id": "stream_io.byte_preserving_echo.v1",
+          "work_units": 4194304,
+          "route": "native-run",
+          "source_digest": {
+            "styio": "d860717e43954ff52f46804f6953e78c745329ed8df5764ed1c6436d2886057e",
+            "cpp": "27900997d104f5e57159ff4218c8aed380b38eb434df082dbb7594c6eb86fd98"
+          },
+          "input_digest": "5085204fd730157a51267cea2d47bf56b5a73ff093414c8bc7bf45944c55cf5c",
+          "expected_output_digest": "5085204fd730157a51267cea2d47bf56b5a73ff093414c8bc7bf45944c55cf5c",
+          "reference_output_digest": "5085204fd730157a51267cea2d47bf56b5a73ff093414c8bc7bf45944c55cf5c",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "stream-I/O/large/compile-and-run",
+          "tier": "large",
+          "size": 33554432,
+          "algorithm_id": "stream_io.byte_preserving_echo.v1",
+          "work_units": 33554432,
+          "route": "compile-and-run",
+          "source_digest": {
+            "styio": "d860717e43954ff52f46804f6953e78c745329ed8df5764ed1c6436d2886057e",
+            "cpp": "27900997d104f5e57159ff4218c8aed380b38eb434df082dbb7594c6eb86fd98"
+          },
+          "input_digest": "5956ff743e337f049e18eb5b313667bd3fc19ff770c69415c4768803c72fadfd",
+          "expected_output_digest": "5956ff743e337f049e18eb5b313667bd3fc19ff770c69415c4768803c72fadfd",
+          "reference_output_digest": "5956ff743e337f049e18eb5b313667bd3fc19ff770c69415c4768803c72fadfd",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          }
+        },
+        {
+          "id": "stream-I/O/large/native-build",
+          "tier": "large",
+          "size": 33554432,
+          "algorithm_id": "stream_io.byte_preserving_echo.v1",
+          "work_units": 33554432,
+          "route": "native-build",
+          "source_digest": {
+            "styio": "d860717e43954ff52f46804f6953e78c745329ed8df5764ed1c6436d2886057e",
+            "cpp": "27900997d104f5e57159ff4218c8aed380b38eb434df082dbb7594c6eb86fd98"
+          },
+          "input_digest": "5956ff743e337f049e18eb5b313667bd3fc19ff770c69415c4768803c72fadfd",
+          "expected_output_digest": "5956ff743e337f049e18eb5b313667bd3fc19ff770c69415c4768803c72fadfd",
+          "reference_output_digest": "5956ff743e337f049e18eb5b313667bd3fc19ff770c69415c4768803c72fadfd",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          }
+        },
+        {
+          "id": "stream-I/O/large/native-run",
+          "tier": "large",
+          "size": 33554432,
+          "algorithm_id": "stream_io.byte_preserving_echo.v1",
+          "work_units": 33554432,
+          "route": "native-run",
+          "source_digest": {
+            "styio": "d860717e43954ff52f46804f6953e78c745329ed8df5764ed1c6436d2886057e",
+            "cpp": "27900997d104f5e57159ff4218c8aed380b38eb434df082dbb7594c6eb86fd98"
+          },
+          "input_digest": "5956ff743e337f049e18eb5b313667bd3fc19ff770c69415c4768803c72fadfd",
+          "expected_output_digest": "5956ff743e337f049e18eb5b313667bd3fc19ff770c69415c4768803c72fadfd",
+          "reference_output_digest": "5956ff743e337f049e18eb5b313667bd3fc19ff770c69415c4768803c72fadfd",
+          "focus_owner": "backend-runtime",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          }
+        }
+      ]
+    }
+  ],
+  "compiler_phase_sweep": {
+    "source_generator": "generators.py:phase_source",
+    "reference_generator": "generators.py:phase_reference_output",
+    "token_unit": "tokens",
+    "token_targets": {
+      "small": 1000,
+      "medium": 16000,
+      "large": 128000
+    },
+    "phases": [
+      {
+        "id": "tokenize",
+        "focus_owner": "frontend-parser",
+        "route": "compile-and-run",
+        "boundary": {
+          "start": "source-bytes",
+          "stop": "token-stream"
+        }
+      },
+      {
+        "id": "parse",
+        "focus_owner": "frontend-parser",
+        "route": "compile-and-run",
+        "boundary": {
+          "start": "token-stream",
+          "stop": "ast"
+        }
+      },
+      {
+        "id": "semantic-analysis",
+        "focus_owner": "frontend-sema",
+        "route": "compile-and-run",
+        "boundary": {
+          "start": "ast",
+          "stop": "typed-ast"
+        }
+      },
+      {
+        "id": "lowering",
+        "focus_owner": "ir-lowering",
+        "route": "compile-and-run",
+        "boundary": {
+          "start": "typed-ast",
+          "stop": "styio-ir"
+        }
+      },
+      {
+        "id": "llvm-emission",
+        "focus_owner": "backend-runtime",
+        "route": "compile-and-run",
+        "boundary": {
+          "start": "styio-ir",
+          "stop": "llvm-ir"
+        }
+      }
+    ],
+    "cells": [
+      {
+        "id": "compiler-phase/tokenize/small",
+        "tier": "small",
+        "size": 1000,
+        "algorithm_id": "compiler_phase.tokenize.v1",
+        "work_units": 1000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "2cd49ba548b5e08874aedbdacb2f77280c5099c0c22cbaa4208b30d74ad88e8d",
+          "cpp": "2a8ef26908c2612779a404591f0064f887c376cf0b1b9bda688358cb96391839"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "reference_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "focus_owner": "frontend-parser",
+        "route_boundary": {
+          "start": "source-bytes",
+          "stop": "token-stream"
+        }
+      },
+      {
+        "id": "compiler-phase/tokenize/medium",
+        "tier": "medium",
+        "size": 16000,
+        "algorithm_id": "compiler_phase.tokenize.v1",
+        "work_units": 16000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "36890c432c0701c52515e3f41d27974bccaa3fecbaecf55dcdf3a3115752d3f9",
+          "cpp": "35d554eecdbc538a080b0ad4d9f0e125bf2b0a9644e57dd1bee8196f662d5856"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "reference_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "focus_owner": "frontend-parser",
+        "route_boundary": {
+          "start": "source-bytes",
+          "stop": "token-stream"
+        }
+      },
+      {
+        "id": "compiler-phase/tokenize/large",
+        "tier": "large",
+        "size": 128000,
+        "algorithm_id": "compiler_phase.tokenize.v1",
+        "work_units": 128000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "ec036e0f58fe7e32a4332d885df51553c95a972538fdc09a2498f48048ff952e",
+          "cpp": "7fa1d9e631f5783e06aa02a8f2571c32c5ac522deb21fd13cae91dd68d8a8df5"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "reference_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "focus_owner": "frontend-parser",
+        "route_boundary": {
+          "start": "source-bytes",
+          "stop": "token-stream"
+        }
+      },
+      {
+        "id": "compiler-phase/parse/small",
+        "tier": "small",
+        "size": 1000,
+        "algorithm_id": "compiler_phase.parse.v1",
+        "work_units": 1000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "2cd49ba548b5e08874aedbdacb2f77280c5099c0c22cbaa4208b30d74ad88e8d",
+          "cpp": "2a8ef26908c2612779a404591f0064f887c376cf0b1b9bda688358cb96391839"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "reference_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "focus_owner": "frontend-parser",
+        "route_boundary": {
+          "start": "token-stream",
+          "stop": "ast"
+        }
+      },
+      {
+        "id": "compiler-phase/parse/medium",
+        "tier": "medium",
+        "size": 16000,
+        "algorithm_id": "compiler_phase.parse.v1",
+        "work_units": 16000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "36890c432c0701c52515e3f41d27974bccaa3fecbaecf55dcdf3a3115752d3f9",
+          "cpp": "35d554eecdbc538a080b0ad4d9f0e125bf2b0a9644e57dd1bee8196f662d5856"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "reference_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "focus_owner": "frontend-parser",
+        "route_boundary": {
+          "start": "token-stream",
+          "stop": "ast"
+        }
+      },
+      {
+        "id": "compiler-phase/parse/large",
+        "tier": "large",
+        "size": 128000,
+        "algorithm_id": "compiler_phase.parse.v1",
+        "work_units": 128000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "ec036e0f58fe7e32a4332d885df51553c95a972538fdc09a2498f48048ff952e",
+          "cpp": "7fa1d9e631f5783e06aa02a8f2571c32c5ac522deb21fd13cae91dd68d8a8df5"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "reference_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "focus_owner": "frontend-parser",
+        "route_boundary": {
+          "start": "token-stream",
+          "stop": "ast"
+        }
+      },
+      {
+        "id": "compiler-phase/semantic-analysis/small",
+        "tier": "small",
+        "size": 1000,
+        "algorithm_id": "compiler_phase.semantic_analysis.v1",
+        "work_units": 1000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "2cd49ba548b5e08874aedbdacb2f77280c5099c0c22cbaa4208b30d74ad88e8d",
+          "cpp": "2a8ef26908c2612779a404591f0064f887c376cf0b1b9bda688358cb96391839"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "reference_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "focus_owner": "frontend-sema",
+        "route_boundary": {
+          "start": "ast",
+          "stop": "typed-ast"
+        }
+      },
+      {
+        "id": "compiler-phase/semantic-analysis/medium",
+        "tier": "medium",
+        "size": 16000,
+        "algorithm_id": "compiler_phase.semantic_analysis.v1",
+        "work_units": 16000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "36890c432c0701c52515e3f41d27974bccaa3fecbaecf55dcdf3a3115752d3f9",
+          "cpp": "35d554eecdbc538a080b0ad4d9f0e125bf2b0a9644e57dd1bee8196f662d5856"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "reference_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "focus_owner": "frontend-sema",
+        "route_boundary": {
+          "start": "ast",
+          "stop": "typed-ast"
+        }
+      },
+      {
+        "id": "compiler-phase/semantic-analysis/large",
+        "tier": "large",
+        "size": 128000,
+        "algorithm_id": "compiler_phase.semantic_analysis.v1",
+        "work_units": 128000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "ec036e0f58fe7e32a4332d885df51553c95a972538fdc09a2498f48048ff952e",
+          "cpp": "7fa1d9e631f5783e06aa02a8f2571c32c5ac522deb21fd13cae91dd68d8a8df5"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "reference_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "focus_owner": "frontend-sema",
+        "route_boundary": {
+          "start": "ast",
+          "stop": "typed-ast"
+        }
+      },
+      {
+        "id": "compiler-phase/lowering/small",
+        "tier": "small",
+        "size": 1000,
+        "algorithm_id": "compiler_phase.lowering.v1",
+        "work_units": 1000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "2cd49ba548b5e08874aedbdacb2f77280c5099c0c22cbaa4208b30d74ad88e8d",
+          "cpp": "2a8ef26908c2612779a404591f0064f887c376cf0b1b9bda688358cb96391839"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "reference_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "focus_owner": "ir-lowering",
+        "route_boundary": {
+          "start": "typed-ast",
+          "stop": "styio-ir"
+        }
+      },
+      {
+        "id": "compiler-phase/lowering/medium",
+        "tier": "medium",
+        "size": 16000,
+        "algorithm_id": "compiler_phase.lowering.v1",
+        "work_units": 16000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "36890c432c0701c52515e3f41d27974bccaa3fecbaecf55dcdf3a3115752d3f9",
+          "cpp": "35d554eecdbc538a080b0ad4d9f0e125bf2b0a9644e57dd1bee8196f662d5856"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "reference_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "focus_owner": "ir-lowering",
+        "route_boundary": {
+          "start": "typed-ast",
+          "stop": "styio-ir"
+        }
+      },
+      {
+        "id": "compiler-phase/lowering/large",
+        "tier": "large",
+        "size": 128000,
+        "algorithm_id": "compiler_phase.lowering.v1",
+        "work_units": 128000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "ec036e0f58fe7e32a4332d885df51553c95a972538fdc09a2498f48048ff952e",
+          "cpp": "7fa1d9e631f5783e06aa02a8f2571c32c5ac522deb21fd13cae91dd68d8a8df5"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "reference_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "focus_owner": "ir-lowering",
+        "route_boundary": {
+          "start": "typed-ast",
+          "stop": "styio-ir"
+        }
+      },
+      {
+        "id": "compiler-phase/llvm-emission/small",
+        "tier": "small",
+        "size": 1000,
+        "algorithm_id": "compiler_phase.llvm_emission.v1",
+        "work_units": 1000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "2cd49ba548b5e08874aedbdacb2f77280c5099c0c22cbaa4208b30d74ad88e8d",
+          "cpp": "2a8ef26908c2612779a404591f0064f887c376cf0b1b9bda688358cb96391839"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "reference_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "focus_owner": "backend-runtime",
+        "route_boundary": {
+          "start": "styio-ir",
+          "stop": "llvm-ir"
+        }
+      },
+      {
+        "id": "compiler-phase/llvm-emission/medium",
+        "tier": "medium",
+        "size": 16000,
+        "algorithm_id": "compiler_phase.llvm_emission.v1",
+        "work_units": 16000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "36890c432c0701c52515e3f41d27974bccaa3fecbaecf55dcdf3a3115752d3f9",
+          "cpp": "35d554eecdbc538a080b0ad4d9f0e125bf2b0a9644e57dd1bee8196f662d5856"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "reference_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "focus_owner": "backend-runtime",
+        "route_boundary": {
+          "start": "styio-ir",
+          "stop": "llvm-ir"
+        }
+      },
+      {
+        "id": "compiler-phase/llvm-emission/large",
+        "tier": "large",
+        "size": 128000,
+        "algorithm_id": "compiler_phase.llvm_emission.v1",
+        "work_units": 128000,
+        "route": "compile-and-run",
+        "source_digest": {
+          "styio": "ec036e0f58fe7e32a4332d885df51553c95a972538fdc09a2498f48048ff952e",
+          "cpp": "7fa1d9e631f5783e06aa02a8f2571c32c5ac522deb21fd13cae91dd68d8a8df5"
+        },
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "expected_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "reference_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "focus_owner": "backend-runtime",
+        "route_boundary": {
+          "start": "styio-ir",
+          "stop": "llvm-ir"
+        }
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "id": "diagnostic/lex/unterminated-block-comment",
+      "kind": "lex",
+      "source": "diagnostics/lex_unterminated_block_comment.styio",
+      "source_digest": "e8af38e8191e3db2f533934c5c7d914466cfadb9a2a48fe3d13314d082be802d",
+      "input_digest": "e8af38e8191e3db2f533934c5c7d914466cfadb9a2a48fe3d13314d082be802d",
+      "expected_exit_code": 2,
+      "expected_diagnostic_code": "STYIO_LEX_UNTERMINATED_BLOCK_COMMENT",
+      "focus_owner": "frontend-parser",
+      "route": "compile-and-run",
+      "route_boundary": {
+        "start": "source-read",
+        "stop": "diagnostic-emitted"
+      }
+    },
+    {
+      "id": "diagnostic/parse/unexpected-token",
+      "kind": "parse",
+      "source": "diagnostics/parse_unexpected_token.styio",
+      "source_digest": "ebeeb47282c5f16019e06df787450d674a9be97cca7609b29baffc75a01bc4f4",
+      "input_digest": "ebeeb47282c5f16019e06df787450d674a9be97cca7609b29baffc75a01bc4f4",
+      "expected_exit_code": 3,
+      "expected_diagnostic_code": "STYIO_PARSE_UNEXPECTED_TOKEN",
+      "focus_owner": "frontend-parser",
+      "route": "compile-and-run",
+      "route_boundary": {
+        "start": "source-read",
+        "stop": "diagnostic-emitted"
+      }
+    },
+    {
+      "id": "diagnostic/type/fixed-reassignment",
+      "kind": "type",
+      "source": "diagnostics/type_final_then_flex_i64.styio",
+      "source_digest": "1fb982c2e9db8faef5a8e01065cc3f665cb894a774e6232cfbdee667311e72bc",
+      "input_digest": "1fb982c2e9db8faef5a8e01065cc3f665cb894a774e6232cfbdee667311e72bc",
+      "expected_exit_code": 4,
+      "expected_diagnostic_code": "STYIO_TYPE_ERROR",
+      "focus_owner": "frontend-sema",
+      "route": "compile-and-run",
+      "route_boundary": {
+        "start": "source-read",
+        "stop": "diagnostic-emitted"
+      }
+    },
+    {
+      "id": "diagnostic/runtime/missing-file",
+      "kind": "runtime",
+      "source": "diagnostics/runtime_read_missing_file.styio",
+      "source_digest": "0fffe8535ade2fe5f076b8ca6abc34def472b696d62d4ffbcf1b8dc39766aab7",
+      "input_digest": "0fffe8535ade2fe5f076b8ca6abc34def472b696d62d4ffbcf1b8dc39766aab7",
+      "expected_exit_code": 5,
+      "expected_diagnostic_code": "STYIO_RUNTIME_FILE_OPEN_READ",
+      "focus_owner": "backend-runtime",
+      "route": "compile-and-run",
+      "route_boundary": {
+        "start": "source-read",
+        "stop": "diagnostic-emitted"
+      }
+    }
+  ]
+}

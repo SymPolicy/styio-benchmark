@@ -18,8 +18,8 @@
   - task scheduler probe；源文件在 `styio-probes/`
 - `tools/perf-route.sh`
   - 一键性能路线 + 结果归档
-- `tools/perf-report.py`
-  - 解析原始日志并生成 `json/csv/markdown` 摘要
+- `tools/parity_gate.py`
+  - 校验 parity catalog、运行冻结的对照 cell 并验证 parity 结果
 - `async-runtime/`
   - Styio task scheduler 与 C++ / Go / Rust 的异步运行时横向基准框架
 - `tools/parser-shadow-suite-gate.sh`
@@ -60,7 +60,7 @@
 - compiler stage benchmark matrix（`tokenize/parse/type/lower/llvm_ir`）
 - compiler micro benchmark matrix（`lexer/parser/type/lower/llvm` 热点切面）
 - full-stack workload matrix（CLI wall-clock）
-- native C++ comparison routes（`full-cli/cached-jit/runtime-only`）
+- Styio / native C++ parity routes（`compile-and-run/native-build/native-run`）
 - compiler error-path benchmark matrix（`lex/parse/type/runtime` 失败路径）
 - parser engine 回归
 - pipeline guard rail
@@ -211,33 +211,30 @@ STYIO_SOAK_MICRO_BENCH_ITERS=5000 \
 
 [`tools/perf-route.sh`](../tools/perf-route.sh) 默认也会跑这一组；如果不传 `--micro-iters`，它默认继承 `--phase-iters`。
 
-## Native C++ Comparison
+## Styio / Native C++ Parity
 
-Styio 与手写原生 C++ 的对照基准由本仓库维护，不放回 Styio 主仓库：
+Styio 与手写原生 C++ 的对照基准由本仓库维护。
+[`workloads/parity-v1/contract.json`](../workloads/parity-v1/contract.json) 是 workload cell
+与路线边界的唯一权威定义，支持的路线集合严格固定为：
 
-```bash
-native-cpp/run-native-cpp-bench.py \
-  --styio-root /path/to/styio \
-  --routes all \
-  --line-count 100000 \
-  --line-bytes 48 \
-  --repeats 5 \
-  --out-dir reports/native-cpp-stdin-echo
-```
+- `compile-and-run`
+  - 边界：`source-read` → `validated-stdout`
+  - 计时区间：每个样本都从源码开始重新编译并执行
+  - 产物规则：不复用任何编译产物
+- `native-build`
+  - 边界：`source-read` → `native-artifact-ready`
+  - 计时区间：每个样本的全新 native build
+  - 产物规则：样本结束后丢弃当次产物
+- `native-run`
+  - 边界：`prebuilt-artifact` → `validated-stdout`
+  - 计时区间：只计已构建程序的执行
+  - 产物规则：在计时区间外完成构建
 
-三条标准路线：
-
-- `full-cli`
-  - Styio CLI vs `-O3 -std=c++20` 原生 C++
-  - Styio 侧包含 source read、parse、lowering、LLVM/JIT 和执行
-- `cached-jit`
-  - 预留给未来可复用编译/JIT 产物执行入口
-  - 当前报告为 `unsupported`，不能用 full CLI 冒充
-- `runtime-only`
-  - 原生 C++ vs 直接调用 Styio 导出 C runtime ABI 的 harness
-  - 当前用于隔离标准流 runtime helper 成本，不等同于生成后的 Styio 程序执行
-
-[`tools/perf-route.sh`](../tools/perf-route.sh) 默认会把这三条路线作为 `native_cpp_comparison` section 跑入总报告目录，并把结果并入 `summary.md / benchmarks.csv / results.json`。
+这是封闭路线集：不接受别名、预留路线或用其他边界回退代替。路线可用性、
+cell 完整性和 parity 结果的判定统一由
+[`tools/parity_gate.py`](../tools/parity_gate.py) 负责：`catalog-check` 校验 catalog，
+`run` 执行冻结 cell，`verify` 对已生成的结果作最终判定。其他报告或
+编排入口可以收集该 gate 的输出，但不得自行改写 parity 结论。
 
 ## 测试面
 

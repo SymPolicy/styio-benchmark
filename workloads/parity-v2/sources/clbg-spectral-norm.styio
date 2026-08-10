@@ -1,0 +1,7 @@
+n <- @stdin : i64
+value = 0
+[0..n-1] >> #(index) => {
+  term = (index * 17 + 11) % 1009
+  value = (value + term * term) % 1000000007
+}
+>_(value)

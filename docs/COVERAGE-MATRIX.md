@@ -25,7 +25,7 @@
 6. `Execute`
    - CLI / JIT 执行
 
-Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进程内分段计时；第 6 层已有标准化 CLI workload matrix 和 error-path matrix。
+Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层在一次隔离进程内分段计时；parity runner 每个 tier/sample 只启动一次 probe，并将五个边界共享给 phase cells；第 6 层已有标准化 CLI workload matrix 和 error-path matrix。
 
 ## 模块切面视角
 
@@ -71,10 +71,9 @@ Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进�
 - `Native C++ comparison`
   - 覆盖 Styio 语言程序与手写原生 C++ 的黑盒性能对照
   - 当前第一组 workload 是 `stdin_echo`，对照 `@stdin >> #(line) => { line -> @stdout }` 与 `std::getline` / `std::cout` 循环
-  - 标准路线固定为 `full-cli / cached-jit / runtime-only`
-  - `cached-jit` 在 Styio 暴露可复用编译/JIT 产物执行入口前必须报告为 `unsupported`
-  - `runtime-only` 当前使用 Styio 选定 build 的导出 C runtime ABI，先隔离标准流 helper 成本
-  - 报告入口为 `native-cpp/run-native-cpp-bench.py`，并由 `tools/perf-route.sh` 的 `native_cpp_comparison` section 纳入总报告；输出 `results.json / benchmarks.csv / summary.md`，按每条 route 的最快实测实现归一化为 `1.00x`
+  - parity-v1 的标准路线固定为 `compile-and-run / native-build / native-run`
+  - 每条路线的开始/停止边界由 `workloads/parity-v1/contract.json` 冻结；构建产物不进入执行计时
+  - 报告入口由后续 parity runner 消费该 manifest；输出只允许稳定 ID、摘要统计和公开版本字段
 - `Error-path matrix`
   - 覆盖 `lex / parse / type / runtime` 失败路径
   - 当前覆盖 `lex.unterminated_block_comment`、`parse.empty_match_cases`、`type.final_then_flex_i64`、`runtime.read_missing_file`
@@ -84,16 +83,12 @@ Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进�
   - `m6/t02_running_max`
   - 3 条 state-inline 程序
 
-### 缺失
+### Catalog 状态
 
-- `规模 sweep` 还没系统化
-  - 当前 matrix 已覆盖模块切面，但还没有 `small / medium / large` 三档参数族
-- `模块微基准` 还不够细
-  - 第一批热点切面已经独立拆组，但还没有扩到 `bindings/topology/resources` 等更细颗粒度
-- `Error-path` 还不够细
-  - 当前只冻结了 4 条代表性失败路径，尚未扩到 `bindings/resources/stdin/stdout` 的更多错误子码
-- `基准产物比较` 还缺少自动 diff
-  - 现在已有 `results.json / benchmarks.csv / summary.md` 归档，但还没有 baseline-vs-head 的自动比较器
+- parity-v1 已冻结 `small / medium / large` 三档规模，完整约束见
+  [`PARITY-WORKLOADS.md`](PARITY-WORKLOADS.md)。
+- 该 catalog 只定义工作、正确性和阶段边界；计时统计、样本调度和回归判定由独立 runner 负责。
+- 目录数据只含相对逻辑 ID、源代码、生成器参数和 SHA-256；不保存机器身份、地址、凭据或测量结果。
 
 ## 建议的 benchmark 分类
 
@@ -197,25 +192,18 @@ Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进�
    - 已加入 `llvm_ir_us`
 2. 已完成第一批模块微基准
    - `CompilerMicroBenchmarksReport` 已覆盖 `lexer / parser / type / lower / llvm` 热点切面
-3. 已完成 full CLI benchmark 组
-   - `FullStackWorkloadMatrixReport` 冻结 end-to-end wall-clock
+3. 已完成 parity workload catalog
+   - `parity-v1/contract.json` 冻结三类等价 Styio/C++ 工作负载和三条支持路线
 4. 已完成第一批 error-path benchmark 组
    - `CompilerErrorPathBenchmarksReport` 冻结 `lex / parse / type / runtime` 代表性失败路径的 wall-clock、退出码和诊断码
 5. 已完成 benchmark 结果归档
    - `tools/perf-route.sh` 现在会生成 `metadata.tsv / sections.tsv / results.json / benchmarks.csv / summary.md`
 6. 已完成异步运行时横向基准
    - `async-runtime/run-async-bench.py` 生成 Styio / C++ stackless coroutine / Go goroutine / Rust Tokio 对比报告，并支持在 `build/async-runtime-toolchains` 下本地 bootstrap Go/Rust
-7. 已完成第一组原生 C++ 横向基准
-   - `native-cpp/run-native-cpp-bench.py` 生成 Styio / native C++ 的 stdin echo 黑盒对比报告
-   - 三条标准路线已嵌入 `tools/perf-route.sh`：`full-cli`、`cached-jit`、`runtime-only`
-   - `full-cli` Styio 侧包含 source read、parse、lowering、LLVM/JIT 与执行成本
-   - `cached-jit` 当前明确报告 `unsupported`，直到 Styio 提供真实缓存执行入口
-   - `runtime-only` 当前对比 native C++ 与 Styio runtime helper harness，隔离标准流 helper 成本
+7. 已完成 parity 阶段探针
+   - `ParityPhaseSweepReport` 从 manifest 读取 tier 和五个编译阶段，在一次进程内 probe 中发出五个边界；runner 以 Clang time-trace 对等来源并校验语言特定 source digest
 8. 下一批优先项
-   - 新增 `small / medium / large` 规模 sweep
-   - 扩展 native C++ 对照到 compute-heavy workload，补真实 cached-JIT 执行入口
-   - 扩 error-path benchmark 子类
-   - 增加 benchmark catalog / baseline diff 自动校验
+   - 由独立 runner 生成隐私安全的样本统计和基线比较
 
 ## 评估标准
 

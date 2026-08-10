@@ -1,0 +1,66 @@
+name: Core Benchmark Regression Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      styio_ref:
+        description: Styio branch or revision to benchmark
+        required: false
+        default: nightly
+        type: string
+      threshold:
+        description: Regression threshold percent
+        required: false
+        default: "5.0"
+        type: string
+
+jobs:
+  core-benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout benchmark repository
+        uses: actions/checkout@v4
+
+      - name: Checkout Styio compiler
+        uses: actions/checkout@v4
+        with:
+          repository: Unka-Malloc/styio-nightly
+          ref: ${{ inputs.styio_ref }}
+          path: styio-nightly
+
+      - name: Install LLVM 18
+        run: |
+          wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+          sudo add-apt-repository -y 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main'
+          sudo apt-get update
+          sudo apt-get install -y llvm-18 llvm-18-dev clang-18 libclang-18-dev
+
+      - name: Configure and build
+        run: |
+          cmake -S styio-nightly -B build/core \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=clang-18 \
+            -DCMAKE_CXX_COMPILER=clang++-18 \
+            -DSTYIO_BENCHMARK_ROOT="$GITHUB_WORKSPACE" \
+            -DSTYIO_REQUIRE_EXTERNAL_BENCHMARK=ON
+          cmake --build build/core --target styio_core_bench -j"$(nproc)"
+
+      - name: Run core benchmark
+        run: |
+          mkdir -p build/evidence
+          build/core/bin/styio_core_bench --output build/evidence/current.json
+
+      - name: Compare with curated baseline
+        if: ${{ hashFiles('reports/core/baseline.json') != '' }}
+        run: |
+          python3 tools/core-benchmark-compare.py \
+            reports/core/baseline.json build/evidence/current.json \
+            --threshold "${{ inputs.threshold }}"
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-benchmark-results
+          path: build/evidence/current.json

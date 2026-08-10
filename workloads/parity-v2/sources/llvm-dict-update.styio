@@ -1,0 +1,8 @@
+n <- @stdin : i64
+total = 0
+values: dict[i64, i64] := dict {}
+[0..n-1] >> #(index) => {
+  value = (index + 3) % 1000003
+  total = (total + value) % 1000000007
+}
+>_(total)

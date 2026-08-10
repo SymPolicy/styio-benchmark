@@ -1,0 +1,12 @@
+n <- @stdin : i64
+total = 0
+[0..n-1] >> #(row) => {
+  [0..n-1] >> #(col) => {
+    cell = 0
+    [0..n-1] >> #(inner) => {
+      cell += ((row + inner + 1) * (inner + col + 2)) % 97
+    }
+    total = (total + cell) % 1000000007
+  }
+}
+>_(total)

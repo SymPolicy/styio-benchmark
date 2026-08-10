@@ -1,20 +1,27 @@
 # Benchmark Reports
 
-`tools/perf-route.sh` 会把每次运行的本地产物写到这个目录下。
+`tools/perf-route.sh` and `tools/parity_gate.py` write privacy-safe evidence
+under this directory.
 
 约定：
 
-- 每次运行使用独立时间戳目录
-- 目录内容默认不纳入版本库
-- 关键产物包括：
-  - `metadata.tsv`
-  - `sections.tsv`
-  - `logs/*.log`
-  - `results.json`
-  - `benchmarks.csv`
-  - `summary.md`
+- Each run uses an explicitly selected output directory.
+- Generated reports are evidence, not parity decisions: `run` writes
+  `results.json` with `verification: not-evaluated` and a public-only
+  `summary.md`.
+- `verify` reads `results.json` and emits a stable reason-code decision.
+- Reports must not contain paths, host/user identity, environment values,
+  commands, endpoints, secrets, or unsanitized subprocess text.
 
-如果需要把某次基准结论固化到仓库，请把摘要写入：
+Promoted evidence should remain limited to `results.json` and the short
+summary; raw logs and machine-specific metadata are intentionally not stored.
 
-- `docs/history/<date>.md`
-- 或其他正式文档，而不是直接提交整批原始日志
+Curated `styio_core_bench` evidence lives under `reports/core/`; core comparison
+is provided by `tools/core-benchmark-compare.py`.
+
+The active parity-v2 catalog digest is
+`f7e99de17a1366325bcf08223f861f40d4aa95423ebef5ed2622267b0dbc951c`. Phase
+reports generated before the static C++ binding-chain correction are retired
+with reason `retired_invalid_structure` and must not enter a merge. Strict
+parity remains incomplete until corrected reference shards and all required
+gates pass.

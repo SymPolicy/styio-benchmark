@@ -1,0 +1,7 @@
+values <- @stdin: list[i64]
+
+accumulator = 0
+[0..values.length-1] >> #(index) => {
+  accumulator = (accumulator + values[index] * ((index % 17) + 1)) % 1000000007
+}
+>_(accumulator)

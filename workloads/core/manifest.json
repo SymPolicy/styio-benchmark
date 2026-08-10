@@ -1,0 +1,30 @@
+{
+  "schema": "styio.core_benchmark_manifest.v1",
+  "description": "Minimal external core performance corpus with stable executable coverage and reproducible timing records.",
+  "workloads": [
+    {
+      "name": "accumulate_sum_i32",
+      "case": "accumulate_sum",
+      "source": "workloads/core/sources/accumulate_sum.styio",
+      "stdin": "[1,2,3,4,5]\n",
+      "expected_stdout": "15\n",
+      "tags": ["core", "list", "numeric"]
+    },
+    {
+      "name": "binary_search_i32",
+      "case": "binary_search",
+      "source": "workloads/core/sources/binary_search.styio",
+      "stdin": "[7,1,4,7,9,10]\n",
+      "expected_stdout": "2\n",
+      "tags": ["core", "list", "control_flow"]
+    },
+    {
+      "name": "inner_product_i32",
+      "case": "inner_product",
+      "source": "workloads/core/sources/inner_product.styio",
+      "stdin": "[4,1,2,3,4,10,20,30,40]\n",
+      "expected_stdout": "300\n",
+      "tags": ["core", "list", "numeric"]
+    }
+  ]
+}

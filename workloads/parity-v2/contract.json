@@ -1,0 +1,4318 @@
+{
+  "canonical_encoding": "utf-8",
+  "catalog_id": "parity-v2",
+  "catalog_version": 2,
+  "compiler_phase_sweep": {
+    "cells": [
+      {
+        "algorithm_id": "compiler_phase.tokenize.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 1000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "family": "compiler-phase",
+        "focus_owner": "frontend-parser",
+        "id": "compiler-phase/tokenize/smoke",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "tokenize",
+        "reference_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "required": false,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "smoke",
+        "source_digest": {
+          "cpp": "5c34c4a8e61ae47e55101407b85090cd36d0140816b0fb3716516d11f2bd727c",
+          "styio": "2cd49ba548b5e08874aedbdacb2f77280c5099c0c22cbaa4208b30d74ad88e8d"
+        },
+        "work_unit": "tokens",
+        "work_units": 1000
+      },
+      {
+        "algorithm_id": "compiler_phase.tokenize.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 16000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "family": "compiler-phase",
+        "focus_owner": "frontend-parser",
+        "id": "compiler-phase/tokenize/development",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "tokenize",
+        "reference_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "required": false,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "development",
+        "source_digest": {
+          "cpp": "a1f60addd9de87cd048fb4fa354f527dc24dacddcc2c944773427edba702d12f",
+          "styio": "36890c432c0701c52515e3f41d27974bccaa3fecbaecf55dcdf3a3115752d3f9"
+        },
+        "work_unit": "tokens",
+        "work_units": 16000
+      },
+      {
+        "algorithm_id": "compiler_phase.tokenize.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 128000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "family": "compiler-phase",
+        "focus_owner": "frontend-parser",
+        "id": "compiler-phase/tokenize/reference",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "tokenize",
+        "reference_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "required": true,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "reference",
+        "source_digest": {
+          "cpp": "c2cbb05eda6e9c7d0ef0e01af83a4687b1acdcac87923f6310a046e475686689",
+          "styio": "ec036e0f58fe7e32a4332d885df51553c95a972538fdc09a2498f48048ff952e"
+        },
+        "work_unit": "tokens",
+        "work_units": 128000
+      },
+      {
+        "algorithm_id": "compiler_phase.parse.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 1000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "family": "compiler-phase",
+        "focus_owner": "frontend-parser",
+        "id": "compiler-phase/parse/smoke",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "parse",
+        "reference_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "required": false,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "smoke",
+        "source_digest": {
+          "cpp": "5c34c4a8e61ae47e55101407b85090cd36d0140816b0fb3716516d11f2bd727c",
+          "styio": "2cd49ba548b5e08874aedbdacb2f77280c5099c0c22cbaa4208b30d74ad88e8d"
+        },
+        "work_unit": "tokens",
+        "work_units": 1000
+      },
+      {
+        "algorithm_id": "compiler_phase.parse.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 16000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "family": "compiler-phase",
+        "focus_owner": "frontend-parser",
+        "id": "compiler-phase/parse/development",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "parse",
+        "reference_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "required": false,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "development",
+        "source_digest": {
+          "cpp": "a1f60addd9de87cd048fb4fa354f527dc24dacddcc2c944773427edba702d12f",
+          "styio": "36890c432c0701c52515e3f41d27974bccaa3fecbaecf55dcdf3a3115752d3f9"
+        },
+        "work_unit": "tokens",
+        "work_units": 16000
+      },
+      {
+        "algorithm_id": "compiler_phase.parse.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 128000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "family": "compiler-phase",
+        "focus_owner": "frontend-parser",
+        "id": "compiler-phase/parse/reference",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "parse",
+        "reference_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "required": true,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "reference",
+        "source_digest": {
+          "cpp": "c2cbb05eda6e9c7d0ef0e01af83a4687b1acdcac87923f6310a046e475686689",
+          "styio": "ec036e0f58fe7e32a4332d885df51553c95a972538fdc09a2498f48048ff952e"
+        },
+        "work_unit": "tokens",
+        "work_units": 128000
+      },
+      {
+        "algorithm_id": "compiler_phase.semantic_analysis.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 1000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "family": "compiler-phase",
+        "focus_owner": "frontend-sema",
+        "id": "compiler-phase/semantic-analysis/smoke",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "semantic-analysis",
+        "reference_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "required": false,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "smoke",
+        "source_digest": {
+          "cpp": "5c34c4a8e61ae47e55101407b85090cd36d0140816b0fb3716516d11f2bd727c",
+          "styio": "2cd49ba548b5e08874aedbdacb2f77280c5099c0c22cbaa4208b30d74ad88e8d"
+        },
+        "work_unit": "tokens",
+        "work_units": 1000
+      },
+      {
+        "algorithm_id": "compiler_phase.semantic_analysis.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 16000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "family": "compiler-phase",
+        "focus_owner": "frontend-sema",
+        "id": "compiler-phase/semantic-analysis/development",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "semantic-analysis",
+        "reference_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "required": false,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "development",
+        "source_digest": {
+          "cpp": "a1f60addd9de87cd048fb4fa354f527dc24dacddcc2c944773427edba702d12f",
+          "styio": "36890c432c0701c52515e3f41d27974bccaa3fecbaecf55dcdf3a3115752d3f9"
+        },
+        "work_unit": "tokens",
+        "work_units": 16000
+      },
+      {
+        "algorithm_id": "compiler_phase.semantic_analysis.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 128000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "family": "compiler-phase",
+        "focus_owner": "frontend-sema",
+        "id": "compiler-phase/semantic-analysis/reference",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "semantic-analysis",
+        "reference_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "required": true,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "reference",
+        "source_digest": {
+          "cpp": "c2cbb05eda6e9c7d0ef0e01af83a4687b1acdcac87923f6310a046e475686689",
+          "styio": "ec036e0f58fe7e32a4332d885df51553c95a972538fdc09a2498f48048ff952e"
+        },
+        "work_unit": "tokens",
+        "work_units": 128000
+      },
+      {
+        "algorithm_id": "compiler_phase.lowering.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 1000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "family": "compiler-phase",
+        "focus_owner": "ir-lowering",
+        "id": "compiler-phase/lowering/smoke",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "lowering",
+        "reference_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "required": false,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "smoke",
+        "source_digest": {
+          "cpp": "5c34c4a8e61ae47e55101407b85090cd36d0140816b0fb3716516d11f2bd727c",
+          "styio": "2cd49ba548b5e08874aedbdacb2f77280c5099c0c22cbaa4208b30d74ad88e8d"
+        },
+        "work_unit": "tokens",
+        "work_units": 1000
+      },
+      {
+        "algorithm_id": "compiler_phase.lowering.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 16000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "family": "compiler-phase",
+        "focus_owner": "ir-lowering",
+        "id": "compiler-phase/lowering/development",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "lowering",
+        "reference_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "required": false,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "development",
+        "source_digest": {
+          "cpp": "a1f60addd9de87cd048fb4fa354f527dc24dacddcc2c944773427edba702d12f",
+          "styio": "36890c432c0701c52515e3f41d27974bccaa3fecbaecf55dcdf3a3115752d3f9"
+        },
+        "work_unit": "tokens",
+        "work_units": 16000
+      },
+      {
+        "algorithm_id": "compiler_phase.lowering.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 128000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "family": "compiler-phase",
+        "focus_owner": "ir-lowering",
+        "id": "compiler-phase/lowering/reference",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "lowering",
+        "reference_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "required": true,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "reference",
+        "source_digest": {
+          "cpp": "c2cbb05eda6e9c7d0ef0e01af83a4687b1acdcac87923f6310a046e475686689",
+          "styio": "ec036e0f58fe7e32a4332d885df51553c95a972538fdc09a2498f48048ff952e"
+        },
+        "work_unit": "tokens",
+        "work_units": 128000
+      },
+      {
+        "algorithm_id": "compiler_phase.llvm_emission.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 1000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "family": "compiler-phase",
+        "focus_owner": "backend-runtime",
+        "id": "compiler-phase/llvm-emission/smoke",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "llvm-emission",
+        "reference_output_digest": "92d6029c372bb80c3284667e57e5d22a2920eae29224cc06b24a00f535d95cbe",
+        "required": false,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "smoke",
+        "source_digest": {
+          "cpp": "5c34c4a8e61ae47e55101407b85090cd36d0140816b0fb3716516d11f2bd727c",
+          "styio": "2cd49ba548b5e08874aedbdacb2f77280c5099c0c22cbaa4208b30d74ad88e8d"
+        },
+        "work_unit": "tokens",
+        "work_units": 1000
+      },
+      {
+        "algorithm_id": "compiler_phase.llvm_emission.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 16000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "family": "compiler-phase",
+        "focus_owner": "backend-runtime",
+        "id": "compiler-phase/llvm-emission/development",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "llvm-emission",
+        "reference_output_digest": "c39ac0dd49ac869dd8cef8e1174cc9c423e11d84343f587c238b30dfedcfa035",
+        "required": false,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "development",
+        "source_digest": {
+          "cpp": "a1f60addd9de87cd048fb4fa354f527dc24dacddcc2c944773427edba702d12f",
+          "styio": "36890c432c0701c52515e3f41d27974bccaa3fecbaecf55dcdf3a3115752d3f9"
+        },
+        "work_unit": "tokens",
+        "work_units": 16000
+      },
+      {
+        "algorithm_id": "compiler_phase.llvm_emission.v2",
+        "equivalence": {
+          "algorithm": "linear-binding-chain",
+          "input_contract": "generated-source",
+          "numeric_contract": "signed-i64",
+          "output_contract": "same-byte-digest",
+          "static_work_units": 128000,
+          "thread_count": 1
+        },
+        "expected_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "family": "compiler-phase",
+        "focus_owner": "backend-runtime",
+        "id": "compiler-phase/llvm-emission/reference",
+        "input_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "phase": "llvm-emission",
+        "reference_output_digest": "7fa67866bb466decabd5b2d3de4f339d38d8d1ed68b57bb0b5d0284a00136d98",
+        "required": true,
+        "route": "compile-and-run",
+        "route_boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "scale": "reference",
+        "source_digest": {
+          "cpp": "c2cbb05eda6e9c7d0ef0e01af83a4687b1acdcac87923f6310a046e475686689",
+          "styio": "ec036e0f58fe7e32a4332d885df51553c95a972538fdc09a2498f48048ff952e"
+        },
+        "work_unit": "tokens",
+        "work_units": 128000
+      }
+    ],
+    "cpp_source_generator": "generators.py:phase_cpp_source",
+    "output_generator": "generators.py:phase_reference_output",
+    "phases": [
+      {
+        "boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "id": "tokenize",
+        "route": "compile-and-run"
+      },
+      {
+        "boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "id": "parse",
+        "route": "compile-and-run"
+      },
+      {
+        "boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "id": "semantic-analysis",
+        "route": "compile-and-run"
+      },
+      {
+        "boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "id": "lowering",
+        "route": "compile-and-run"
+      },
+      {
+        "boundary": {
+          "start": "source-read",
+          "stop": "validated-stdout"
+        },
+        "id": "llvm-emission",
+        "route": "compile-and-run"
+      }
+    ],
+    "source_generator": "generators.py:phase_source",
+    "token_targets": {
+      "development": 16000,
+      "reference": 128000,
+      "smoke": 1000
+    },
+    "static_structure": {
+      "development": {
+        "work_units": 16000,
+        "styio_tokens": 8008,
+        "cpp_tokens": 14439,
+        "styio_declarations": 1601,
+        "cpp_declarations": 1601,
+        "styio_expression_nodes": 1601,
+        "cpp_expression_nodes": 1601,
+        "styio_binary_expression_nodes": 1600,
+        "cpp_binary_expression_nodes": 1600,
+        "styio_print_nodes": 1,
+        "cpp_print_nodes": 1,
+        "runtime_loop_nodes": 0
+      },
+      "reference": {
+        "work_units": 128000,
+        "styio_tokens": 64008,
+        "cpp_tokens": 115239,
+        "styio_declarations": 12801,
+        "cpp_declarations": 12801,
+        "styio_expression_nodes": 12801,
+        "cpp_expression_nodes": 12801,
+        "styio_binary_expression_nodes": 12800,
+        "cpp_binary_expression_nodes": 12800,
+        "styio_print_nodes": 1,
+        "cpp_print_nodes": 1,
+        "runtime_loop_nodes": 0
+      },
+      "smoke": {
+        "work_units": 1000,
+        "styio_tokens": 508,
+        "cpp_tokens": 939,
+        "styio_declarations": 101,
+        "cpp_declarations": 101,
+        "styio_expression_nodes": 101,
+        "cpp_expression_nodes": 101,
+        "styio_binary_expression_nodes": 100,
+        "cpp_binary_expression_nodes": 100,
+        "styio_print_nodes": 1,
+        "cpp_print_nodes": 1,
+        "runtime_loop_nodes": 0
+      }
+    },
+    "token_unit": "tokens"
+  },
+  "cpp_contract": {
+    "algorithm_policy": "strongest-legal-equivalent",
+    "compiler_family": "clang",
+    "defines": [
+      "NDEBUG"
+    ],
+    "language": "C++20",
+    "lto": false,
+    "optimization": "-O3",
+    "source_policy": "independently-authored",
+    "storage": "reserved-contiguous-where-applicable",
+    "stream_mode": "unsynchronized-fast",
+    "target_synchronized": true,
+    "threads": 1
+  },
+  "digest_algorithm": "sha256",
+  "focus_owners": {
+    "backend-runtime": [
+      "clbg-spectral-norm",
+      "clbg-n-body",
+      "llvm-collection-mutate",
+      "llvm-dict-update",
+      "llvm-dense-matmul",
+      "llvm-list-allocation",
+      "compiler-phase/llvm-emission"
+    ],
+    "frontend-parser": [
+      "compiler-phase/tokenize",
+      "compiler-phase/parse",
+      "llvm-scalar-chain",
+      "llvm-control-diamonds"
+    ],
+    "frontend-sema": [
+      "llvm-call-graph",
+      "llvm-recursive-scc"
+    ],
+    "ir-lowering": [
+      "compiler-phase/lowering"
+    ]
+  },
+  "generator": "generators.py",
+  "measurement_contract": {
+    "max_cv_pct": 5.0,
+    "memory": "isolated process-tree RSS replay, never observer in timed region",
+    "privacy": "reports contain no host identity, absolute paths, commands, endpoints, secrets, or raw subprocess text",
+    "required_case_ratio": 1.1,
+    "required_geomean_ratio": 1.05,
+    "required_reference_scales": [
+      "reference"
+    ],
+    "retained_repetitions": 11,
+    "sharding": "deterministic family shards; merge disjoint complete cell identities",
+    "statistics": "paired geometric mean; equal-weight cells; retain every sample",
+    "warmups": 3
+  },
+  "provenance": {
+    "clbg_source": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html",
+    "llvm_source": "https://llvm.org/docs/TestSuiteGuide.html",
+    "measurement_rules": "LLVM LNT structure and SPEC CPU run-rule methodology; no SPEC programs or inputs are included",
+    "standard": "CLBG and LLVM TestSuite-style independent workloads"
+  },
+  "routes": [
+    {
+      "boundary": {
+        "artifact_policy": "discard-after-sample",
+        "start": "source-read",
+        "stop": "validated-stdout",
+        "timed_region": "fresh-compile-build-and-execute"
+      },
+      "id": "compile-and-run",
+      "work_unit_policy": "compile_once_execute_once"
+    },
+    {
+      "boundary": {
+        "artifact_policy": "discard-after-sample",
+        "start": "source-read",
+        "stop": "native-artifact-ready",
+        "timed_region": "fresh-native-build"
+      },
+      "id": "native-build",
+      "work_unit_policy": "build_once_no_execute"
+    },
+    {
+      "boundary": {
+        "artifact_policy": "built-outside-timing",
+        "start": "prebuilt-artifact",
+        "stop": "validated-stdout",
+        "timed_region": "execution-only"
+      },
+      "id": "native-run",
+      "work_unit_policy": "execute_prebuilt_once"
+    }
+  ],
+  "scales": {
+    "development": {
+      "label": "development",
+      "official": false,
+      "purpose": "local tuning"
+    },
+    "reference": {
+      "label": "official reference",
+      "official": true,
+      "purpose": "standards claim"
+    },
+    "smoke": {
+      "label": "smoke",
+      "official": false,
+      "purpose": "bounded development check"
+    }
+  },
+  "schema": "styio.parity.catalog.v2",
+  "unsupported_cases": [
+    {
+      "aggregate": false,
+      "id": "bit-packed",
+      "reason": "current Styio capability is not equivalent without syntax or ABI changes",
+      "status": "capability-blocked"
+    },
+    {
+      "aggregate": false,
+      "id": "byte-buffer",
+      "reason": "current Styio capability is not equivalent without syntax or ABI changes",
+      "status": "capability-blocked"
+    },
+    {
+      "aggregate": false,
+      "id": "object-node",
+      "reason": "current Styio capability is not equivalent without syntax or ABI changes",
+      "status": "capability-blocked"
+    },
+    {
+      "aggregate": false,
+      "id": "regular-expression",
+      "reason": "current Styio capability is not equivalent without syntax or ABI changes",
+      "status": "capability-blocked"
+    },
+    {
+      "aggregate": false,
+      "id": "arbitrary-precision",
+      "reason": "current Styio capability is not equivalent without syntax or ABI changes",
+      "status": "capability-blocked"
+    }
+  ],
+  "workload_policy": {
+    "input_policy": "deterministic generated bytes; same bytes for both languages",
+    "output_policy": "validate exact canonical digest before timing",
+    "scale_policy": "smoke and development are never official claims",
+    "source_policy": "independent implementations; no copied third-party source",
+    "unsupported_policy": "capability-blocked cases stay outside aggregate"
+  },
+  "workloads": [
+    {
+      "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+      "cells": [
+        {
+          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "equivalence": {
+            "algorithm": "checksum-and-flip-count",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 5,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e8d9a59db7e946bc016b63384bd006c281a77e109ab49b8cc28ef28d265d9427",
+          "family": "clbg-fannkuch-redux",
+          "focus_owner": "frontend-parser",
+          "id": "clbg-fannkuch-redux/smoke/compile-and-run",
+          "input_digest": "f0b5c2c2211c8d67ed15e75e656c7862d086e9245420892a7de62cd9ec582a06",
+          "reference_output_digest": "e8d9a59db7e946bc016b63384bd006c281a77e109ab49b8cc28ef28d265d9427",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
+            "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
+          },
+          "work_unit": "permutations",
+          "work_units": 5
+        },
+        {
+          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "equivalence": {
+            "algorithm": "checksum-and-flip-count",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 5,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e8d9a59db7e946bc016b63384bd006c281a77e109ab49b8cc28ef28d265d9427",
+          "family": "clbg-fannkuch-redux",
+          "focus_owner": "frontend-parser",
+          "id": "clbg-fannkuch-redux/smoke/native-build",
+          "input_digest": "f0b5c2c2211c8d67ed15e75e656c7862d086e9245420892a7de62cd9ec582a06",
+          "reference_output_digest": "e8d9a59db7e946bc016b63384bd006c281a77e109ab49b8cc28ef28d265d9427",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
+            "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
+          },
+          "work_unit": "permutations",
+          "work_units": 5
+        },
+        {
+          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "equivalence": {
+            "algorithm": "checksum-and-flip-count",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 5,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e8d9a59db7e946bc016b63384bd006c281a77e109ab49b8cc28ef28d265d9427",
+          "family": "clbg-fannkuch-redux",
+          "focus_owner": "frontend-parser",
+          "id": "clbg-fannkuch-redux/smoke/native-run",
+          "input_digest": "f0b5c2c2211c8d67ed15e75e656c7862d086e9245420892a7de62cd9ec582a06",
+          "reference_output_digest": "e8d9a59db7e946bc016b63384bd006c281a77e109ab49b8cc28ef28d265d9427",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
+            "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
+          },
+          "work_unit": "permutations",
+          "work_units": 5
+        },
+        {
+          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "equivalence": {
+            "algorithm": "checksum-and-flip-count",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 9,
+            "thread_count": 1
+          },
+          "expected_output_digest": "eafaf685249b30138e950504a09a4c307331ea179d8063595be727fb665381db",
+          "family": "clbg-fannkuch-redux",
+          "focus_owner": "frontend-parser",
+          "id": "clbg-fannkuch-redux/development/compile-and-run",
+          "input_digest": "2e6d31a5983a91251bfae5aefa1c0a19d8ba3cf601d0e8a706b4cfa9661a6b8a",
+          "reference_output_digest": "eafaf685249b30138e950504a09a4c307331ea179d8063595be727fb665381db",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
+            "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
+          },
+          "work_unit": "permutations",
+          "work_units": 9
+        },
+        {
+          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "equivalence": {
+            "algorithm": "checksum-and-flip-count",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 9,
+            "thread_count": 1
+          },
+          "expected_output_digest": "eafaf685249b30138e950504a09a4c307331ea179d8063595be727fb665381db",
+          "family": "clbg-fannkuch-redux",
+          "focus_owner": "frontend-parser",
+          "id": "clbg-fannkuch-redux/development/native-build",
+          "input_digest": "2e6d31a5983a91251bfae5aefa1c0a19d8ba3cf601d0e8a706b4cfa9661a6b8a",
+          "reference_output_digest": "eafaf685249b30138e950504a09a4c307331ea179d8063595be727fb665381db",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
+            "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
+          },
+          "work_unit": "permutations",
+          "work_units": 9
+        },
+        {
+          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "equivalence": {
+            "algorithm": "checksum-and-flip-count",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 9,
+            "thread_count": 1
+          },
+          "expected_output_digest": "eafaf685249b30138e950504a09a4c307331ea179d8063595be727fb665381db",
+          "family": "clbg-fannkuch-redux",
+          "focus_owner": "frontend-parser",
+          "id": "clbg-fannkuch-redux/development/native-run",
+          "input_digest": "2e6d31a5983a91251bfae5aefa1c0a19d8ba3cf601d0e8a706b4cfa9661a6b8a",
+          "reference_output_digest": "eafaf685249b30138e950504a09a4c307331ea179d8063595be727fb665381db",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
+            "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
+          },
+          "work_unit": "permutations",
+          "work_units": 9
+        },
+        {
+          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "equivalence": {
+            "algorithm": "checksum-and-flip-count",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 12,
+            "thread_count": 1
+          },
+          "expected_output_digest": "eba337689b5a0e23f32a6844f117779eebf948a2c56ee3465aee9b33ae519eaf",
+          "family": "clbg-fannkuch-redux",
+          "focus_owner": "frontend-parser",
+          "id": "clbg-fannkuch-redux/reference/compile-and-run",
+          "input_digest": "a1fb50e6c86fae1679ef3351296fd6713411a08cf8dd1790a4fd05fae8688164",
+          "reference_output_digest": "eba337689b5a0e23f32a6844f117779eebf948a2c56ee3465aee9b33ae519eaf",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
+            "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
+          },
+          "work_unit": "permutations",
+          "work_units": 12
+        },
+        {
+          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "equivalence": {
+            "algorithm": "checksum-and-flip-count",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 12,
+            "thread_count": 1
+          },
+          "expected_output_digest": "eba337689b5a0e23f32a6844f117779eebf948a2c56ee3465aee9b33ae519eaf",
+          "family": "clbg-fannkuch-redux",
+          "focus_owner": "frontend-parser",
+          "id": "clbg-fannkuch-redux/reference/native-build",
+          "input_digest": "a1fb50e6c86fae1679ef3351296fd6713411a08cf8dd1790a4fd05fae8688164",
+          "reference_output_digest": "eba337689b5a0e23f32a6844f117779eebf948a2c56ee3465aee9b33ae519eaf",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
+            "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
+          },
+          "work_unit": "permutations",
+          "work_units": 12
+        },
+        {
+          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "equivalence": {
+            "algorithm": "checksum-and-flip-count",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 12,
+            "thread_count": 1
+          },
+          "expected_output_digest": "eba337689b5a0e23f32a6844f117779eebf948a2c56ee3465aee9b33ae519eaf",
+          "family": "clbg-fannkuch-redux",
+          "focus_owner": "frontend-parser",
+          "id": "clbg-fannkuch-redux/reference/native-run",
+          "input_digest": "a1fb50e6c86fae1679ef3351296fd6713411a08cf8dd1790a4fd05fae8688164",
+          "reference_output_digest": "eba337689b5a0e23f32a6844f117779eebf948a2c56ee3465aee9b33ae519eaf",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
+            "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
+          },
+          "work_unit": "permutations",
+          "work_units": 12
+        }
+      ],
+      "id": "clbg-fannkuch-redux",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "2e6d31a5983a91251bfae5aefa1c0a19d8ba3cf601d0e8a706b4cfa9661a6b8a",
+          "reference": "a1fb50e6c86fae1679ef3351296fd6713411a08cf8dd1790a4fd05fae8688164",
+          "smoke": "f0b5c2c2211c8d67ed15e75e656c7862d086e9245420892a7de62cd9ec582a06"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "eafaf685249b30138e950504a09a4c307331ea179d8063595be727fb665381db",
+          "reference": "eba337689b5a0e23f32a6844f117779eebf948a2c56ee3465aee9b33ae519eaf",
+          "smoke": "e8d9a59db7e946bc016b63384bd006c281a77e109ab49b8cc28ef28d265d9427"
+        }
+      },
+      "provenance": {
+        "authority": "CLBG",
+        "case": "fannkuch-redux",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 9
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 12
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 5
+        }
+      },
+      "source": {
+        "cpp": "sources/clbg-fannkuch-redux.cpp",
+        "source_digest": {
+          "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
+          "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
+        },
+        "styio": "sources/clbg-fannkuch-redux.styio"
+      },
+      "standard_family": "CLBG",
+      "work_unit": "permutations"
+    },
+    {
+      "algorithm_id": "spectral-norm.fixed-point.v2",
+      "cells": [
+        {
+          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "equivalence": {
+            "algorithm": "fixed-point-norm",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "65a5e164308cabeb0194d265d673f679757606a6c602d11b8b57b84737a2a115",
+          "family": "clbg-spectral-norm",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-spectral-norm/smoke/compile-and-run",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "65a5e164308cabeb0194d265d673f679757606a6c602d11b8b57b84737a2a115",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
+            "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
+          },
+          "work_unit": "matrix_rows",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "equivalence": {
+            "algorithm": "fixed-point-norm",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "65a5e164308cabeb0194d265d673f679757606a6c602d11b8b57b84737a2a115",
+          "family": "clbg-spectral-norm",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-spectral-norm/smoke/native-build",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "65a5e164308cabeb0194d265d673f679757606a6c602d11b8b57b84737a2a115",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
+            "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
+          },
+          "work_unit": "matrix_rows",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "equivalence": {
+            "algorithm": "fixed-point-norm",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "65a5e164308cabeb0194d265d673f679757606a6c602d11b8b57b84737a2a115",
+          "family": "clbg-spectral-norm",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-spectral-norm/smoke/native-run",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "65a5e164308cabeb0194d265d673f679757606a6c602d11b8b57b84737a2a115",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
+            "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
+          },
+          "work_unit": "matrix_rows",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "equivalence": {
+            "algorithm": "fixed-point-norm",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 128,
+            "thread_count": 1
+          },
+          "expected_output_digest": "163b77d7eefb515872e27773a8b92e242045009e80921686122e5e250bb2c81f",
+          "family": "clbg-spectral-norm",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-spectral-norm/development/compile-and-run",
+          "input_digest": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference_output_digest": "163b77d7eefb515872e27773a8b92e242045009e80921686122e5e250bb2c81f",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
+            "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
+          },
+          "work_unit": "matrix_rows",
+          "work_units": 128
+        },
+        {
+          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "equivalence": {
+            "algorithm": "fixed-point-norm",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 128,
+            "thread_count": 1
+          },
+          "expected_output_digest": "163b77d7eefb515872e27773a8b92e242045009e80921686122e5e250bb2c81f",
+          "family": "clbg-spectral-norm",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-spectral-norm/development/native-build",
+          "input_digest": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference_output_digest": "163b77d7eefb515872e27773a8b92e242045009e80921686122e5e250bb2c81f",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
+            "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
+          },
+          "work_unit": "matrix_rows",
+          "work_units": 128
+        },
+        {
+          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "equivalence": {
+            "algorithm": "fixed-point-norm",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 128,
+            "thread_count": 1
+          },
+          "expected_output_digest": "163b77d7eefb515872e27773a8b92e242045009e80921686122e5e250bb2c81f",
+          "family": "clbg-spectral-norm",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-spectral-norm/development/native-run",
+          "input_digest": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference_output_digest": "163b77d7eefb515872e27773a8b92e242045009e80921686122e5e250bb2c81f",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
+            "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
+          },
+          "work_unit": "matrix_rows",
+          "work_units": 128
+        },
+        {
+          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "equivalence": {
+            "algorithm": "fixed-point-norm",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 5500,
+            "thread_count": 1
+          },
+          "expected_output_digest": "99e01dad3276c2fd42cf661d43eca2d2d71d75814667b01e1f62173b8eaf79b8",
+          "family": "clbg-spectral-norm",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-spectral-norm/reference/compile-and-run",
+          "input_digest": "8666d4223a3433f36c506421682f6869e77a3865a6b0fcf98ca685344f578bd8",
+          "reference_output_digest": "99e01dad3276c2fd42cf661d43eca2d2d71d75814667b01e1f62173b8eaf79b8",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
+            "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
+          },
+          "work_unit": "matrix_rows",
+          "work_units": 5500
+        },
+        {
+          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "equivalence": {
+            "algorithm": "fixed-point-norm",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 5500,
+            "thread_count": 1
+          },
+          "expected_output_digest": "99e01dad3276c2fd42cf661d43eca2d2d71d75814667b01e1f62173b8eaf79b8",
+          "family": "clbg-spectral-norm",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-spectral-norm/reference/native-build",
+          "input_digest": "8666d4223a3433f36c506421682f6869e77a3865a6b0fcf98ca685344f578bd8",
+          "reference_output_digest": "99e01dad3276c2fd42cf661d43eca2d2d71d75814667b01e1f62173b8eaf79b8",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
+            "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
+          },
+          "work_unit": "matrix_rows",
+          "work_units": 5500
+        },
+        {
+          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "equivalence": {
+            "algorithm": "fixed-point-norm",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 5500,
+            "thread_count": 1
+          },
+          "expected_output_digest": "99e01dad3276c2fd42cf661d43eca2d2d71d75814667b01e1f62173b8eaf79b8",
+          "family": "clbg-spectral-norm",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-spectral-norm/reference/native-run",
+          "input_digest": "8666d4223a3433f36c506421682f6869e77a3865a6b0fcf98ca685344f578bd8",
+          "reference_output_digest": "99e01dad3276c2fd42cf661d43eca2d2d71d75814667b01e1f62173b8eaf79b8",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
+            "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
+          },
+          "work_unit": "matrix_rows",
+          "work_units": 5500
+        }
+      ],
+      "id": "clbg-spectral-norm",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference": "8666d4223a3433f36c506421682f6869e77a3865a6b0fcf98ca685344f578bd8",
+          "smoke": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "163b77d7eefb515872e27773a8b92e242045009e80921686122e5e250bb2c81f",
+          "reference": "99e01dad3276c2fd42cf661d43eca2d2d71d75814667b01e1f62173b8eaf79b8",
+          "smoke": "65a5e164308cabeb0194d265d673f679757606a6c602d11b8b57b84737a2a115"
+        }
+      },
+      "provenance": {
+        "authority": "CLBG",
+        "case": "spectral-norm",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 128
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 5500
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 32
+        }
+      },
+      "source": {
+        "cpp": "sources/clbg-spectral-norm.cpp",
+        "source_digest": {
+          "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
+          "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
+        },
+        "styio": "sources/clbg-spectral-norm.styio"
+      },
+      "standard_family": "CLBG",
+      "work_unit": "matrix_rows"
+    },
+    {
+      "algorithm_id": "n-body.soa-step.v2",
+      "cells": [
+        {
+          "algorithm_id": "n-body.soa-step.v2",
+          "equivalence": {
+            "algorithm": "energy-and-momentum",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 100,
+            "thread_count": 1
+          },
+          "expected_output_digest": "04bbcab49fd768d62ba4f5837835c9242f2fd1544da85ad40106e305e12088fe",
+          "family": "clbg-n-body",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-n-body/smoke/compile-and-run",
+          "input_digest": "eea8254c7500ba3de996aa8ad6af399183f04e17d4a8102fde539dbc93a90012",
+          "reference_output_digest": "04bbcab49fd768d62ba4f5837835c9242f2fd1544da85ad40106e305e12088fe",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
+            "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
+          },
+          "work_unit": "integration_steps",
+          "work_units": 100
+        },
+        {
+          "algorithm_id": "n-body.soa-step.v2",
+          "equivalence": {
+            "algorithm": "energy-and-momentum",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 100,
+            "thread_count": 1
+          },
+          "expected_output_digest": "04bbcab49fd768d62ba4f5837835c9242f2fd1544da85ad40106e305e12088fe",
+          "family": "clbg-n-body",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-n-body/smoke/native-build",
+          "input_digest": "eea8254c7500ba3de996aa8ad6af399183f04e17d4a8102fde539dbc93a90012",
+          "reference_output_digest": "04bbcab49fd768d62ba4f5837835c9242f2fd1544da85ad40106e305e12088fe",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
+            "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
+          },
+          "work_unit": "integration_steps",
+          "work_units": 100
+        },
+        {
+          "algorithm_id": "n-body.soa-step.v2",
+          "equivalence": {
+            "algorithm": "energy-and-momentum",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 100,
+            "thread_count": 1
+          },
+          "expected_output_digest": "04bbcab49fd768d62ba4f5837835c9242f2fd1544da85ad40106e305e12088fe",
+          "family": "clbg-n-body",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-n-body/smoke/native-run",
+          "input_digest": "eea8254c7500ba3de996aa8ad6af399183f04e17d4a8102fde539dbc93a90012",
+          "reference_output_digest": "04bbcab49fd768d62ba4f5837835c9242f2fd1544da85ad40106e305e12088fe",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
+            "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
+          },
+          "work_unit": "integration_steps",
+          "work_units": 100
+        },
+        {
+          "algorithm_id": "n-body.soa-step.v2",
+          "equivalence": {
+            "algorithm": "energy-and-momentum",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "0c360edfb55c237c51a3fbb5405ad3966c3937ccaaa2c634403a0a32561f7fbc",
+          "family": "clbg-n-body",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-n-body/development/compile-and-run",
+          "input_digest": "83c02ac2d48c863dab2ccf6870455aadfc2cec073b8db269b517c879d76aa6d9",
+          "reference_output_digest": "0c360edfb55c237c51a3fbb5405ad3966c3937ccaaa2c634403a0a32561f7fbc",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
+            "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
+          },
+          "work_unit": "integration_steps",
+          "work_units": 1000
+        },
+        {
+          "algorithm_id": "n-body.soa-step.v2",
+          "equivalence": {
+            "algorithm": "energy-and-momentum",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "0c360edfb55c237c51a3fbb5405ad3966c3937ccaaa2c634403a0a32561f7fbc",
+          "family": "clbg-n-body",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-n-body/development/native-build",
+          "input_digest": "83c02ac2d48c863dab2ccf6870455aadfc2cec073b8db269b517c879d76aa6d9",
+          "reference_output_digest": "0c360edfb55c237c51a3fbb5405ad3966c3937ccaaa2c634403a0a32561f7fbc",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
+            "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
+          },
+          "work_unit": "integration_steps",
+          "work_units": 1000
+        },
+        {
+          "algorithm_id": "n-body.soa-step.v2",
+          "equivalence": {
+            "algorithm": "energy-and-momentum",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "0c360edfb55c237c51a3fbb5405ad3966c3937ccaaa2c634403a0a32561f7fbc",
+          "family": "clbg-n-body",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-n-body/development/native-run",
+          "input_digest": "83c02ac2d48c863dab2ccf6870455aadfc2cec073b8db269b517c879d76aa6d9",
+          "reference_output_digest": "0c360edfb55c237c51a3fbb5405ad3966c3937ccaaa2c634403a0a32561f7fbc",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
+            "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
+          },
+          "work_unit": "integration_steps",
+          "work_units": 1000
+        },
+        {
+          "algorithm_id": "n-body.soa-step.v2",
+          "equivalence": {
+            "algorithm": "energy-and-momentum",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 50000000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "83b45d9e3b90a41a9b4e8c9bb90f2b74dd597d7618d283c8f626ff3647150839",
+          "family": "clbg-n-body",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-n-body/reference/compile-and-run",
+          "input_digest": "6cb7cb92efabf18562614cd07c294ed7d36370c0c2bb60d61237943f2e730adb",
+          "reference_output_digest": "83b45d9e3b90a41a9b4e8c9bb90f2b74dd597d7618d283c8f626ff3647150839",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
+            "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
+          },
+          "work_unit": "integration_steps",
+          "work_units": 50000000
+        },
+        {
+          "algorithm_id": "n-body.soa-step.v2",
+          "equivalence": {
+            "algorithm": "energy-and-momentum",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 50000000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "83b45d9e3b90a41a9b4e8c9bb90f2b74dd597d7618d283c8f626ff3647150839",
+          "family": "clbg-n-body",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-n-body/reference/native-build",
+          "input_digest": "6cb7cb92efabf18562614cd07c294ed7d36370c0c2bb60d61237943f2e730adb",
+          "reference_output_digest": "83b45d9e3b90a41a9b4e8c9bb90f2b74dd597d7618d283c8f626ff3647150839",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
+            "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
+          },
+          "work_unit": "integration_steps",
+          "work_units": 50000000
+        },
+        {
+          "algorithm_id": "n-body.soa-step.v2",
+          "equivalence": {
+            "algorithm": "energy-and-momentum",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 50000000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "83b45d9e3b90a41a9b4e8c9bb90f2b74dd597d7618d283c8f626ff3647150839",
+          "family": "clbg-n-body",
+          "focus_owner": "backend-runtime",
+          "id": "clbg-n-body/reference/native-run",
+          "input_digest": "6cb7cb92efabf18562614cd07c294ed7d36370c0c2bb60d61237943f2e730adb",
+          "reference_output_digest": "83b45d9e3b90a41a9b4e8c9bb90f2b74dd597d7618d283c8f626ff3647150839",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
+            "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
+          },
+          "work_unit": "integration_steps",
+          "work_units": 50000000
+        }
+      ],
+      "id": "clbg-n-body",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "83c02ac2d48c863dab2ccf6870455aadfc2cec073b8db269b517c879d76aa6d9",
+          "reference": "6cb7cb92efabf18562614cd07c294ed7d36370c0c2bb60d61237943f2e730adb",
+          "smoke": "eea8254c7500ba3de996aa8ad6af399183f04e17d4a8102fde539dbc93a90012"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "0c360edfb55c237c51a3fbb5405ad3966c3937ccaaa2c634403a0a32561f7fbc",
+          "reference": "83b45d9e3b90a41a9b4e8c9bb90f2b74dd597d7618d283c8f626ff3647150839",
+          "smoke": "04bbcab49fd768d62ba4f5837835c9242f2fd1544da85ad40106e305e12088fe"
+        }
+      },
+      "provenance": {
+        "authority": "CLBG",
+        "case": "n-body",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 1000
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 50000000
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 100
+        }
+      },
+      "source": {
+        "cpp": "sources/clbg-n-body.cpp",
+        "source_digest": {
+          "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
+          "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
+        },
+        "styio": "sources/clbg-n-body.styio"
+      },
+      "standard_family": "CLBG",
+      "work_unit": "integration_steps"
+    },
+    {
+      "algorithm_id": "scalar-chain.linear.v2",
+      "cells": [
+        {
+          "algorithm_id": "scalar-chain.linear.v2",
+          "equivalence": {
+            "algorithm": "scalar-chain",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+          "family": "llvm-scalar-chain",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-scalar-chain/smoke/compile-and-run",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+            "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+          },
+          "work_unit": "chain_iterations",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "scalar-chain.linear.v2",
+          "equivalence": {
+            "algorithm": "scalar-chain",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+          "family": "llvm-scalar-chain",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-scalar-chain/smoke/native-build",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+            "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+          },
+          "work_unit": "chain_iterations",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "scalar-chain.linear.v2",
+          "equivalence": {
+            "algorithm": "scalar-chain",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+          "family": "llvm-scalar-chain",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-scalar-chain/smoke/native-run",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+            "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+          },
+          "work_unit": "chain_iterations",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "scalar-chain.linear.v2",
+          "equivalence": {
+            "algorithm": "scalar-chain",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 256,
+            "thread_count": 1
+          },
+          "expected_output_digest": "ddb8f5fbeb7f2556aae87046861e141ec8cb545f0db6b00118dac80b28d030db",
+          "family": "llvm-scalar-chain",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-scalar-chain/development/compile-and-run",
+          "input_digest": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference_output_digest": "ddb8f5fbeb7f2556aae87046861e141ec8cb545f0db6b00118dac80b28d030db",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+            "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+          },
+          "work_unit": "chain_iterations",
+          "work_units": 256
+        },
+        {
+          "algorithm_id": "scalar-chain.linear.v2",
+          "equivalence": {
+            "algorithm": "scalar-chain",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 256,
+            "thread_count": 1
+          },
+          "expected_output_digest": "ddb8f5fbeb7f2556aae87046861e141ec8cb545f0db6b00118dac80b28d030db",
+          "family": "llvm-scalar-chain",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-scalar-chain/development/native-build",
+          "input_digest": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference_output_digest": "ddb8f5fbeb7f2556aae87046861e141ec8cb545f0db6b00118dac80b28d030db",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+            "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+          },
+          "work_unit": "chain_iterations",
+          "work_units": 256
+        },
+        {
+          "algorithm_id": "scalar-chain.linear.v2",
+          "equivalence": {
+            "algorithm": "scalar-chain",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 256,
+            "thread_count": 1
+          },
+          "expected_output_digest": "ddb8f5fbeb7f2556aae87046861e141ec8cb545f0db6b00118dac80b28d030db",
+          "family": "llvm-scalar-chain",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-scalar-chain/development/native-run",
+          "input_digest": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference_output_digest": "ddb8f5fbeb7f2556aae87046861e141ec8cb545f0db6b00118dac80b28d030db",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+            "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+          },
+          "work_unit": "chain_iterations",
+          "work_units": 256
+        },
+        {
+          "algorithm_id": "scalar-chain.linear.v2",
+          "equivalence": {
+            "algorithm": "scalar-chain",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 4096,
+            "thread_count": 1
+          },
+          "expected_output_digest": "502e55280bbcbc0423e8c8bb348efafbf8c356cd1288806bc4e9acc5c8cd5903",
+          "family": "llvm-scalar-chain",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-scalar-chain/reference/compile-and-run",
+          "input_digest": "25ac87b7309b7946b51c32e824793ff48b56b735efa16875cf33e4ba67523d91",
+          "reference_output_digest": "502e55280bbcbc0423e8c8bb348efafbf8c356cd1288806bc4e9acc5c8cd5903",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+            "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+          },
+          "work_unit": "chain_iterations",
+          "work_units": 4096
+        },
+        {
+          "algorithm_id": "scalar-chain.linear.v2",
+          "equivalence": {
+            "algorithm": "scalar-chain",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 4096,
+            "thread_count": 1
+          },
+          "expected_output_digest": "502e55280bbcbc0423e8c8bb348efafbf8c356cd1288806bc4e9acc5c8cd5903",
+          "family": "llvm-scalar-chain",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-scalar-chain/reference/native-build",
+          "input_digest": "25ac87b7309b7946b51c32e824793ff48b56b735efa16875cf33e4ba67523d91",
+          "reference_output_digest": "502e55280bbcbc0423e8c8bb348efafbf8c356cd1288806bc4e9acc5c8cd5903",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+            "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+          },
+          "work_unit": "chain_iterations",
+          "work_units": 4096
+        },
+        {
+          "algorithm_id": "scalar-chain.linear.v2",
+          "equivalence": {
+            "algorithm": "scalar-chain",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 4096,
+            "thread_count": 1
+          },
+          "expected_output_digest": "502e55280bbcbc0423e8c8bb348efafbf8c356cd1288806bc4e9acc5c8cd5903",
+          "family": "llvm-scalar-chain",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-scalar-chain/reference/native-run",
+          "input_digest": "25ac87b7309b7946b51c32e824793ff48b56b735efa16875cf33e4ba67523d91",
+          "reference_output_digest": "502e55280bbcbc0423e8c8bb348efafbf8c356cd1288806bc4e9acc5c8cd5903",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+            "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+          },
+          "work_unit": "chain_iterations",
+          "work_units": 4096
+        }
+      ],
+      "id": "llvm-scalar-chain",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference": "25ac87b7309b7946b51c32e824793ff48b56b735efa16875cf33e4ba67523d91",
+          "smoke": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "ddb8f5fbeb7f2556aae87046861e141ec8cb545f0db6b00118dac80b28d030db",
+          "reference": "502e55280bbcbc0423e8c8bb348efafbf8c356cd1288806bc4e9acc5c8cd5903",
+          "smoke": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79"
+        }
+      },
+      "provenance": {
+        "authority": "LLVM-TestSuite",
+        "case": "scalar-chain",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 256
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 4096
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 32
+        }
+      },
+      "source": {
+        "cpp": "sources/llvm-scalar-chain.cpp",
+        "source_digest": {
+          "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+          "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+        },
+        "styio": "sources/llvm-scalar-chain.styio"
+      },
+      "standard_family": "LLVM-TestSuite",
+      "work_unit": "chain_iterations"
+    },
+    {
+      "algorithm_id": "call-graph.fanout.v2",
+      "cells": [
+        {
+          "algorithm_id": "call-graph.fanout.v2",
+          "equivalence": {
+            "algorithm": "call-graph-fanout",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 16,
+            "thread_count": 1
+          },
+          "expected_output_digest": "ac59feff9aa16085a06eb604ddeec37f75c9763aa5516148641d7c556f2c9302",
+          "family": "llvm-call-graph",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-call-graph/smoke/compile-and-run",
+          "input_digest": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017",
+          "reference_output_digest": "ac59feff9aa16085a06eb604ddeec37f75c9763aa5516148641d7c556f2c9302",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
+            "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
+          },
+          "work_unit": "call_iterations",
+          "work_units": 16
+        },
+        {
+          "algorithm_id": "call-graph.fanout.v2",
+          "equivalence": {
+            "algorithm": "call-graph-fanout",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 16,
+            "thread_count": 1
+          },
+          "expected_output_digest": "ac59feff9aa16085a06eb604ddeec37f75c9763aa5516148641d7c556f2c9302",
+          "family": "llvm-call-graph",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-call-graph/smoke/native-build",
+          "input_digest": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017",
+          "reference_output_digest": "ac59feff9aa16085a06eb604ddeec37f75c9763aa5516148641d7c556f2c9302",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
+            "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
+          },
+          "work_unit": "call_iterations",
+          "work_units": 16
+        },
+        {
+          "algorithm_id": "call-graph.fanout.v2",
+          "equivalence": {
+            "algorithm": "call-graph-fanout",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 16,
+            "thread_count": 1
+          },
+          "expected_output_digest": "ac59feff9aa16085a06eb604ddeec37f75c9763aa5516148641d7c556f2c9302",
+          "family": "llvm-call-graph",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-call-graph/smoke/native-run",
+          "input_digest": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017",
+          "reference_output_digest": "ac59feff9aa16085a06eb604ddeec37f75c9763aa5516148641d7c556f2c9302",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
+            "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
+          },
+          "work_unit": "call_iterations",
+          "work_units": 16
+        },
+        {
+          "algorithm_id": "call-graph.fanout.v2",
+          "equivalence": {
+            "algorithm": "call-graph-fanout",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 128,
+            "thread_count": 1
+          },
+          "expected_output_digest": "3adf989ff0f44c3be8d8cd71acca104ece2f88354899ebfbc2c8d80274b67f67",
+          "family": "llvm-call-graph",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-call-graph/development/compile-and-run",
+          "input_digest": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference_output_digest": "3adf989ff0f44c3be8d8cd71acca104ece2f88354899ebfbc2c8d80274b67f67",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
+            "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
+          },
+          "work_unit": "call_iterations",
+          "work_units": 128
+        },
+        {
+          "algorithm_id": "call-graph.fanout.v2",
+          "equivalence": {
+            "algorithm": "call-graph-fanout",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 128,
+            "thread_count": 1
+          },
+          "expected_output_digest": "3adf989ff0f44c3be8d8cd71acca104ece2f88354899ebfbc2c8d80274b67f67",
+          "family": "llvm-call-graph",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-call-graph/development/native-build",
+          "input_digest": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference_output_digest": "3adf989ff0f44c3be8d8cd71acca104ece2f88354899ebfbc2c8d80274b67f67",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
+            "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
+          },
+          "work_unit": "call_iterations",
+          "work_units": 128
+        },
+        {
+          "algorithm_id": "call-graph.fanout.v2",
+          "equivalence": {
+            "algorithm": "call-graph-fanout",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 128,
+            "thread_count": 1
+          },
+          "expected_output_digest": "3adf989ff0f44c3be8d8cd71acca104ece2f88354899ebfbc2c8d80274b67f67",
+          "family": "llvm-call-graph",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-call-graph/development/native-run",
+          "input_digest": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference_output_digest": "3adf989ff0f44c3be8d8cd71acca104ece2f88354899ebfbc2c8d80274b67f67",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
+            "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
+          },
+          "work_unit": "call_iterations",
+          "work_units": 128
+        },
+        {
+          "algorithm_id": "call-graph.fanout.v2",
+          "equivalence": {
+            "algorithm": "call-graph-fanout",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 2048,
+            "thread_count": 1
+          },
+          "expected_output_digest": "b37bde2e8096bda6c2792abd8b777c66f3391e56e2439f90829a04fe0f97eee6",
+          "family": "llvm-call-graph",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-call-graph/reference/compile-and-run",
+          "input_digest": "3ed26e56eb4e40cb4d731e5e170955b7d03de05ec5486ef291e950aa119ba250",
+          "reference_output_digest": "b37bde2e8096bda6c2792abd8b777c66f3391e56e2439f90829a04fe0f97eee6",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
+            "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
+          },
+          "work_unit": "call_iterations",
+          "work_units": 2048
+        },
+        {
+          "algorithm_id": "call-graph.fanout.v2",
+          "equivalence": {
+            "algorithm": "call-graph-fanout",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 2048,
+            "thread_count": 1
+          },
+          "expected_output_digest": "b37bde2e8096bda6c2792abd8b777c66f3391e56e2439f90829a04fe0f97eee6",
+          "family": "llvm-call-graph",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-call-graph/reference/native-build",
+          "input_digest": "3ed26e56eb4e40cb4d731e5e170955b7d03de05ec5486ef291e950aa119ba250",
+          "reference_output_digest": "b37bde2e8096bda6c2792abd8b777c66f3391e56e2439f90829a04fe0f97eee6",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
+            "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
+          },
+          "work_unit": "call_iterations",
+          "work_units": 2048
+        },
+        {
+          "algorithm_id": "call-graph.fanout.v2",
+          "equivalence": {
+            "algorithm": "call-graph-fanout",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 2048,
+            "thread_count": 1
+          },
+          "expected_output_digest": "b37bde2e8096bda6c2792abd8b777c66f3391e56e2439f90829a04fe0f97eee6",
+          "family": "llvm-call-graph",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-call-graph/reference/native-run",
+          "input_digest": "3ed26e56eb4e40cb4d731e5e170955b7d03de05ec5486ef291e950aa119ba250",
+          "reference_output_digest": "b37bde2e8096bda6c2792abd8b777c66f3391e56e2439f90829a04fe0f97eee6",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
+            "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
+          },
+          "work_unit": "call_iterations",
+          "work_units": 2048
+        }
+      ],
+      "id": "llvm-call-graph",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference": "3ed26e56eb4e40cb4d731e5e170955b7d03de05ec5486ef291e950aa119ba250",
+          "smoke": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "3adf989ff0f44c3be8d8cd71acca104ece2f88354899ebfbc2c8d80274b67f67",
+          "reference": "b37bde2e8096bda6c2792abd8b777c66f3391e56e2439f90829a04fe0f97eee6",
+          "smoke": "ac59feff9aa16085a06eb604ddeec37f75c9763aa5516148641d7c556f2c9302"
+        }
+      },
+      "provenance": {
+        "authority": "LLVM-TestSuite",
+        "case": "call-graph",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 128
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 2048
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 16
+        }
+      },
+      "source": {
+        "cpp": "sources/llvm-call-graph.cpp",
+        "source_digest": {
+          "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
+          "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
+        },
+        "styio": "sources/llvm-call-graph.styio"
+      },
+      "standard_family": "LLVM-TestSuite",
+      "work_unit": "call_iterations"
+    },
+    {
+      "algorithm_id": "control-diamonds.branch.v2",
+      "cells": [
+        {
+          "algorithm_id": "control-diamonds.branch.v2",
+          "equivalence": {
+            "algorithm": "control-diamond",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "79a9dc8a2ea14420d6f42c21fb670ea1d07d1ede46d77b81f9514b1961724627",
+          "family": "llvm-control-diamonds",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-control-diamonds/smoke/compile-and-run",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "79a9dc8a2ea14420d6f42c21fb670ea1d07d1ede46d77b81f9514b1961724627",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "4753b266dc8e13af441fa63058355979ab7afd82a4c1654db4fbc232248f500d",
+            "styio": "f69bcbf951227914cee48407597f3edcc2ea81c185672a0320a0e747eac54b1a"
+          },
+          "work_unit": "branch_iterations",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "control-diamonds.branch.v2",
+          "equivalence": {
+            "algorithm": "control-diamond",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "79a9dc8a2ea14420d6f42c21fb670ea1d07d1ede46d77b81f9514b1961724627",
+          "family": "llvm-control-diamonds",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-control-diamonds/smoke/native-build",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "79a9dc8a2ea14420d6f42c21fb670ea1d07d1ede46d77b81f9514b1961724627",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "4753b266dc8e13af441fa63058355979ab7afd82a4c1654db4fbc232248f500d",
+            "styio": "f69bcbf951227914cee48407597f3edcc2ea81c185672a0320a0e747eac54b1a"
+          },
+          "work_unit": "branch_iterations",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "control-diamonds.branch.v2",
+          "equivalence": {
+            "algorithm": "control-diamond",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "79a9dc8a2ea14420d6f42c21fb670ea1d07d1ede46d77b81f9514b1961724627",
+          "family": "llvm-control-diamonds",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-control-diamonds/smoke/native-run",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "79a9dc8a2ea14420d6f42c21fb670ea1d07d1ede46d77b81f9514b1961724627",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "4753b266dc8e13af441fa63058355979ab7afd82a4c1654db4fbc232248f500d",
+            "styio": "f69bcbf951227914cee48407597f3edcc2ea81c185672a0320a0e747eac54b1a"
+          },
+          "work_unit": "branch_iterations",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "control-diamonds.branch.v2",
+          "equivalence": {
+            "algorithm": "control-diamond",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 256,
+            "thread_count": 1
+          },
+          "expected_output_digest": "4d6d1a6216a7059286e8b74b0a262f0bf1ec5ae4c20b44bb8100555aaec75f3e",
+          "family": "llvm-control-diamonds",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-control-diamonds/development/compile-and-run",
+          "input_digest": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference_output_digest": "4d6d1a6216a7059286e8b74b0a262f0bf1ec5ae4c20b44bb8100555aaec75f3e",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "4753b266dc8e13af441fa63058355979ab7afd82a4c1654db4fbc232248f500d",
+            "styio": "f69bcbf951227914cee48407597f3edcc2ea81c185672a0320a0e747eac54b1a"
+          },
+          "work_unit": "branch_iterations",
+          "work_units": 256
+        },
+        {
+          "algorithm_id": "control-diamonds.branch.v2",
+          "equivalence": {
+            "algorithm": "control-diamond",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 256,
+            "thread_count": 1
+          },
+          "expected_output_digest": "4d6d1a6216a7059286e8b74b0a262f0bf1ec5ae4c20b44bb8100555aaec75f3e",
+          "family": "llvm-control-diamonds",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-control-diamonds/development/native-build",
+          "input_digest": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference_output_digest": "4d6d1a6216a7059286e8b74b0a262f0bf1ec5ae4c20b44bb8100555aaec75f3e",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "4753b266dc8e13af441fa63058355979ab7afd82a4c1654db4fbc232248f500d",
+            "styio": "f69bcbf951227914cee48407597f3edcc2ea81c185672a0320a0e747eac54b1a"
+          },
+          "work_unit": "branch_iterations",
+          "work_units": 256
+        },
+        {
+          "algorithm_id": "control-diamonds.branch.v2",
+          "equivalence": {
+            "algorithm": "control-diamond",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 256,
+            "thread_count": 1
+          },
+          "expected_output_digest": "4d6d1a6216a7059286e8b74b0a262f0bf1ec5ae4c20b44bb8100555aaec75f3e",
+          "family": "llvm-control-diamonds",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-control-diamonds/development/native-run",
+          "input_digest": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference_output_digest": "4d6d1a6216a7059286e8b74b0a262f0bf1ec5ae4c20b44bb8100555aaec75f3e",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "4753b266dc8e13af441fa63058355979ab7afd82a4c1654db4fbc232248f500d",
+            "styio": "f69bcbf951227914cee48407597f3edcc2ea81c185672a0320a0e747eac54b1a"
+          },
+          "work_unit": "branch_iterations",
+          "work_units": 256
+        },
+        {
+          "algorithm_id": "control-diamonds.branch.v2",
+          "equivalence": {
+            "algorithm": "control-diamond",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 4096,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e5c131bb5e0485bb1ecd28e91f5fc2b40c559fac9c84afe45601a9bef8a1c8f2",
+          "family": "llvm-control-diamonds",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-control-diamonds/reference/compile-and-run",
+          "input_digest": "25ac87b7309b7946b51c32e824793ff48b56b735efa16875cf33e4ba67523d91",
+          "reference_output_digest": "e5c131bb5e0485bb1ecd28e91f5fc2b40c559fac9c84afe45601a9bef8a1c8f2",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "4753b266dc8e13af441fa63058355979ab7afd82a4c1654db4fbc232248f500d",
+            "styio": "f69bcbf951227914cee48407597f3edcc2ea81c185672a0320a0e747eac54b1a"
+          },
+          "work_unit": "branch_iterations",
+          "work_units": 4096
+        },
+        {
+          "algorithm_id": "control-diamonds.branch.v2",
+          "equivalence": {
+            "algorithm": "control-diamond",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 4096,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e5c131bb5e0485bb1ecd28e91f5fc2b40c559fac9c84afe45601a9bef8a1c8f2",
+          "family": "llvm-control-diamonds",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-control-diamonds/reference/native-build",
+          "input_digest": "25ac87b7309b7946b51c32e824793ff48b56b735efa16875cf33e4ba67523d91",
+          "reference_output_digest": "e5c131bb5e0485bb1ecd28e91f5fc2b40c559fac9c84afe45601a9bef8a1c8f2",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "4753b266dc8e13af441fa63058355979ab7afd82a4c1654db4fbc232248f500d",
+            "styio": "f69bcbf951227914cee48407597f3edcc2ea81c185672a0320a0e747eac54b1a"
+          },
+          "work_unit": "branch_iterations",
+          "work_units": 4096
+        },
+        {
+          "algorithm_id": "control-diamonds.branch.v2",
+          "equivalence": {
+            "algorithm": "control-diamond",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 4096,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e5c131bb5e0485bb1ecd28e91f5fc2b40c559fac9c84afe45601a9bef8a1c8f2",
+          "family": "llvm-control-diamonds",
+          "focus_owner": "frontend-parser",
+          "id": "llvm-control-diamonds/reference/native-run",
+          "input_digest": "25ac87b7309b7946b51c32e824793ff48b56b735efa16875cf33e4ba67523d91",
+          "reference_output_digest": "e5c131bb5e0485bb1ecd28e91f5fc2b40c559fac9c84afe45601a9bef8a1c8f2",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "4753b266dc8e13af441fa63058355979ab7afd82a4c1654db4fbc232248f500d",
+            "styio": "f69bcbf951227914cee48407597f3edcc2ea81c185672a0320a0e747eac54b1a"
+          },
+          "work_unit": "branch_iterations",
+          "work_units": 4096
+        }
+      ],
+      "id": "llvm-control-diamonds",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference": "25ac87b7309b7946b51c32e824793ff48b56b735efa16875cf33e4ba67523d91",
+          "smoke": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "4d6d1a6216a7059286e8b74b0a262f0bf1ec5ae4c20b44bb8100555aaec75f3e",
+          "reference": "e5c131bb5e0485bb1ecd28e91f5fc2b40c559fac9c84afe45601a9bef8a1c8f2",
+          "smoke": "79a9dc8a2ea14420d6f42c21fb670ea1d07d1ede46d77b81f9514b1961724627"
+        }
+      },
+      "provenance": {
+        "authority": "LLVM-TestSuite",
+        "case": "control-diamonds",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 256
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 4096
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 32
+        }
+      },
+      "source": {
+        "cpp": "sources/llvm-control-diamonds.cpp",
+        "source_digest": {
+          "cpp": "4753b266dc8e13af441fa63058355979ab7afd82a4c1654db4fbc232248f500d",
+          "styio": "f69bcbf951227914cee48407597f3edcc2ea81c185672a0320a0e747eac54b1a"
+        },
+        "styio": "sources/llvm-control-diamonds.styio"
+      },
+      "standard_family": "LLVM-TestSuite",
+      "work_unit": "branch_iterations"
+    },
+    {
+      "algorithm_id": "recursive-scc.mutual.v2",
+      "cells": [
+        {
+          "algorithm_id": "recursive-scc.mutual.v2",
+          "equivalence": {
+            "algorithm": "mutual-recursive-scc",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 16,
+            "thread_count": 1
+          },
+          "expected_output_digest": "f3c899b5a19ba8203d8d823e7270b7d2f4b3a732fd89b4e4d6d417dab94e5eef",
+          "family": "llvm-recursive-scc",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-recursive-scc/smoke/compile-and-run",
+          "input_digest": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017",
+          "reference_output_digest": "f3c899b5a19ba8203d8d823e7270b7d2f4b3a732fd89b4e4d6d417dab94e5eef",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
+            "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
+          },
+          "work_unit": "scc_iterations",
+          "work_units": 16
+        },
+        {
+          "algorithm_id": "recursive-scc.mutual.v2",
+          "equivalence": {
+            "algorithm": "mutual-recursive-scc",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 16,
+            "thread_count": 1
+          },
+          "expected_output_digest": "f3c899b5a19ba8203d8d823e7270b7d2f4b3a732fd89b4e4d6d417dab94e5eef",
+          "family": "llvm-recursive-scc",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-recursive-scc/smoke/native-build",
+          "input_digest": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017",
+          "reference_output_digest": "f3c899b5a19ba8203d8d823e7270b7d2f4b3a732fd89b4e4d6d417dab94e5eef",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
+            "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
+          },
+          "work_unit": "scc_iterations",
+          "work_units": 16
+        },
+        {
+          "algorithm_id": "recursive-scc.mutual.v2",
+          "equivalence": {
+            "algorithm": "mutual-recursive-scc",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 16,
+            "thread_count": 1
+          },
+          "expected_output_digest": "f3c899b5a19ba8203d8d823e7270b7d2f4b3a732fd89b4e4d6d417dab94e5eef",
+          "family": "llvm-recursive-scc",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-recursive-scc/smoke/native-run",
+          "input_digest": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017",
+          "reference_output_digest": "f3c899b5a19ba8203d8d823e7270b7d2f4b3a732fd89b4e4d6d417dab94e5eef",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
+            "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
+          },
+          "work_unit": "scc_iterations",
+          "work_units": 16
+        },
+        {
+          "algorithm_id": "recursive-scc.mutual.v2",
+          "equivalence": {
+            "algorithm": "mutual-recursive-scc",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 128,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e51b64dd28693a2407b0150b7b5f47548e3d178169a0851634270f39df284b6d",
+          "family": "llvm-recursive-scc",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-recursive-scc/development/compile-and-run",
+          "input_digest": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference_output_digest": "e51b64dd28693a2407b0150b7b5f47548e3d178169a0851634270f39df284b6d",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
+            "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
+          },
+          "work_unit": "scc_iterations",
+          "work_units": 128
+        },
+        {
+          "algorithm_id": "recursive-scc.mutual.v2",
+          "equivalence": {
+            "algorithm": "mutual-recursive-scc",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 128,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e51b64dd28693a2407b0150b7b5f47548e3d178169a0851634270f39df284b6d",
+          "family": "llvm-recursive-scc",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-recursive-scc/development/native-build",
+          "input_digest": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference_output_digest": "e51b64dd28693a2407b0150b7b5f47548e3d178169a0851634270f39df284b6d",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
+            "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
+          },
+          "work_unit": "scc_iterations",
+          "work_units": 128
+        },
+        {
+          "algorithm_id": "recursive-scc.mutual.v2",
+          "equivalence": {
+            "algorithm": "mutual-recursive-scc",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 128,
+            "thread_count": 1
+          },
+          "expected_output_digest": "e51b64dd28693a2407b0150b7b5f47548e3d178169a0851634270f39df284b6d",
+          "family": "llvm-recursive-scc",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-recursive-scc/development/native-run",
+          "input_digest": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference_output_digest": "e51b64dd28693a2407b0150b7b5f47548e3d178169a0851634270f39df284b6d",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
+            "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
+          },
+          "work_unit": "scc_iterations",
+          "work_units": 128
+        },
+        {
+          "algorithm_id": "recursive-scc.mutual.v2",
+          "equivalence": {
+            "algorithm": "mutual-recursive-scc",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1024,
+            "thread_count": 1
+          },
+          "expected_output_digest": "b92e9abfb82862100e29ec343af952efc85ba5b06a6bcee7db1c615d15951447",
+          "family": "llvm-recursive-scc",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-recursive-scc/reference/compile-and-run",
+          "input_digest": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference_output_digest": "b92e9abfb82862100e29ec343af952efc85ba5b06a6bcee7db1c615d15951447",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
+            "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
+          },
+          "work_unit": "scc_iterations",
+          "work_units": 1024
+        },
+        {
+          "algorithm_id": "recursive-scc.mutual.v2",
+          "equivalence": {
+            "algorithm": "mutual-recursive-scc",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1024,
+            "thread_count": 1
+          },
+          "expected_output_digest": "b92e9abfb82862100e29ec343af952efc85ba5b06a6bcee7db1c615d15951447",
+          "family": "llvm-recursive-scc",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-recursive-scc/reference/native-build",
+          "input_digest": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference_output_digest": "b92e9abfb82862100e29ec343af952efc85ba5b06a6bcee7db1c615d15951447",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
+            "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
+          },
+          "work_unit": "scc_iterations",
+          "work_units": 1024
+        },
+        {
+          "algorithm_id": "recursive-scc.mutual.v2",
+          "equivalence": {
+            "algorithm": "mutual-recursive-scc",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1024,
+            "thread_count": 1
+          },
+          "expected_output_digest": "b92e9abfb82862100e29ec343af952efc85ba5b06a6bcee7db1c615d15951447",
+          "family": "llvm-recursive-scc",
+          "focus_owner": "frontend-sema",
+          "id": "llvm-recursive-scc/reference/native-run",
+          "input_digest": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference_output_digest": "b92e9abfb82862100e29ec343af952efc85ba5b06a6bcee7db1c615d15951447",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
+            "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
+          },
+          "work_unit": "scc_iterations",
+          "work_units": 1024
+        }
+      ],
+      "id": "llvm-recursive-scc",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "56292515f7d3a7110811eb8de26b3f75f82a0766aa5a1fd66ebcfcb84fe6d5ff",
+          "reference": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "smoke": "e6c21e8d260fe71882debdb339d2402a2ca7648529bc2303f48649bce0380017"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "e51b64dd28693a2407b0150b7b5f47548e3d178169a0851634270f39df284b6d",
+          "reference": "b92e9abfb82862100e29ec343af952efc85ba5b06a6bcee7db1c615d15951447",
+          "smoke": "f3c899b5a19ba8203d8d823e7270b7d2f4b3a732fd89b4e4d6d417dab94e5eef"
+        }
+      },
+      "provenance": {
+        "authority": "LLVM-TestSuite",
+        "case": "recursive-scc",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 128
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 1024
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 16
+        }
+      },
+      "source": {
+        "cpp": "sources/llvm-recursive-scc.cpp",
+        "source_digest": {
+          "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
+          "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
+        },
+        "styio": "sources/llvm-recursive-scc.styio"
+      },
+      "standard_family": "LLVM-TestSuite",
+      "work_unit": "scc_iterations"
+    },
+    {
+      "algorithm_id": "collection-mutate.contiguous.v2",
+      "cells": [
+        {
+          "algorithm_id": "collection-mutate.contiguous.v2",
+          "equivalence": {
+            "algorithm": "collection-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 64,
+            "thread_count": 1
+          },
+          "expected_output_digest": "29cdef7d90e126e660fc0f0b2ccb52a96ba47ae4792def98e4e6d3b51310c269",
+          "family": "llvm-collection-mutate",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-collection-mutate/smoke/compile-and-run",
+          "input_digest": "913f5d1da2feaf4deeccc9e55cbb350a20f12b3f507e87be85dbb77fdd3cb9bc",
+          "reference_output_digest": "29cdef7d90e126e660fc0f0b2ccb52a96ba47ae4792def98e4e6d3b51310c269",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
+            "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
+          },
+          "work_unit": "element_updates",
+          "work_units": 64
+        },
+        {
+          "algorithm_id": "collection-mutate.contiguous.v2",
+          "equivalence": {
+            "algorithm": "collection-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 64,
+            "thread_count": 1
+          },
+          "expected_output_digest": "29cdef7d90e126e660fc0f0b2ccb52a96ba47ae4792def98e4e6d3b51310c269",
+          "family": "llvm-collection-mutate",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-collection-mutate/smoke/native-build",
+          "input_digest": "913f5d1da2feaf4deeccc9e55cbb350a20f12b3f507e87be85dbb77fdd3cb9bc",
+          "reference_output_digest": "29cdef7d90e126e660fc0f0b2ccb52a96ba47ae4792def98e4e6d3b51310c269",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
+            "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
+          },
+          "work_unit": "element_updates",
+          "work_units": 64
+        },
+        {
+          "algorithm_id": "collection-mutate.contiguous.v2",
+          "equivalence": {
+            "algorithm": "collection-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 64,
+            "thread_count": 1
+          },
+          "expected_output_digest": "29cdef7d90e126e660fc0f0b2ccb52a96ba47ae4792def98e4e6d3b51310c269",
+          "family": "llvm-collection-mutate",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-collection-mutate/smoke/native-run",
+          "input_digest": "913f5d1da2feaf4deeccc9e55cbb350a20f12b3f507e87be85dbb77fdd3cb9bc",
+          "reference_output_digest": "29cdef7d90e126e660fc0f0b2ccb52a96ba47ae4792def98e4e6d3b51310c269",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
+            "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
+          },
+          "work_unit": "element_updates",
+          "work_units": 64
+        },
+        {
+          "algorithm_id": "collection-mutate.contiguous.v2",
+          "equivalence": {
+            "algorithm": "collection-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1024,
+            "thread_count": 1
+          },
+          "expected_output_digest": "bc06ab919de86b009ffbcc5ce613642038f5e02ed98b5d41addb76514c363056",
+          "family": "llvm-collection-mutate",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-collection-mutate/development/compile-and-run",
+          "input_digest": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference_output_digest": "bc06ab919de86b009ffbcc5ce613642038f5e02ed98b5d41addb76514c363056",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
+            "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
+          },
+          "work_unit": "element_updates",
+          "work_units": 1024
+        },
+        {
+          "algorithm_id": "collection-mutate.contiguous.v2",
+          "equivalence": {
+            "algorithm": "collection-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1024,
+            "thread_count": 1
+          },
+          "expected_output_digest": "bc06ab919de86b009ffbcc5ce613642038f5e02ed98b5d41addb76514c363056",
+          "family": "llvm-collection-mutate",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-collection-mutate/development/native-build",
+          "input_digest": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference_output_digest": "bc06ab919de86b009ffbcc5ce613642038f5e02ed98b5d41addb76514c363056",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
+            "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
+          },
+          "work_unit": "element_updates",
+          "work_units": 1024
+        },
+        {
+          "algorithm_id": "collection-mutate.contiguous.v2",
+          "equivalence": {
+            "algorithm": "collection-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1024,
+            "thread_count": 1
+          },
+          "expected_output_digest": "bc06ab919de86b009ffbcc5ce613642038f5e02ed98b5d41addb76514c363056",
+          "family": "llvm-collection-mutate",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-collection-mutate/development/native-run",
+          "input_digest": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference_output_digest": "bc06ab919de86b009ffbcc5ce613642038f5e02ed98b5d41addb76514c363056",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
+            "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
+          },
+          "work_unit": "element_updates",
+          "work_units": 1024
+        },
+        {
+          "algorithm_id": "collection-mutate.contiguous.v2",
+          "equivalence": {
+            "algorithm": "collection-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1000000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "c9ae179a2dc3c26cd04ebe8d517e9d9a0a2f1bd375d1902133418336b145cc1a",
+          "family": "llvm-collection-mutate",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-collection-mutate/reference/compile-and-run",
+          "input_digest": "085c348f64a3b543e973a33749e90ba20847b99016a87e5228847597d61ce582",
+          "reference_output_digest": "c9ae179a2dc3c26cd04ebe8d517e9d9a0a2f1bd375d1902133418336b145cc1a",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
+            "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
+          },
+          "work_unit": "element_updates",
+          "work_units": 1000000
+        },
+        {
+          "algorithm_id": "collection-mutate.contiguous.v2",
+          "equivalence": {
+            "algorithm": "collection-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1000000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "c9ae179a2dc3c26cd04ebe8d517e9d9a0a2f1bd375d1902133418336b145cc1a",
+          "family": "llvm-collection-mutate",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-collection-mutate/reference/native-build",
+          "input_digest": "085c348f64a3b543e973a33749e90ba20847b99016a87e5228847597d61ce582",
+          "reference_output_digest": "c9ae179a2dc3c26cd04ebe8d517e9d9a0a2f1bd375d1902133418336b145cc1a",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
+            "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
+          },
+          "work_unit": "element_updates",
+          "work_units": 1000000
+        },
+        {
+          "algorithm_id": "collection-mutate.contiguous.v2",
+          "equivalence": {
+            "algorithm": "collection-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1000000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "c9ae179a2dc3c26cd04ebe8d517e9d9a0a2f1bd375d1902133418336b145cc1a",
+          "family": "llvm-collection-mutate",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-collection-mutate/reference/native-run",
+          "input_digest": "085c348f64a3b543e973a33749e90ba20847b99016a87e5228847597d61ce582",
+          "reference_output_digest": "c9ae179a2dc3c26cd04ebe8d517e9d9a0a2f1bd375d1902133418336b145cc1a",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
+            "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
+          },
+          "work_unit": "element_updates",
+          "work_units": 1000000
+        }
+      ],
+      "id": "llvm-collection-mutate",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference": "085c348f64a3b543e973a33749e90ba20847b99016a87e5228847597d61ce582",
+          "smoke": "913f5d1da2feaf4deeccc9e55cbb350a20f12b3f507e87be85dbb77fdd3cb9bc"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "bc06ab919de86b009ffbcc5ce613642038f5e02ed98b5d41addb76514c363056",
+          "reference": "c9ae179a2dc3c26cd04ebe8d517e9d9a0a2f1bd375d1902133418336b145cc1a",
+          "smoke": "29cdef7d90e126e660fc0f0b2ccb52a96ba47ae4792def98e4e6d3b51310c269"
+        }
+      },
+      "provenance": {
+        "authority": "LLVM-TestSuite",
+        "case": "collection-mutate",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 1024
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 1000000
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 64
+        }
+      },
+      "source": {
+        "cpp": "sources/llvm-collection-mutate.cpp",
+        "source_digest": {
+          "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
+          "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
+        },
+        "styio": "sources/llvm-collection-mutate.styio"
+      },
+      "standard_family": "LLVM-TestSuite",
+      "work_unit": "element_updates"
+    },
+    {
+      "algorithm_id": "dict-update.reserved.v2",
+      "cells": [
+        {
+          "algorithm_id": "dict-update.reserved.v2",
+          "equivalence": {
+            "algorithm": "dictionary-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "fbbbdc7231dc30612154b1808efeaf4b6f7e8756db6c205e6ff94579e0ba8aa0",
+          "family": "llvm-dict-update",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dict-update/smoke/compile-and-run",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "fbbbdc7231dc30612154b1808efeaf4b6f7e8756db6c205e6ff94579e0ba8aa0",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
+            "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
+          },
+          "work_unit": "map_updates",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "dict-update.reserved.v2",
+          "equivalence": {
+            "algorithm": "dictionary-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "fbbbdc7231dc30612154b1808efeaf4b6f7e8756db6c205e6ff94579e0ba8aa0",
+          "family": "llvm-dict-update",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dict-update/smoke/native-build",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "fbbbdc7231dc30612154b1808efeaf4b6f7e8756db6c205e6ff94579e0ba8aa0",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
+            "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
+          },
+          "work_unit": "map_updates",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "dict-update.reserved.v2",
+          "equivalence": {
+            "algorithm": "dictionary-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "fbbbdc7231dc30612154b1808efeaf4b6f7e8756db6c205e6ff94579e0ba8aa0",
+          "family": "llvm-dict-update",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dict-update/smoke/native-run",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "fbbbdc7231dc30612154b1808efeaf4b6f7e8756db6c205e6ff94579e0ba8aa0",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
+            "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
+          },
+          "work_unit": "map_updates",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "dict-update.reserved.v2",
+          "equivalence": {
+            "algorithm": "dictionary-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 512,
+            "thread_count": 1
+          },
+          "expected_output_digest": "40e06cb845fea23a965581e6f3d287bedcca70b72d74e56e64c670fe98570517",
+          "family": "llvm-dict-update",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dict-update/development/compile-and-run",
+          "input_digest": "240269e94afb4bbc4c643851e366bf4f0d870ff0753d250b854f748cf3516285",
+          "reference_output_digest": "40e06cb845fea23a965581e6f3d287bedcca70b72d74e56e64c670fe98570517",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
+            "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
+          },
+          "work_unit": "map_updates",
+          "work_units": 512
+        },
+        {
+          "algorithm_id": "dict-update.reserved.v2",
+          "equivalence": {
+            "algorithm": "dictionary-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 512,
+            "thread_count": 1
+          },
+          "expected_output_digest": "40e06cb845fea23a965581e6f3d287bedcca70b72d74e56e64c670fe98570517",
+          "family": "llvm-dict-update",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dict-update/development/native-build",
+          "input_digest": "240269e94afb4bbc4c643851e366bf4f0d870ff0753d250b854f748cf3516285",
+          "reference_output_digest": "40e06cb845fea23a965581e6f3d287bedcca70b72d74e56e64c670fe98570517",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
+            "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
+          },
+          "work_unit": "map_updates",
+          "work_units": 512
+        },
+        {
+          "algorithm_id": "dict-update.reserved.v2",
+          "equivalence": {
+            "algorithm": "dictionary-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 512,
+            "thread_count": 1
+          },
+          "expected_output_digest": "40e06cb845fea23a965581e6f3d287bedcca70b72d74e56e64c670fe98570517",
+          "family": "llvm-dict-update",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dict-update/development/native-run",
+          "input_digest": "240269e94afb4bbc4c643851e366bf4f0d870ff0753d250b854f748cf3516285",
+          "reference_output_digest": "40e06cb845fea23a965581e6f3d287bedcca70b72d74e56e64c670fe98570517",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
+            "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
+          },
+          "work_unit": "map_updates",
+          "work_units": 512
+        },
+        {
+          "algorithm_id": "dict-update.reserved.v2",
+          "equivalence": {
+            "algorithm": "dictionary-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1000000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "b53335f03b2c05938e252ea294b9403ea3eeb3a019a0a921d177eda4096ac9e9",
+          "family": "llvm-dict-update",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dict-update/reference/compile-and-run",
+          "input_digest": "085c348f64a3b543e973a33749e90ba20847b99016a87e5228847597d61ce582",
+          "reference_output_digest": "b53335f03b2c05938e252ea294b9403ea3eeb3a019a0a921d177eda4096ac9e9",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
+            "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
+          },
+          "work_unit": "map_updates",
+          "work_units": 1000000
+        },
+        {
+          "algorithm_id": "dict-update.reserved.v2",
+          "equivalence": {
+            "algorithm": "dictionary-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1000000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "b53335f03b2c05938e252ea294b9403ea3eeb3a019a0a921d177eda4096ac9e9",
+          "family": "llvm-dict-update",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dict-update/reference/native-build",
+          "input_digest": "085c348f64a3b543e973a33749e90ba20847b99016a87e5228847597d61ce582",
+          "reference_output_digest": "b53335f03b2c05938e252ea294b9403ea3eeb3a019a0a921d177eda4096ac9e9",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
+            "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
+          },
+          "work_unit": "map_updates",
+          "work_units": 1000000
+        },
+        {
+          "algorithm_id": "dict-update.reserved.v2",
+          "equivalence": {
+            "algorithm": "dictionary-update",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1000000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "b53335f03b2c05938e252ea294b9403ea3eeb3a019a0a921d177eda4096ac9e9",
+          "family": "llvm-dict-update",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dict-update/reference/native-run",
+          "input_digest": "085c348f64a3b543e973a33749e90ba20847b99016a87e5228847597d61ce582",
+          "reference_output_digest": "b53335f03b2c05938e252ea294b9403ea3eeb3a019a0a921d177eda4096ac9e9",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
+            "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
+          },
+          "work_unit": "map_updates",
+          "work_units": 1000000
+        }
+      ],
+      "id": "llvm-dict-update",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "240269e94afb4bbc4c643851e366bf4f0d870ff0753d250b854f748cf3516285",
+          "reference": "085c348f64a3b543e973a33749e90ba20847b99016a87e5228847597d61ce582",
+          "smoke": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "40e06cb845fea23a965581e6f3d287bedcca70b72d74e56e64c670fe98570517",
+          "reference": "b53335f03b2c05938e252ea294b9403ea3eeb3a019a0a921d177eda4096ac9e9",
+          "smoke": "fbbbdc7231dc30612154b1808efeaf4b6f7e8756db6c205e6ff94579e0ba8aa0"
+        }
+      },
+      "provenance": {
+        "authority": "LLVM-TestSuite",
+        "case": "dict-update",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 512
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 1000000
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 32
+        }
+      },
+      "source": {
+        "cpp": "sources/llvm-dict-update.cpp",
+        "source_digest": {
+          "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
+          "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
+        },
+        "styio": "sources/llvm-dict-update.styio"
+      },
+      "standard_family": "LLVM-TestSuite",
+      "work_unit": "map_updates"
+    },
+    {
+      "algorithm_id": "dense-matmul.row-major.v2",
+      "cells": [
+        {
+          "algorithm_id": "dense-matmul.row-major.v2",
+          "equivalence": {
+            "algorithm": "dense-matrix-multiply",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 8,
+            "thread_count": 1
+          },
+          "expected_output_digest": "0f3155e769591a56143a48160dfe72975a9d9dad61c8a754783084b7bc01e354",
+          "family": "llvm-dense-matmul",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dense-matmul/smoke/compile-and-run",
+          "input_digest": "aa67a169b0bba217aa0aa88a65346920c84c42447c36ba5f7ea65f422c1fe5d8",
+          "reference_output_digest": "0f3155e769591a56143a48160dfe72975a9d9dad61c8a754783084b7bc01e354",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
+            "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
+          },
+          "work_unit": "matrix_order_cubed",
+          "work_units": 8
+        },
+        {
+          "algorithm_id": "dense-matmul.row-major.v2",
+          "equivalence": {
+            "algorithm": "dense-matrix-multiply",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 8,
+            "thread_count": 1
+          },
+          "expected_output_digest": "0f3155e769591a56143a48160dfe72975a9d9dad61c8a754783084b7bc01e354",
+          "family": "llvm-dense-matmul",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dense-matmul/smoke/native-build",
+          "input_digest": "aa67a169b0bba217aa0aa88a65346920c84c42447c36ba5f7ea65f422c1fe5d8",
+          "reference_output_digest": "0f3155e769591a56143a48160dfe72975a9d9dad61c8a754783084b7bc01e354",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
+            "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
+          },
+          "work_unit": "matrix_order_cubed",
+          "work_units": 8
+        },
+        {
+          "algorithm_id": "dense-matmul.row-major.v2",
+          "equivalence": {
+            "algorithm": "dense-matrix-multiply",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 8,
+            "thread_count": 1
+          },
+          "expected_output_digest": "0f3155e769591a56143a48160dfe72975a9d9dad61c8a754783084b7bc01e354",
+          "family": "llvm-dense-matmul",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dense-matmul/smoke/native-run",
+          "input_digest": "aa67a169b0bba217aa0aa88a65346920c84c42447c36ba5f7ea65f422c1fe5d8",
+          "reference_output_digest": "0f3155e769591a56143a48160dfe72975a9d9dad61c8a754783084b7bc01e354",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
+            "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
+          },
+          "work_unit": "matrix_order_cubed",
+          "work_units": 8
+        },
+        {
+          "algorithm_id": "dense-matmul.row-major.v2",
+          "equivalence": {
+            "algorithm": "dense-matrix-multiply",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "3b455062d54f0ba5433a03ef3b23898af8f02e8ddc9888f71efaa0f7cb87306a",
+          "family": "llvm-dense-matmul",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dense-matmul/development/compile-and-run",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "3b455062d54f0ba5433a03ef3b23898af8f02e8ddc9888f71efaa0f7cb87306a",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
+            "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
+          },
+          "work_unit": "matrix_order_cubed",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "dense-matmul.row-major.v2",
+          "equivalence": {
+            "algorithm": "dense-matrix-multiply",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "3b455062d54f0ba5433a03ef3b23898af8f02e8ddc9888f71efaa0f7cb87306a",
+          "family": "llvm-dense-matmul",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dense-matmul/development/native-build",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "3b455062d54f0ba5433a03ef3b23898af8f02e8ddc9888f71efaa0f7cb87306a",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
+            "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
+          },
+          "work_unit": "matrix_order_cubed",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "dense-matmul.row-major.v2",
+          "equivalence": {
+            "algorithm": "dense-matrix-multiply",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 32,
+            "thread_count": 1
+          },
+          "expected_output_digest": "3b455062d54f0ba5433a03ef3b23898af8f02e8ddc9888f71efaa0f7cb87306a",
+          "family": "llvm-dense-matmul",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dense-matmul/development/native-run",
+          "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference_output_digest": "3b455062d54f0ba5433a03ef3b23898af8f02e8ddc9888f71efaa0f7cb87306a",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
+            "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
+          },
+          "work_unit": "matrix_order_cubed",
+          "work_units": 32
+        },
+        {
+          "algorithm_id": "dense-matmul.row-major.v2",
+          "equivalence": {
+            "algorithm": "dense-matrix-multiply",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 256,
+            "thread_count": 1
+          },
+          "expected_output_digest": "3c26724d4bdaafd4dbc75f6b67a7014b2eaced7af6220f12c57fc3f83150c035",
+          "family": "llvm-dense-matmul",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dense-matmul/reference/compile-and-run",
+          "input_digest": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference_output_digest": "3c26724d4bdaafd4dbc75f6b67a7014b2eaced7af6220f12c57fc3f83150c035",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
+            "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
+          },
+          "work_unit": "matrix_order_cubed",
+          "work_units": 256
+        },
+        {
+          "algorithm_id": "dense-matmul.row-major.v2",
+          "equivalence": {
+            "algorithm": "dense-matrix-multiply",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 256,
+            "thread_count": 1
+          },
+          "expected_output_digest": "3c26724d4bdaafd4dbc75f6b67a7014b2eaced7af6220f12c57fc3f83150c035",
+          "family": "llvm-dense-matmul",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dense-matmul/reference/native-build",
+          "input_digest": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference_output_digest": "3c26724d4bdaafd4dbc75f6b67a7014b2eaced7af6220f12c57fc3f83150c035",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
+            "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
+          },
+          "work_unit": "matrix_order_cubed",
+          "work_units": 256
+        },
+        {
+          "algorithm_id": "dense-matmul.row-major.v2",
+          "equivalence": {
+            "algorithm": "dense-matrix-multiply",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 256,
+            "thread_count": 1
+          },
+          "expected_output_digest": "3c26724d4bdaafd4dbc75f6b67a7014b2eaced7af6220f12c57fc3f83150c035",
+          "family": "llvm-dense-matmul",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-dense-matmul/reference/native-run",
+          "input_digest": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "reference_output_digest": "3c26724d4bdaafd4dbc75f6b67a7014b2eaced7af6220f12c57fc3f83150c035",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
+            "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
+          },
+          "work_unit": "matrix_order_cubed",
+          "work_units": 256
+        }
+      ],
+      "id": "llvm-dense-matmul",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+          "reference": "f16c302d5d30e1d3fbe955cf4f637f58a871adeba597922e3baad0aeeb13f656",
+          "smoke": "aa67a169b0bba217aa0aa88a65346920c84c42447c36ba5f7ea65f422c1fe5d8"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "3b455062d54f0ba5433a03ef3b23898af8f02e8ddc9888f71efaa0f7cb87306a",
+          "reference": "3c26724d4bdaafd4dbc75f6b67a7014b2eaced7af6220f12c57fc3f83150c035",
+          "smoke": "0f3155e769591a56143a48160dfe72975a9d9dad61c8a754783084b7bc01e354"
+        }
+      },
+      "provenance": {
+        "authority": "LLVM-TestSuite",
+        "case": "dense-matmul",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 32
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 256
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 8
+        }
+      },
+      "source": {
+        "cpp": "sources/llvm-dense-matmul.cpp",
+        "source_digest": {
+          "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
+          "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
+        },
+        "styio": "sources/llvm-dense-matmul.styio"
+      },
+      "standard_family": "LLVM-TestSuite",
+      "work_unit": "matrix_order_cubed"
+    },
+    {
+      "algorithm_id": "list-allocation.records.v2",
+      "cells": [
+        {
+          "algorithm_id": "list-allocation.records.v2",
+          "equivalence": {
+            "algorithm": "record-allocation",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 64,
+            "thread_count": 1
+          },
+          "expected_output_digest": "62a32ef979386586a2ff51f54aa5c0b86a8df9f39f01d427dae1f889ffe35ec4",
+          "family": "llvm-list-allocation",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-list-allocation/smoke/compile-and-run",
+          "input_digest": "913f5d1da2feaf4deeccc9e55cbb350a20f12b3f507e87be85dbb77fdd3cb9bc",
+          "reference_output_digest": "62a32ef979386586a2ff51f54aa5c0b86a8df9f39f01d427dae1f889ffe35ec4",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
+            "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
+          },
+          "work_unit": "record_allocations",
+          "work_units": 64
+        },
+        {
+          "algorithm_id": "list-allocation.records.v2",
+          "equivalence": {
+            "algorithm": "record-allocation",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 64,
+            "thread_count": 1
+          },
+          "expected_output_digest": "62a32ef979386586a2ff51f54aa5c0b86a8df9f39f01d427dae1f889ffe35ec4",
+          "family": "llvm-list-allocation",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-list-allocation/smoke/native-build",
+          "input_digest": "913f5d1da2feaf4deeccc9e55cbb350a20f12b3f507e87be85dbb77fdd3cb9bc",
+          "reference_output_digest": "62a32ef979386586a2ff51f54aa5c0b86a8df9f39f01d427dae1f889ffe35ec4",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
+            "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
+          },
+          "work_unit": "record_allocations",
+          "work_units": 64
+        },
+        {
+          "algorithm_id": "list-allocation.records.v2",
+          "equivalence": {
+            "algorithm": "record-allocation",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 64,
+            "thread_count": 1
+          },
+          "expected_output_digest": "62a32ef979386586a2ff51f54aa5c0b86a8df9f39f01d427dae1f889ffe35ec4",
+          "family": "llvm-list-allocation",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-list-allocation/smoke/native-run",
+          "input_digest": "913f5d1da2feaf4deeccc9e55cbb350a20f12b3f507e87be85dbb77fdd3cb9bc",
+          "reference_output_digest": "62a32ef979386586a2ff51f54aa5c0b86a8df9f39f01d427dae1f889ffe35ec4",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "smoke",
+          "source_digest": {
+            "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
+            "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
+          },
+          "work_unit": "record_allocations",
+          "work_units": 64
+        },
+        {
+          "algorithm_id": "list-allocation.records.v2",
+          "equivalence": {
+            "algorithm": "record-allocation",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1024,
+            "thread_count": 1
+          },
+          "expected_output_digest": "6f1f61433f5a92cb978614fb910bcc8ba1f3b8731053e872b4db4de19d6dfc13",
+          "family": "llvm-list-allocation",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-list-allocation/development/compile-and-run",
+          "input_digest": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference_output_digest": "6f1f61433f5a92cb978614fb910bcc8ba1f3b8731053e872b4db4de19d6dfc13",
+          "required": false,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
+            "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
+          },
+          "work_unit": "record_allocations",
+          "work_units": 1024
+        },
+        {
+          "algorithm_id": "list-allocation.records.v2",
+          "equivalence": {
+            "algorithm": "record-allocation",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1024,
+            "thread_count": 1
+          },
+          "expected_output_digest": "6f1f61433f5a92cb978614fb910bcc8ba1f3b8731053e872b4db4de19d6dfc13",
+          "family": "llvm-list-allocation",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-list-allocation/development/native-build",
+          "input_digest": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference_output_digest": "6f1f61433f5a92cb978614fb910bcc8ba1f3b8731053e872b4db4de19d6dfc13",
+          "required": false,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
+            "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
+          },
+          "work_unit": "record_allocations",
+          "work_units": 1024
+        },
+        {
+          "algorithm_id": "list-allocation.records.v2",
+          "equivalence": {
+            "algorithm": "record-allocation",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 1024,
+            "thread_count": 1
+          },
+          "expected_output_digest": "6f1f61433f5a92cb978614fb910bcc8ba1f3b8731053e872b4db4de19d6dfc13",
+          "family": "llvm-list-allocation",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-list-allocation/development/native-run",
+          "input_digest": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference_output_digest": "6f1f61433f5a92cb978614fb910bcc8ba1f3b8731053e872b4db4de19d6dfc13",
+          "required": false,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "development",
+          "source_digest": {
+            "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
+            "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
+          },
+          "work_unit": "record_allocations",
+          "work_units": 1024
+        },
+        {
+          "algorithm_id": "list-allocation.records.v2",
+          "equivalence": {
+            "algorithm": "record-allocation",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 100000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "57be4ee61ce20527de8753d08dd237d5d1c56d17c9b48e000f28b04d3745fa4f",
+          "family": "llvm-list-allocation",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-list-allocation/reference/compile-and-run",
+          "input_digest": "b80500a01f984c764f1a3b486622d0ef7cc5b13fa9bd57ec9015113eaf875597",
+          "reference_output_digest": "57be4ee61ce20527de8753d08dd237d5d1c56d17c9b48e000f28b04d3745fa4f",
+          "required": true,
+          "route": "compile-and-run",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
+            "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
+          },
+          "work_unit": "record_allocations",
+          "work_units": 100000
+        },
+        {
+          "algorithm_id": "list-allocation.records.v2",
+          "equivalence": {
+            "algorithm": "record-allocation",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 100000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "57be4ee61ce20527de8753d08dd237d5d1c56d17c9b48e000f28b04d3745fa4f",
+          "family": "llvm-list-allocation",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-list-allocation/reference/native-build",
+          "input_digest": "b80500a01f984c764f1a3b486622d0ef7cc5b13fa9bd57ec9015113eaf875597",
+          "reference_output_digest": "57be4ee61ce20527de8753d08dd237d5d1c56d17c9b48e000f28b04d3745fa4f",
+          "required": true,
+          "route": "native-build",
+          "route_boundary": {
+            "start": "source-read",
+            "stop": "native-artifact-ready"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
+            "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
+          },
+          "work_unit": "record_allocations",
+          "work_units": 100000
+        },
+        {
+          "algorithm_id": "list-allocation.records.v2",
+          "equivalence": {
+            "algorithm": "record-allocation",
+            "input_contract": "same-canonical-bytes",
+            "numeric_contract": "signed-i64-modular",
+            "output_contract": "same-byte-digest",
+            "static_work_units": 100000,
+            "thread_count": 1
+          },
+          "expected_output_digest": "57be4ee61ce20527de8753d08dd237d5d1c56d17c9b48e000f28b04d3745fa4f",
+          "family": "llvm-list-allocation",
+          "focus_owner": "backend-runtime",
+          "id": "llvm-list-allocation/reference/native-run",
+          "input_digest": "b80500a01f984c764f1a3b486622d0ef7cc5b13fa9bd57ec9015113eaf875597",
+          "reference_output_digest": "57be4ee61ce20527de8753d08dd237d5d1c56d17c9b48e000f28b04d3745fa4f",
+          "required": true,
+          "route": "native-run",
+          "route_boundary": {
+            "start": "prebuilt-artifact",
+            "stop": "validated-stdout"
+          },
+          "scale": "reference",
+          "source_digest": {
+            "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
+            "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
+          },
+          "work_unit": "record_allocations",
+          "work_units": 100000
+        }
+      ],
+      "id": "llvm-list-allocation",
+      "input": {
+        "encoding": "ascii-decimal-lines",
+        "generator": "generators.py:input_for",
+        "sha256_by_scale": {
+          "development": "4f71bb761ace37c88826cd8cc1c948e1cf5b5d0cd153dc651a6efdb3dfb9f2b1",
+          "reference": "b80500a01f984c764f1a3b486622d0ef7cc5b13fa9bd57ec9015113eaf875597",
+          "smoke": "913f5d1da2feaf4deeccc9e55cbb350a20f12b3f507e87be85dbb77fdd3cb9bc"
+        }
+      },
+      "output_oracle": {
+        "encoding": "canonical-stdout",
+        "generator": "generators.py:reference_for",
+        "sha256_by_scale": {
+          "development": "6f1f61433f5a92cb978614fb910bcc8ba1f3b8731053e872b4db4de19d6dfc13",
+          "reference": "57be4ee61ce20527de8753d08dd237d5d1c56d17c9b48e000f28b04d3745fa4f",
+          "smoke": "62a32ef979386586a2ff51f54aa5c0b86a8df9f39f01d427dae1f889ffe35ec4"
+        }
+      },
+      "provenance": {
+        "authority": "LLVM-TestSuite",
+        "case": "list-allocation",
+        "official_description": "independent implementation from the public benchmark description",
+        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+      },
+      "scales": {
+        "development": {
+          "classification": "development",
+          "official": false,
+          "work_units": 1024
+        },
+        "reference": {
+          "classification": "official reference",
+          "official": true,
+          "work_units": 100000
+        },
+        "smoke": {
+          "classification": "smoke",
+          "official": false,
+          "work_units": 64
+        }
+      },
+      "source": {
+        "cpp": "sources/llvm-list-allocation.cpp",
+        "source_digest": {
+          "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
+          "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
+        },
+        "styio": "sources/llvm-list-allocation.styio"
+      },
+      "standard_family": "LLVM-TestSuite",
+      "work_unit": "record_allocations"
+    }
+  ]
+}

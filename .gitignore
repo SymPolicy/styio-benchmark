@@ -223,6 +223,8 @@ __marimo__/
 !/async-runtime/reports/20260505-async-runtime-baseline/**
 /reports/*
 !/reports/README.md
+!/reports/core/
+!/reports/core/**
 !/reports/20260429T032953Z-native-extern-raw/
 !/reports/20260429T032953Z-native-extern-raw/**
 /regressions/*

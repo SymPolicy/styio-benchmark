@@ -1,0 +1,9 @@
+n <- @stdin : i64
+value = 19
+[0..n-1] >> #(index) => {
+  value = (value + index + 9) % 1000003
+  [0..8] >> #(depth) => {
+    value = (value * 3 + depth) % 1000003
+  }
+}
+>_(value)
