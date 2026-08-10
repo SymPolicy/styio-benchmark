@@ -1,0 +1,12 @@
+{
+  "plans": [
+    {
+      "checkpoints": "benchmark-capabilities/Checkpoints.json",
+      "code": "PLAN-001",
+      "directory": "benchmark-capabilities",
+      "plan": "benchmark-capabilities/Plan.json",
+      "title": "Benchmark capabilities survey and completion"
+    }
+  ],
+  "schema": "better-plan.manifest/v3"
+}

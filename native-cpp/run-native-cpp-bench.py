@@ -5,7 +5,9 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 import os
+import random
 import shlex
 import shutil
 import statistics
@@ -20,6 +22,15 @@ from typing import Any
 
 BENCHMARK_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_STYIO_ROOT = (BENCHMARK_ROOT / "../styio").resolve()
+BOOTSTRAP_SEED = 0x5EED
+BOOTSTRAP_RESAMPLES = 10000
+ALPHA = 0.05
+
+SCALE_LINE_COUNTS = {
+    "small": 10_000,
+    "medium": 100_000,
+    "large": 1_000_000,
+}
 
 
 STYIO_STDIN_ECHO = """@stdin >> #(line) => {
@@ -99,9 +110,10 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument("--styio-exe", default="", help="Explicit styio executable path")
   parser.add_argument("--cxx", default="", help="C++ compiler for native baseline (default: CXX, clang++, c++)")
   parser.add_argument("--out-dir", default="", help="Artifact directory (default: reports/<timestamp>-native-cpp)")
-  parser.add_argument("--line-count", type=int, default=100_000)
+  parser.add_argument("--scale", choices=sorted(SCALE_LINE_COUNTS), default="medium", help="Input size preset (line count); explicit --line-count overrides it")
+  parser.add_argument("--line-count", type=int, default=None)
   parser.add_argument("--line-bytes", type=int, default=48)
-  parser.add_argument("--repeats", type=int, default=5)
+  parser.add_argument("--repeats", type=int, default=10)
   parser.add_argument("--warmups", type=int, default=1)
   parser.add_argument("--keep-outputs", action="store_true", help="Keep validation outputs instead of deleting them")
   return parser.parse_args()
@@ -221,6 +233,114 @@ def percentile95(samples: list[float]) -> float:
   return ordered[index]
 
 
+def percentile(values: list[float], percent: float) -> float:
+  ordered = sorted(values)
+  if not ordered:
+    return 0.0
+  if len(ordered) == 1:
+    return ordered[0]
+  rank = (percent / 100.0) * (len(ordered) - 1)
+  lower = int(math.floor(rank))
+  upper = int(math.ceil(rank))
+  if lower == upper:
+    return ordered[lower]
+  fraction = rank - lower
+  return ordered[lower] + (ordered[upper] - ordered[lower]) * fraction
+
+
+def bootstrap_ci(values: list[float]) -> tuple[float, float]:
+  if len(values) == 1:
+    return values[0], values[0]
+  rng = random.Random(BOOTSTRAP_SEED)
+  resampled_medians = []
+  for _ in range(BOOTSTRAP_RESAMPLES):
+    resampled = [values[rng.randrange(len(values))] for _ in values]
+    resampled_medians.append(statistics.median(resampled))
+  return percentile(resampled_medians, 2.5), percentile(resampled_medians, 97.5)
+
+
+def coefficient_of_variation(values: list[float]) -> float | None:
+  if len(values) < 2:
+    return None
+  if any(value < 0 for value in values):
+    return None
+  mean_value = statistics.mean(values)
+  if mean_value <= 0:
+    return None
+  return statistics.stdev(values) / mean_value
+
+
+def statistic_object(values: list[float]) -> dict[str, Any]:
+  low, high = bootstrap_ci(values)
+  cv = coefficient_of_variation(values)
+  return {
+    "sample_count": len(values),
+    "median": statistics.median(values),
+    "ci95_low": low,
+    "ci95_high": high,
+    "cv": cv,
+    "quality": "ok" if cv is not None else "insufficient_sample",
+  }
+
+
+def average_ranks(values: list[float]) -> list[float]:
+  order = sorted(range(len(values)), key=lambda index: values[index])
+  ranks = [0.0] * len(values)
+  index = 0
+  while index < len(order):
+    end = index
+    while end + 1 < len(order) and values[order[end + 1]] == values[order[index]]:
+      end += 1
+    average = (index + end) / 2.0 + 1.0
+    for position in range(index, end + 1):
+      ranks[order[position]] = average
+    index = end + 1
+  return ranks
+
+
+def mann_whitney_u(candidate: list[float], baseline: list[float], alpha: float = ALPHA) -> dict[str, Any]:
+  n = len(candidate)
+  m = len(baseline)
+  if n < 2 or m < 2:
+    return {"u": None, "p_value": None, "alpha": alpha, "significant": None, "direction": None, "status": "insufficient_sample"}
+  combined = candidate + baseline
+  combined_ranks = average_ranks(combined)
+  u_a = sum(combined_ranks[:n]) - n * (n + 1) / 2.0
+  u_b = n * m - u_a
+  u = min(u_a, u_b)
+  mu = n * m / 2.0
+  ordered = sorted(combined)
+  tie_correction = 0.0
+  index = 0
+  while index < len(ordered):
+    end = index
+    while end + 1 < len(ordered) and ordered[end + 1] == ordered[index]:
+      end += 1
+    size = end - index + 1
+    if size > 1:
+      tie_correction += size**3 - size
+    index = end + 1
+  total = n + m
+  variance = n * m / 12.0 * ((total + 1) - tie_correction / (total * (total - 1)))
+  if variance <= 0:
+    return {"u": None, "p_value": None, "alpha": alpha, "significant": None, "direction": None, "status": "insufficient_sample"}
+  z = max(0.0, mu - u - 0.5) / math.sqrt(variance)
+  p_value = math.erfc(z / math.sqrt(2.0))
+  return {"u": u, "p_value": p_value, "alpha": alpha, "significant": p_value < alpha, "direction": None, "status": "ok"}
+
+
+def comparison_direction(candidate_median: float, baseline_median: float, lower_is_better: bool) -> str:
+  if candidate_median < baseline_median:
+    return "better" if lower_is_better else "worse"
+  if candidate_median > baseline_median:
+    return "worse" if lower_is_better else "better"
+  return "similar"
+
+
+def throughput_samples(samples_s: list[float], input_bytes: int) -> list[float]:
+  return [(input_bytes / (1024.0 * 1024.0)) / value for value in samples_s if value > 0]
+
+
 def result_record(
   *,
   case: str,
@@ -256,6 +376,10 @@ def result_record(
     "min_s": min(samples_s),
     "p95_s": percentile95(samples_s),
     "throughput_mib_s": throughput_mib_s,
+    "statistics": {
+      "elapsed_s": statistic_object(samples_s),
+      "throughput_mib_s": statistic_object(throughput_samples(samples_s, input_bytes)),
+    },
   }
 
 
@@ -272,9 +396,64 @@ def unsupported_record(case: str, route: str, implementation: str, reason: str) 
   }
 
 
+def add_native_comparisons(records: list[dict[str, Any]]) -> None:
+  groups: dict[tuple[str, str], list[dict[str, Any]]] = {}
+  for record in records:
+    groups.setdefault((str(record["case"]), str(record["route"])), []).append(record)
+  for group in groups.values():
+    native = next(
+      (record for record in group if record.get("status") == "pass" and record.get("implementation") == "native_cpp"),
+      None,
+    )
+    native_samples = native.get("samples_s", []) if native else []
+    for record in group:
+      if record.get("status") == "unsupported":
+        record["comparison"] = {
+          "baseline_identity": "native_cpp",
+          "u": None,
+          "p_value": None,
+          "alpha": ALPHA,
+          "significant": None,
+          "direction": None,
+          "status": "not_comparable",
+        }
+        continue
+      if record.get("status") != "pass":
+        continue
+      if record.get("implementation") == "native_cpp":
+        record["comparison"] = {
+          "baseline_identity": "native_cpp",
+          "u": None,
+          "p_value": None,
+          "alpha": ALPHA,
+          "significant": None,
+          "direction": None,
+          "status": "baseline",
+        }
+        continue
+      if native is None:
+        record["comparison"] = {
+          "baseline_identity": "native_cpp",
+          "u": None,
+          "p_value": None,
+          "alpha": ALPHA,
+          "significant": None,
+          "direction": None,
+          "status": "missing_baseline",
+        }
+        continue
+      comparison = mann_whitney_u(record.get("samples_s", []), native_samples)
+      comparison["baseline_identity"] = "native_cpp"
+      if comparison["status"] == "ok":
+        comparison["direction"] = comparison_direction(
+          statistics.median(record["samples_s"]), statistics.median(native_samples), lower_is_better=True
+        )
+      record["comparison"] = comparison
+
+
 def write_json(path: Path, payload: dict[str, Any]) -> None:
   with path.open("w", encoding="utf-8") as handle:
-    json.dump(payload, handle, indent=2, sort_keys=True)
+    json.dump(payload, handle, indent=2, sort_keys=True, allow_nan=False)
     handle.write("\n")
 
 
@@ -298,12 +477,43 @@ def write_csv(path: Path, records: list[dict[str, Any]]) -> None:
     "throughput_mib_s",
     "relative_x",
     "command",
+    "elapsed_ci95_low_s",
+    "elapsed_ci95_high_s",
+    "elapsed_cv",
+    "throughput_ci95_low_mib_s",
+    "throughput_ci95_high_mib_s",
+    "throughput_cv",
+    "significance_u",
+    "significance_p_value",
+    "significance_alpha",
+    "significance_significant",
+    "significance_direction",
+    "significance_status",
+    "significance_baseline_identity",
   ]
   with path.open("w", encoding="utf-8", newline="") as handle:
     writer = csv.DictWriter(handle, fieldnames=fields)
     writer.writeheader()
     for record in records:
-      writer.writerow({field: record.get(field, "") for field in fields})
+      row = {field: record.get(field, "") for field in fields}
+      statistics_payload = record.get("statistics", {})
+      elapsed = statistics_payload.get("elapsed_s", {})
+      throughput = statistics_payload.get("throughput_mib_s", {})
+      row["elapsed_ci95_low_s"] = elapsed.get("ci95_low", "")
+      row["elapsed_ci95_high_s"] = elapsed.get("ci95_high", "")
+      row["elapsed_cv"] = elapsed.get("cv", "")
+      row["throughput_ci95_low_mib_s"] = throughput.get("ci95_low", "")
+      row["throughput_ci95_high_mib_s"] = throughput.get("ci95_high", "")
+      row["throughput_cv"] = throughput.get("cv", "")
+      comparison = record.get("comparison", {})
+      row["significance_u"] = comparison.get("u", "")
+      row["significance_p_value"] = comparison.get("p_value", "")
+      row["significance_alpha"] = comparison.get("alpha", "")
+      row["significance_significant"] = comparison.get("significant", "")
+      row["significance_direction"] = comparison.get("direction", "")
+      row["significance_status"] = comparison.get("status", "")
+      row["significance_baseline_identity"] = comparison.get("baseline_identity", "")
+      writer.writerow(row)
 
 
 def write_summary(path: Path, metadata: dict[str, Any], records: list[dict[str, Any]]) -> None:
@@ -323,28 +533,49 @@ def write_summary(path: Path, metadata: dict[str, Any], records: list[dict[str, 
       [
         f"## {route}",
         "",
-        "| Case | Implementation | Status | Median s | Throughput MiB/s | Relative | Note |",
-        "| --- | --- | --- | ---: | ---: | ---: | --- |",
+        "| Case | Implementation | Status | Median s | 95% CI s | CV | Throughput MiB/s | Relative | Sig | Direction | Note |",
+        "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |",
       ]
     )
     route_records = [record for record in records if record.get("route") == route]
     for record in sorted(route_records, key=lambda item: (item["case"], item["implementation"])):
       if record.get("status") == "pass":
+        elapsed = record.get("statistics", {}).get("elapsed_s", {})
+        comparison = record.get("comparison", {})
+        if comparison.get("status") == "baseline":
+          sig = "-"
+          direction = "baseline"
+        elif comparison.get("status") in ("missing_baseline", "insufficient_sample"):
+          sig = "-"
+          direction = comparison.get("status", "-")
+        else:
+          sig = str(comparison.get("significant", "-"))
+          direction = comparison.get("direction", "-")
+        ci_low = elapsed.get("ci95_low")
+        ci_high = elapsed.get("ci95_high")
+        ci_text = f"{ci_low:.6f}..{ci_high:.6f}" if ci_low is not None and ci_high is not None else "-"
+        cv = elapsed.get("cv")
+        cv_text = f"{cv:.3f}" if cv is not None else "-"
         lines.append(
-          "| {case} | {implementation} | pass | {median:.6f} | {throughput:.2f} | {relative:.2f}x |  |".format(
+          "| {case} | {implementation} | pass | {median:.6f} | {ci} | {cv} | {throughput:.2f} | {relative:.2f}x | {sig} | {direction} |  |".format(
             case=record["case"],
             implementation=record["implementation"],
             median=record["median_s"],
+            ci=ci_text,
+            cv=cv_text,
             throughput=record["throughput_mib_s"],
             relative=record["relative_x"],
+            sig=sig,
+            direction=direction,
           )
         )
       else:
         lines.append(
-          "| {case} | {implementation} | {status} |  |  |  | {reason} |".format(
+          "| {case} | {implementation} | {status} |  |  |  |  |  |  | {direction} | {reason} |".format(
             case=record["case"],
             implementation=record["implementation"],
             status=record.get("status", ""),
+            direction=record.get("comparison", {}).get("status", ""),
             reason=record.get("reason", ""),
           )
         )
@@ -617,6 +848,7 @@ def run_case(
       )
 
   normalize_relative(case_records)
+  add_native_comparisons(case_records)
   return case_records
 
 
@@ -634,6 +866,7 @@ def main() -> int:
     raise ValueError("--repeats must be positive")
   if args.warmups < 0:
     raise ValueError("--warmups must be non-negative")
+  args.line_count = args.line_count if args.line_count is not None else SCALE_LINE_COUNTS[args.scale]
 
   out_dir = resolve_repo_path(args.out_dir) if args.out_dir else BENCHMARK_ROOT / "reports" / f"{utc_stamp()}-native-cpp"
   programs_dir = out_dir / "programs"
@@ -655,6 +888,7 @@ def main() -> int:
     "uname": subprocess.check_output(["uname", "-srm"], text=True).strip(),
     "styio_exe": str(styio_exe),
     "cxx": cxx,
+    "scale": args.scale,
     "line_count": args.line_count,
     "line_bytes": args.line_bytes,
     "repeats": args.repeats,

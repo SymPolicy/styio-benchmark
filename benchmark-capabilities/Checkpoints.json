@@ -1,0 +1,70 @@
+{
+  "delivery_status": "completed",
+  "full_regression": {
+    "commands": [
+      {
+        "command_sha256": "ba034fc95caff40a62c51da2f7596bf3830593a0794a3f7a3ce37ffdfc2a56e4",
+        "exit_code": 0,
+        "outcome": "passed",
+        "recorded_at": "2026-08-10T17:22:49Z"
+      },
+      {
+        "command_sha256": "c82caa01cec4434d9498895a0ef65515ba44b28f441b219bdea35a81f9bc2865",
+        "exit_code": 0,
+        "outcome": "passed",
+        "recorded_at": "2026-08-10T17:23:00Z"
+      }
+    ],
+    "content_fingerprint": "cdf72f3460c5c8cdd9f6ce5b76717d96c5a4f99f6426ddf89a1e6fb1ade255c6",
+    "passed": true,
+    "recorded_at": "2026-08-10T17:23:00Z"
+  },
+  "plan": "PLAN-001",
+  "revision": 1,
+  "schema": "better-plan.checkpoints/v3",
+  "semantic_digest": "7870ede3416aa948e25fc1871daf077e391617d2f24c96d850a6763f2656b3e4",
+  "tasks": [
+    {
+      "code": "TASK-001",
+      "dispatch": null,
+      "evidence": [
+        {
+          "commands": [
+            {
+              "command_sha256": "ba034fc95caff40a62c51da2f7596bf3830593a0794a3f7a3ce37ffdfc2a56e4",
+              "exit_code": 0,
+              "outcome": "passed",
+              "recorded_at": "2026-08-10T16:24:46Z"
+            }
+          ],
+          "content_fingerprint": "7022a18e0f71a1564a81a5be882e74c4b7922a468fdb4574efedca62ad851244",
+          "kind": "focused_regression",
+          "passed": true,
+          "recorded_at": "2026-08-10T16:24:46Z"
+        }
+      ],
+      "status": "completed"
+    },
+    {
+      "code": "TASK-002",
+      "dispatch": null,
+      "evidence": [
+        {
+          "commands": [
+            {
+              "command_sha256": "d2ad189dff8b2eec1b212de6d849889fabf0ec523ee524d3b42bb52f8217091b",
+              "exit_code": 0,
+              "outcome": "passed",
+              "recorded_at": "2026-08-10T16:51:25Z"
+            }
+          ],
+          "content_fingerprint": "56b38d48ec94e5b26b317b07e5b8d755b1dce5069d8baa3a979fdc4c377fa618",
+          "kind": "focused_regression",
+          "passed": true,
+          "recorded_at": "2026-08-10T16:51:25Z"
+        }
+      ],
+      "status": "completed"
+    }
+  ]
+}

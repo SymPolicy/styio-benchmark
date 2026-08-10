@@ -54,7 +54,8 @@ async-runtime/run-async-bench.py \
   --styio-root /path/to/styio \
   --case baseline \
   --bootstrap-toolchains \
-  --repeats 5 \
+  --scale medium \
+  --repeats 10 \
   --out-dir async-runtime/reports/<run-id>
 ```
 
@@ -68,6 +69,14 @@ Presets:
 - `--case baseline`: default comparable report across the selected runtimes.
 - `--case stress`: larger fanout route for scheduler regression investigation.
 - `--case custom`: use explicit `--tasks`, `--sleep-ms`, `--noop-tasks`, `--workers`, and `--repeats` values.
+- `--scale small`: tasks `2`, sleep `20ms`, no-op tasks `1000`, workers `2`.
+- `--scale medium`: tasks `4`, sleep `160ms`, no-op tasks `100000`, workers `4` (default baseline sizes).
+- `--scale large`: tasks `8`, sleep `160ms`, no-op tasks `200000`, workers `8`.
+
+Explicit sizing flags (`--tasks`, `--sleep-ms`, `--noop-tasks`, `--workers`,
+`--repeats`) always override scale and case presets. Baseline runs default to
+ten repeats; the `smoke` case keeps its existing sizes and a one-repeat
+default so the pytest contract stays fast.
 
 The report directory contains:
 
@@ -76,6 +85,28 @@ The report directory contains:
 - `benchmarks.csv`
 - `summary.md`
 
-`summary.md` includes normalized `Sleep perf` and `Noop perf` columns. Each workload is normalized independently: the best runtime is `1.00x`, and the others show their relative score against that best result. It also includes a C++ stackless coroutine parity section for Styio. The default route runs each runtime five times and reports medians; `results.json` keeps the successful samples for debugging noisy microbenchmarks.
+`summary.md` includes normalized `Sleep perf` and `Noop perf` columns. Each workload is normalized independently: the best runtime is `1.00x`, and the others show their relative score against that best result. It also includes a C++ stackless coroutine parity section for Styio. The default baseline route runs each runtime ten times and reports medians; `results.json` keeps the successful samples for debugging noisy microbenchmarks.
+
+## Statistics
+
+Every successful core metric (`sleep` sequential/parallel milliseconds,
+per-sample speedup, `noop` total and per-task microseconds) carries a
+`statistics` object with `sample_count`, `median`, a deterministic bootstrap
+95% confidence interval (fixed local seed, 10000 median resamples), the
+coefficient of variation, and a quality marker. Each non-C++ runtime also gets
+`comparisons` per metric against the C++ stackless-coroutine samples using a
+two-sided Mann-Whitney U test (average ranks, tie correction, continuity
+correction, alpha 0.05); the C++ record is marked as the baseline. Fields are
+additive: legacy JSON fields, CSV rows, and Markdown sections keep their names
+and meanings, with flattened `statistics.*`/`significance.*` CSV rows and a
+`Statistics and C++ Significance` summary section appended.
+
+## Measurement boundary
+
+Wall-clock benchmarks are only meaningful on controlled local machines. Run
+`tools/benchmark-env-check.py` before local runs, compare stored baselines
+with `tools/benchmark-compare.py`, and treat shared CI as contract-only: CI
+byte-compiles, validates fixtures, and runs fast deterministic tests, but
+never executes this runner.
 
 The generated temporary C++/Go/Rust sources and binaries live under `<styio-root>/build/async-runtime-release/async-runtime-work/<run-id>`, not inside the report.

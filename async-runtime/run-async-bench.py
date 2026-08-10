@@ -4,10 +4,13 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 import os
 import platform
+import random
 import shutil
 import stat
+import statistics
 import subprocess
 import sys
 import tarfile
@@ -24,9 +27,12 @@ DEFAULT_TASKS = 4
 DEFAULT_SLEEP_MS = 160
 DEFAULT_NOOP_TASKS = 100000
 DEFAULT_WORKERS = 4
-DEFAULT_REPEATS = 5
+DEFAULT_REPEATS = 10
 DEFAULT_CASE = "baseline"
 RUNTIME_CHOICES = ("styio", "cpp", "go", "rust")
+BOOTSTRAP_SEED = 0x5EED
+BOOTSTRAP_RESAMPLES = 10000
+ALPHA = 0.05
 
 
 def default_styio_root() -> Path:
@@ -71,6 +77,49 @@ BENCHMARK_CASES = {
         repeats=7,
         description="higher fanout comparison for scheduler regression investigation",
     ),
+}
+
+
+@dataclass(frozen=True)
+class ScalePreset:
+    tasks: int
+    sleep_ms: int
+    noop_tasks: int
+    workers: int
+    description: str
+
+
+BENCHMARK_SCALES = {
+    "small": ScalePreset(
+        tasks=2,
+        sleep_ms=20,
+        noop_tasks=1000,
+        workers=2,
+        description="bounded small-scale route for fast local sanity runs",
+    ),
+    "medium": ScalePreset(
+        tasks=DEFAULT_TASKS,
+        sleep_ms=DEFAULT_SLEEP_MS,
+        noop_tasks=DEFAULT_NOOP_TASKS,
+        workers=DEFAULT_WORKERS,
+        description="default baseline sizes",
+    ),
+    "large": ScalePreset(
+        tasks=8,
+        sleep_ms=160,
+        noop_tasks=200000,
+        workers=8,
+        description="enlarged fanout route for scheduler regression investigation",
+    ),
+}
+
+
+ASYNC_CORE_METRICS = {
+    "sleep.sequential_ms": {"workload": "sleep", "metric": "sequential_ms", "lower_is_better": True},
+    "sleep.parallel_ms": {"workload": "sleep", "metric": "parallel_ms", "lower_is_better": True},
+    "sleep.speedup": {"workload": "sleep", "metric": "speedup", "lower_is_better": False},
+    "noop.total_us": {"workload": "noop", "metric": "total_us", "lower_is_better": True},
+    "noop.per_task_us": {"workload": "noop", "metric": "per_task_us", "lower_is_better": True},
 }
 
 
@@ -577,16 +626,27 @@ fn main() {
 
 
 def run(cmd: list[str], *, cwd: Path, env: dict[str, str] | None = None, timeout: int = 120) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        cmd,
-        cwd=cwd,
-        env=env,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        timeout=timeout,
-        check=False,
-    )
+    try:
+        return subprocess.run(
+            cmd,
+            cwd=cwd,
+            env=env,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=timeout,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        stdout = exc.stdout or ""
+        stderr = exc.stderr or ""
+        if isinstance(stdout, bytes):
+            stdout = stdout.decode(errors="replace")
+        if isinstance(stderr, bytes):
+            stderr = stderr.decode(errors="replace")
+        timeout_message = f"timed out after {timeout}s: {' '.join(cmd)}"
+        stderr = (stderr + "\n" + timeout_message).strip()
+        return subprocess.CompletedProcess(cmd, 124, stdout=stdout, stderr=stderr)
 
 
 def command_version(cmd: str) -> str:
@@ -792,11 +852,18 @@ def relative_path(path: Path, base: Path) -> str:
         return str(path)
 
 
+def same_checkout(left: Path, right: Path) -> bool:
+    try:
+        return left.samefile(right)
+    except OSError:
+        return left.resolve() == right.resolve()
+
+
 def ensure_styio_release_build(build_dir: Path, styio_root: Path) -> str | None:
     cache = build_dir / "CMakeCache.txt"
     if cache.exists():
         home = cmake_cache_value(build_dir, "CMAKE_HOME_DIRECTORY")
-        if home and Path(home).resolve() != styio_root.resolve():
+        if home and not same_checkout(Path(home), styio_root):
             return f"{relative_path(build_dir, styio_root)} points at {home}, not {styio_root}"
         build_type = cmake_cache_value(build_dir, "CMAKE_BUILD_TYPE")
         if build_type and build_type != "Release":
@@ -990,6 +1057,184 @@ def median(values: list[float]) -> float:
     return (ordered[mid - 1] + ordered[mid]) / 2.0
 
 
+def percentile(values: list[float], percent: float) -> float:
+    ordered = sorted(values)
+    if not ordered:
+        return 0.0
+    if len(ordered) == 1:
+        return ordered[0]
+    rank = (percent / 100.0) * (len(ordered) - 1)
+    lower = int(math.floor(rank))
+    upper = int(math.ceil(rank))
+    if lower == upper:
+        return ordered[lower]
+    fraction = rank - lower
+    return ordered[lower] + (ordered[upper] - ordered[lower]) * fraction
+
+
+def bootstrap_ci(values: list[float]) -> tuple[float, float]:
+    if len(values) == 1:
+        return values[0], values[0]
+    rng = random.Random(BOOTSTRAP_SEED)
+    resampled_medians = []
+    for _ in range(BOOTSTRAP_RESAMPLES):
+        resampled = [values[rng.randrange(len(values))] for _ in values]
+        resampled_medians.append(median(resampled))
+    return percentile(resampled_medians, 2.5), percentile(resampled_medians, 97.5)
+
+
+def coefficient_of_variation(values: list[float]) -> float | None:
+    if len(values) < 2:
+        return None
+    if any(value < 0 for value in values):
+        return None
+    mean_value = statistics.mean(values)
+    if mean_value <= 0:
+        return None
+    return statistics.stdev(values) / mean_value
+
+
+def statistic_object(values: list[float]) -> dict[str, Any]:
+    low, high = bootstrap_ci(values)
+    cv = coefficient_of_variation(values)
+    return {
+        "sample_count": len(values),
+        "median": median(values),
+        "ci95_low": low,
+        "ci95_high": high,
+        "cv": cv,
+        "quality": "ok" if cv is not None else "insufficient_sample",
+    }
+
+
+def sample_values(samples: list[dict[str, Any]], workload: str, metric: str) -> list[float]:
+    return [
+        float(sample[workload][metric])
+        for sample in samples
+        if sample.get("status") == "ok" and workload in sample and metric in sample[workload]
+    ]
+
+
+def average_ranks(values: list[float]) -> list[float]:
+    order = sorted(range(len(values)), key=lambda index: values[index])
+    ranks = [0.0] * len(values)
+    index = 0
+    while index < len(order):
+        end = index
+        while end + 1 < len(order) and values[order[end + 1]] == values[order[index]]:
+            end += 1
+        average = (index + end) / 2.0 + 1.0
+        for position in range(index, end + 1):
+            ranks[order[position]] = average
+        index = end + 1
+    return ranks
+
+
+def mann_whitney_u(candidate: list[float], baseline: list[float], alpha: float = ALPHA) -> dict[str, Any]:
+    n = len(candidate)
+    m = len(baseline)
+    if n < 2 or m < 2:
+        return {
+            "u": None,
+            "p_value": None,
+            "alpha": alpha,
+            "significant": None,
+            "direction": None,
+            "status": "insufficient_sample",
+        }
+    combined = candidate + baseline
+    combined_ranks = average_ranks(combined)
+    u_a = sum(combined_ranks[:n]) - n * (n + 1) / 2.0
+    u_b = n * m - u_a
+    u = min(u_a, u_b)
+    mu = n * m / 2.0
+    ordered = sorted(combined)
+    tie_correction = 0.0
+    index = 0
+    while index < len(ordered):
+        end = index
+        while end + 1 < len(ordered) and ordered[end + 1] == ordered[index]:
+            end += 1
+        size = end - index + 1
+        if size > 1:
+            tie_correction += size**3 - size
+        index = end + 1
+    total = n + m
+    variance = n * m / 12.0 * ((total + 1) - tie_correction / (total * (total - 1)))
+    if variance <= 0:
+        return {
+            "u": None,
+            "p_value": None,
+            "alpha": alpha,
+            "significant": None,
+            "direction": None,
+            "status": "insufficient_sample",
+        }
+    z = max(0.0, mu - u - 0.5) / math.sqrt(variance)
+    p_value = math.erfc(z / math.sqrt(2.0))
+    return {
+        "u": u,
+        "p_value": p_value,
+        "alpha": alpha,
+        "significant": p_value < alpha,
+        "direction": None,
+        "status": "ok",
+    }
+
+
+def comparison_direction(candidate_median: float, baseline_median: float, lower_is_better: bool) -> str:
+    if candidate_median < baseline_median:
+        return "better" if lower_is_better else "worse"
+    if candidate_median > baseline_median:
+        return "worse" if lower_is_better else "better"
+    return "similar"
+
+
+def add_cpp_comparisons(results: list[dict[str, Any]]) -> None:
+    cpp_result = next(
+        (result for result in results if result.get("status") == "ok" and result.get("runtime_key") == "cpp"),
+        None,
+    )
+    cpp_samples = cpp_result.get("samples", []) if cpp_result else []
+    for result in results:
+        if result.get("status") != "ok":
+            continue
+        if result.get("runtime_key") == "cpp":
+            result["comparison"] = {
+                "baseline_identity": "cpp_stackless_coroutine",
+                "u": None,
+                "p_value": None,
+                "alpha": ALPHA,
+                "significant": None,
+                "direction": None,
+                "status": "baseline",
+            }
+            continue
+        comparisons: dict[str, Any] = {}
+        for key, spec in ASYNC_CORE_METRICS.items():
+            candidate_values = sample_values(result.get("samples", []), spec["workload"], spec["metric"])
+            baseline_values = sample_values(cpp_samples, spec["workload"], spec["metric"])
+            if cpp_result is None:
+                comparison: dict[str, Any] = {
+                    "baseline_identity": "cpp_stackless_coroutine",
+                    "u": None,
+                    "p_value": None,
+                    "alpha": ALPHA,
+                    "significant": None,
+                    "direction": None,
+                    "status": "missing_baseline",
+                }
+            else:
+                comparison = mann_whitney_u(candidate_values, baseline_values)
+                comparison["baseline_identity"] = "cpp_stackless_coroutine"
+                if comparison["status"] == "ok":
+                    comparison["direction"] = comparison_direction(
+                        median(candidate_values), median(baseline_values), spec["lower_is_better"]
+                    )
+            comparisons[key] = comparison
+        result["comparisons"] = comparisons
+
+
 def median_number(samples: list[dict[str, Any]], workload: str, metric: str) -> float:
     return median([
         float(sample[workload][metric])
@@ -1028,6 +1273,17 @@ def summarize_ok_samples(samples: list[dict[str, Any]]) -> dict[str, Any]:
             "total_us": noop_total_us,
             "per_task_us": noop_per_task_us,
         },
+        "statistics": {
+            "sleep": {
+                "sequential_ms": statistic_object(sample_values(ok_samples, "sleep", "sequential_ms")),
+                "parallel_ms": statistic_object(sample_values(ok_samples, "sleep", "parallel_ms")),
+                "speedup": statistic_object(sample_values(ok_samples, "sleep", "speedup")),
+            },
+            "noop": {
+                "total_us": statistic_object(sample_values(ok_samples, "noop", "total_us")),
+                "per_task_us": statistic_object(sample_values(ok_samples, "noop", "per_task_us")),
+            },
+        },
         "samples": ok_samples,
     }
     return summary
@@ -1065,6 +1321,28 @@ def flatten_rows(results: list[dict[str, Any]]) -> list[dict[str, Any]]:
             rows.append({**base, "workload": "relative", "metric": metric, "value": value})
         if result.get("sample_count") is not None:
             rows.append({**base, "workload": "summary", "metric": "sample_count", "value": result["sample_count"]})
+        statistics_payload = result.get("statistics", {})
+        for workload, metrics in statistics_payload.items():
+            for metric, stat in metrics.items():
+                for field in ("sample_count", "median", "ci95_low", "ci95_high", "cv", "quality"):
+                    rows.append(
+                        {**base, "workload": workload, "metric": f"statistics.{metric}.{field}", "value": stat.get(field)}
+                    )
+        comparisons = result.get("comparisons", {})
+        baseline_marker = result.get("comparison")
+        if baseline_marker and baseline_marker.get("status") == "baseline":
+            comparisons = {key: baseline_marker for key in ASYNC_CORE_METRICS}
+        for key, comparison in comparisons.items():
+            workload, metric_name = key.split(".", 1)
+            for field in ("baseline_identity", "u", "p_value", "alpha", "significant", "direction", "status"):
+                rows.append(
+                    {
+                        **base,
+                        "workload": workload,
+                        "metric": f"significance.{metric_name}.{field}",
+                        "value": comparison.get(field),
+                    }
+                )
     return rows
 
 
@@ -1125,9 +1403,16 @@ def add_relative_performance(results: list[dict[str, Any]]) -> None:
 
 def write_report(out_dir: Path, metadata: dict[str, Any], results: list[dict[str, Any]]) -> None:
     add_relative_performance(results)
+    add_cpp_comparisons(results)
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "metadata.json").write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    (out_dir / "results.json").write_text(json.dumps({"metadata": metadata, "results": results}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    (out_dir / "metadata.json").write_text(
+        json.dumps(metadata, indent=2, sort_keys=True, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
+    (out_dir / "results.json").write_text(
+        json.dumps({"metadata": metadata, "results": results}, indent=2, sort_keys=True, allow_nan=False) + "\n",
+        encoding="utf-8",
+    )
     with (out_dir / "benchmarks.csv").open("w", encoding="utf-8", newline="") as handle:
         fieldnames = ["language", "runtime", "status", "workload", "metric", "value"]
         writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")
@@ -1202,6 +1487,60 @@ def write_report(out_dir: Path, metadata: dict[str, Any], results: list[dict[str
                 "",
             ]
         )
+    lines.extend(
+        [
+            "## Statistics and C++ Significance",
+            "",
+            "| Runtime | Metric | Samples | Median | 95% CI | CV | U | p-value | Significant | Direction |",
+            "|---|---|---:|---:|---:|---:|---:|---:|---:|---|",
+        ]
+    )
+    for result in results:
+        if result.get("status") != "ok":
+            continue
+        statistics_payload = result.get("statistics", {})
+        comparisons = result.get("comparisons", {})
+        is_cpp = result.get("runtime_key") == "cpp"
+        for workload, metrics in statistics_payload.items():
+            for metric, stat in metrics.items():
+                key = f"{workload}.{metric}"
+                comparison = comparisons.get(key)
+                if is_cpp:
+                    u_text = p_text = significant_text = "-"
+                    direction_text = "baseline"
+                elif comparison is None:
+                    u_text = p_text = significant_text = direction_text = "n/a"
+                elif comparison.get("status") == "missing_baseline":
+                    u_text = p_text = significant_text = "missing baseline"
+                    direction_text = "-"
+                else:
+                    u_text = fmt(comparison.get("u"))
+                    p_text = fmt(comparison.get("p_value"))
+                    significant_text = str(comparison.get("significant")) if comparison.get("significant") is not None else "-"
+                    direction_text = comparison.get("direction") or "-"
+                ci_text = (
+                    f"{fmt(stat.get('ci95_low'))}..{fmt(stat.get('ci95_high'))}"
+                    if stat.get("ci95_low") is not None and stat.get("ci95_high") is not None
+                    else "-"
+                )
+                lines.append(
+                    "| "
+                    + " | ".join(
+                        [
+                            str(result.get("runtime", "")),
+                            key,
+                            str(stat.get("sample_count", "")),
+                            fmt(stat.get("median")),
+                            ci_text,
+                            fmt(stat.get("cv")),
+                            u_text,
+                            p_text,
+                            significant_text,
+                            direction_text,
+                        ]
+                    )
+                    + " |"
+                )
     (out_dir / "summary.md").write_text("\n".join(lines), encoding="utf-8")
 
 
@@ -1211,6 +1550,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--build-dir", default=DEFAULT_STYIO_BUILD_DIR, help="Release CMake build directory for Styio runtime target.")
     parser.add_argument("--out-dir", default="", help="Output directory. Defaults to async-runtime/reports/<run-id> in this benchmark repository.")
     parser.add_argument("--case", choices=[*BENCHMARK_CASES.keys(), "custom"], default=DEFAULT_CASE, help="Benchmark case preset. Use custom with explicit sizing flags.")
+    parser.add_argument("--scale", choices=[*BENCHMARK_SCALES.keys()], default=None, help="Scale preset for tasks, sleep duration, noop fanout, and workers. Explicit sizing flags override presets.")
     parser.add_argument("--tasks", type=int, default=None)
     parser.add_argument("--sleep-ms", type=int, default=None)
     parser.add_argument("--noop-tasks", type=int, default=None)
@@ -1241,11 +1581,13 @@ def resolve_benchmark_args(args: argparse.Namespace) -> None:
         raise SystemExit(f"--styio-root does not look like a Styio source checkout: {args.styio_root}")
     case = BENCHMARK_CASES[DEFAULT_CASE] if args.case == "custom" else BENCHMARK_CASES[args.case]
     args.case_description = "custom sizing over the baseline benchmark contract" if args.case == "custom" else case.description
-    args.tasks = args.tasks if args.tasks is not None else case.tasks
-    args.sleep_ms = args.sleep_ms if args.sleep_ms is not None else case.sleep_ms
-    args.noop_tasks = args.noop_tasks if args.noop_tasks is not None else case.noop_tasks
-    args.workers = args.workers if args.workers is not None else case.workers
+    scale = BENCHMARK_SCALES[args.scale] if args.scale else None
+    args.tasks = args.tasks if args.tasks is not None else (scale.tasks if scale else case.tasks)
+    args.sleep_ms = args.sleep_ms if args.sleep_ms is not None else (scale.sleep_ms if scale else case.sleep_ms)
+    args.noop_tasks = args.noop_tasks if args.noop_tasks is not None else (scale.noop_tasks if scale else case.noop_tasks)
+    args.workers = args.workers if args.workers is not None else (scale.workers if scale else case.workers)
     args.repeats = args.repeats if args.repeats is not None else case.repeats
+    args.scale_name = args.scale or ("medium" if args.case in ("baseline", "custom") else None)
     args.runtimes = unique_preserving_order(args.runtimes or RUNTIME_CHOICES)
     args.required_runtimes = unique_preserving_order(args.required_runtimes)
     if args.tasks < 1:
@@ -1307,6 +1649,7 @@ def main() -> int:
         "noop_tasks": args.noop_tasks,
         "workers": args.workers,
         "repeats": args.repeats,
+        "scale": args.scale_name,
         "bootstrap_toolchains": args.bootstrap_toolchains,
     }
     runners = {

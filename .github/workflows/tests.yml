@@ -1,0 +1,49 @@
+name: tests
+
+on:
+  pull_request:
+  push:
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-smoke:
+    name: test / smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout styio-benchmark
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.5"
+
+      - name: Run smoke tests
+        run: PYTHONPYCACHEPREFIX="$RUNNER_TEMP/styio-benchmark-smoke-pycache" python3 -m compileall async-runtime native-cpp tools tests scripts
+
+  test-golden-standard:
+    name: test / golden-standard
+    needs: [test-smoke]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout styio-benchmark
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13.5"
+
+      - name: Install test dependencies
+        run: python3 -m pip install ".[test]"
+
+      - name: Run golden-standard tests
+        run: python3 scripts/benchmark-golden-gate.py

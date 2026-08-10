@@ -10,9 +10,15 @@ test = [
   "pytest>=8",
 ]
 
+[tool.setuptools]
+py-modules = []
+
 [tool.pytest.ini_options]
 testpaths = [
   "async-runtime",
+  "native-cpp",
+  "tools",
+  "tests",
 ]
 python_files = [
   "test_*.py",

@@ -68,6 +68,8 @@ Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进�
 - `Async runtime matrix`
   - 覆盖 `Styio task scheduler / C++ stackless coroutine / Go goroutine / Rust Tokio`
   - 当前冻结 `sleep` 阻塞任务并发收敛与 `noop` fanout 调度开销，报告入口为 `async-runtime/run-async-bench.py`
+  - 每个核心指标输出 median + 确定性 bootstrap 95% CI + CV，并对非 C++ 运行时输出相对 C++ stackless coroutine 的双侧 Mann-Whitney U 显著性
+  - 支持 `small / medium / large` 三档规模预设，baseline 默认重复 10 次，smoke 保持 1 次
 - `Native C++ comparison`
   - 覆盖 Styio 语言程序与手写原生 C++ 的黑盒性能对照
   - 当前第一组 workload 是 `stdin_echo`，对照 `@stdin >> #(line) => { line -> @stdout }` 与 `std::getline` / `std::cout` 循环
@@ -75,6 +77,12 @@ Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进�
   - `cached-jit` 在 Styio 暴露可复用编译/JIT 产物执行入口前必须报告为 `unsupported`
   - `runtime-only` 当前使用 Styio 选定 build 的导出 C runtime ABI，先隔离标准流 helper 成本
   - 报告入口为 `native-cpp/run-native-cpp-bench.py`，并由 `tools/perf-route.sh` 的 `native_cpp_comparison` section 纳入总报告；输出 `results.json / benchmarks.csv / summary.md`，按每条 route 的最快实测实现归一化为 `1.00x`
+  - 每条 measurable 记录输出 elapsed/throughput 的 median + bootstrap 95% CI + CV，并与同 case/route 的 `native_cpp` 做 Mann-Whitney U 显著性；`native_cpp` 标记为 baseline，`unsupported` 标记为 not comparable
+  - 支持 `small / medium / large` 三档 line-count 预设，默认重复 10 次
+- `统计与工具面`
+  - `tools/benchmark-env-check.py`：只读环境清单（CPU 可用性/亲和性、后台负载、频率 governor、turbo/boost、电源），输出 sanitized 的 pass/warn/unavailable，strict 模式可本地强制
+  - `tools/benchmark-compare.py`：baseline-vs-head 报告比较器，输出方向感知的 median 变化与 Mann-Whitney U 证据，分类为 regression / improvement / inconclusive / insufficient-sample / incompatible-input
+  - `scripts/benchmark-golden-gate.py` 与 `.github/workflows/tests.yml`：契约门禁只做 byte-compile、fixture 校验、快速测试与工具 smoke，共享 CI 不运行墙钟基准
 - `Error-path matrix`
   - 覆盖 `lex / parse / type / runtime` 失败路径
   - 当前覆盖 `lex.unterminated_block_comment`、`parse.empty_match_cases`、`type.final_then_flex_i64`、`runtime.read_missing_file`
@@ -86,14 +94,10 @@ Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进�
 
 ### 缺失
 
-- `规模 sweep` 还没系统化
-  - 当前 matrix 已覆盖模块切面，但还没有 `small / medium / large` 三档参数族
 - `模块微基准` 还不够细
   - 第一批热点切面已经独立拆组，但还没有扩到 `bindings/topology/resources` 等更细颗粒度
 - `Error-path` 还不够细
   - 当前只冻结了 4 条代表性失败路径，尚未扩到 `bindings/resources/stdin/stdout` 的更多错误子码
-- `基准产物比较` 还缺少自动 diff
-  - 现在已有 `results.json / benchmarks.csv / summary.md` 归档，但还没有 baseline-vs-head 的自动比较器
 
 ## 建议的 benchmark 分类
 
@@ -212,10 +216,10 @@ Styio 主仓库的 `styio_soak_test` probe 已能让第 1 到 5 层稳定在进�
    - `cached-jit` 当前明确报告 `unsupported`，直到 Styio 提供真实缓存执行入口
    - `runtime-only` 当前对比 native C++ 与 Styio runtime helper harness，隔离标准流 helper 成本
 8. 下一批优先项
-   - 新增 `small / medium / large` 规模 sweep
+   - 把 `small / medium / large` 规模 sweep 扩展到 compiler stage、module micro 与 full-stack benchmark 族
    - 扩展 native C++ 对照到 compute-heavy workload，补真实 cached-JIT 执行入口
    - 扩 error-path benchmark 子类
-   - 增加 benchmark catalog / baseline diff 自动校验
+   - 增加 benchmark catalog 与受控本地 baseline 选择、版本治理
 
 ## 评估标准
 

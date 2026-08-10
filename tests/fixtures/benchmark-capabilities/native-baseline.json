@@ -1,0 +1,204 @@
+{
+  "metadata": {
+    "scale": "medium",
+    "repeats": 10,
+    "line_count": 100000,
+    "line_bytes": 48,
+    "fixture": "native-baseline"
+  },
+  "results": [
+    {
+      "case": "stdin_echo",
+      "route": "full-cli",
+      "implementation": "native_cpp",
+      "language": "C++20",
+      "mode": "full-cli",
+      "status": "pass",
+      "command": "synthetic native_cpp",
+      "input_bytes": 4800000,
+      "input_mib": 4.57763671875,
+      "line_count": 100000,
+      "line_bytes": 48,
+      "repeats": 10,
+      "warmups": 1,
+      "samples_s": [
+        0.02,
+        0.0201,
+        0.0202,
+        0.020300000000000002,
+        0.0204,
+        0.0205,
+        0.0206,
+        0.0207,
+        0.0208,
+        0.020900000000000002
+      ],
+      "median_s": 0.020450000000000003,
+      "min_s": 0.02,
+      "p95_s": 0.020900000000000002,
+      "throughput_mib_s": 223.84531632029336,
+      "statistics": {
+        "elapsed_s": {
+          "sample_count": 10,
+          "median": 0.020450000000000003,
+          "ci95_low": 0.0202,
+          "ci95_high": 0.0207,
+          "cv": 0.014805136205855707,
+          "quality": "ok"
+        },
+        "throughput_mib_s": {
+          "sample_count": 10,
+          "median": 223.84665446780843,
+          "ci95_low": 221.1418704710145,
+          "ci95_high": 226.62123304352622,
+          "cv": 0.014808536051724778,
+          "quality": "ok"
+        }
+      },
+      "comparison": {
+        "baseline_identity": "native_cpp",
+        "u": null,
+        "p_value": null,
+        "alpha": 0.05,
+        "significant": null,
+        "direction": null,
+        "status": "baseline"
+      }
+    },
+    {
+      "case": "stdin_echo",
+      "route": "full-cli",
+      "implementation": "styio",
+      "language": "Styio",
+      "mode": "full-cli",
+      "status": "pass",
+      "command": "synthetic styio",
+      "input_bytes": 4800000,
+      "input_mib": 4.57763671875,
+      "line_count": 100000,
+      "line_bytes": 48,
+      "repeats": 10,
+      "warmups": 1,
+      "samples_s": [
+        0.1,
+        0.10020000000000001,
+        0.1004,
+        0.10060000000000001,
+        0.1008,
+        0.101,
+        0.10120000000000001,
+        0.1014,
+        0.10160000000000001,
+        0.1018
+      ],
+      "median_s": 0.1009,
+      "min_s": 0.1,
+      "p95_s": 0.1018,
+      "throughput_mib_s": 45.36805469524281,
+      "statistics": {
+        "elapsed_s": {
+          "sample_count": 10,
+          "median": 0.1009,
+          "ci95_low": 0.1004,
+          "ci95_high": 0.10140000000000002,
+          "cv": 0.006001289106238829,
+          "quality": "ok"
+        },
+        "throughput_mib_s": {
+          "sample_count": 10,
+          "median": 45.36809925760991,
+          "ci95_low": 45.144346338757394,
+          "ci95_high": 45.59417214899227,
+          "cv": 0.006001515476873781,
+          "quality": "ok"
+        }
+      },
+      "comparison": {
+        "baseline_identity": "native_cpp",
+        "u": 0.0,
+        "p_value": 0.00018267179110955043,
+        "alpha": 0.05,
+        "significant": true,
+        "direction": "worse",
+        "status": "ok"
+      }
+    },
+    {
+      "case": "stdin_echo",
+      "route": "runtime-only",
+      "implementation": "styio_runtime_helpers",
+      "language": "C++",
+      "mode": "runtime-only",
+      "status": "pass",
+      "command": "synthetic styio_runtime_helpers",
+      "input_bytes": 4800000,
+      "input_mib": 4.57763671875,
+      "line_count": 100000,
+      "line_bytes": 48,
+      "repeats": 10,
+      "warmups": 1,
+      "samples_s": [
+        0.12,
+        0.1202,
+        0.1204,
+        0.1206,
+        0.12079999999999999,
+        0.121,
+        0.1212,
+        0.1214,
+        0.1216,
+        0.12179999999999999
+      ],
+      "median_s": 0.1209,
+      "min_s": 0.12,
+      "p95_s": 0.12179999999999999,
+      "throughput_mib_s": 37.86300015508685,
+      "statistics": {
+        "elapsed_s": {
+          "sample_count": 10,
+          "median": 0.1209,
+          "ci95_low": 0.1204,
+          "ci95_high": 0.12140000000000001,
+          "cv": 0.005008520023320909,
+          "quality": "ok"
+        },
+        "throughput_mib_s": {
+          "sample_count": 10,
+          "median": 37.86302605884154,
+          "ci95_low": 37.70705699135091,
+          "ci95_high": 38.02034343931342,
+          "cv": 0.005008651608385368,
+          "quality": "ok"
+        }
+      },
+      "comparison": {
+        "baseline_identity": "native_cpp",
+        "u": null,
+        "p_value": null,
+        "alpha": 0.05,
+        "significant": null,
+        "direction": null,
+        "status": "missing_baseline"
+      }
+    },
+    {
+      "case": "stdin_echo",
+      "route": "cached-jit",
+      "implementation": "styio",
+      "language": "Styio",
+      "mode": "cached-jit",
+      "status": "unsupported",
+      "reason": "no reusable compiled entrypoint",
+      "relative_x": "",
+      "comparison": {
+        "baseline_identity": "native_cpp",
+        "u": null,
+        "p_value": null,
+        "alpha": 0.05,
+        "significant": null,
+        "direction": null,
+        "status": "not_comparable"
+      }
+    }
+  ]
+}

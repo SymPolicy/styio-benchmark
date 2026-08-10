@@ -1,0 +1,32 @@
+#!/bin/sh
+set -eu
+
+repo_root="$(git rev-parse --show-toplevel)"
+project="styio-benchmark"
+
+framework_root="${STYIO_AUDIT_FRAMEWORK_ROOT:-}"
+if [ -z "$framework_root" ]; then
+  for candidate in \
+    "$repo_root" \
+    "$repo_root/../styio-audit" \
+    "$repo_root/../../SymPolicy/styio-audit"
+  do
+    if [ -x "$candidate/bin/styio-audit" ]; then
+      framework_root="$candidate"
+      break
+    fi
+  done
+fi
+
+if [ -z "$framework_root" ] || [ ! -x "$framework_root/bin/styio-audit" ]; then
+  echo "[styio-audit] pre-commit failed: cannot locate styio-audit; set STYIO_AUDIT_FRAMEWORK_ROOT" >&2
+  exit 1
+fi
+
+python3 "$framework_root/bin/styio-audit" pre-commit --repo "$repo_root" --project "$project"
+
+git_common_dir="$(git rev-parse --git-common-dir)"
+legacy_hook="$git_common_dir/hooks/pre-commit"
+if [ -x "$legacy_hook" ]; then
+  "$legacy_hook" "$@"
+fi

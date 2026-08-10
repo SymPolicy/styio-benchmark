@@ -24,8 +24,16 @@
   - Styio task scheduler 与 C++ / Go / Rust 的异步运行时横向基准框架
 - `tools/parser-shadow-suite-gate.sh`
   - parser shadow gate 脚本
+- `tools/benchmark-env-check.py`
+  - 只读环境清单：本地受控墙钟基准前检查 CPU 可用性/亲和性、后台负载、频率 governor、turbo/boost、电源
+- `tools/benchmark-compare.py`
+  - baseline-vs-head 报告比较器：方向感知 median 变化 + Mann-Whitney U 证据，输出 regression/improvement/inconclusive/insufficient-sample/incompatible-input
 - `tools/soak-minimize.sh`
   - soak 失败二分最小化
+- `scripts/benchmark-golden-gate.py`
+  - 契约门禁：byte-compile、历史与新 fixture 校验、快速能力测试、工具 smoke、依赖与 CI 边界断言
+- `tests/`
+  - 快速能力契约测试与确定性报告 fixture
 - `docs/REGRESSION-TEMPLATE.md`
   - 回归记录模板
 - `docs/COVERAGE-MATRIX.md`
@@ -68,6 +76,12 @@
 - parser shadow gates
 - soak smoke
 - 可选 `soak_deep`
+
+## 统计与规模口径
+
+- 两个 runner 对每个核心指标输出 `median`、确定性 bootstrap 95% CI（固定种子 10000 次重采样）、`CV`，并对匹配的 C++ 基线输出双侧 Mann-Whitney U 显著性；报告 JSON 字段为增量扩展，旧字段全部保留。
+- baseline 默认重复 10 次；`async-runtime/run-async-bench.py` 与 `native-cpp/run-native-cpp-bench.py` 均支持 `--scale small/medium/large`，显式 sizing/repeats 参数优先级最高；async smoke 保持原有尺寸与 1 次重复。
+- 真实墙钟基准只在受控本地执行：先跑 `tools/benchmark-env-check.py` 确认环境，再用 `tools/benchmark-compare.py` 对比存档 baseline 与新结果。共享 CI 只跑契约测试与门禁，不运行任何墙钟基准 job。
 
 覆盖设计与补强方向见 [COVERAGE-MATRIX.md](./COVERAGE-MATRIX.md)。
 
@@ -221,7 +235,7 @@ native-cpp/run-native-cpp-bench.py \
   --routes all \
   --line-count 100000 \
   --line-bytes 48 \
-  --repeats 5 \
+  --repeats 10 \
   --out-dir reports/native-cpp-stdin-echo
 ```
 
