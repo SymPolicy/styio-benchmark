@@ -90,6 +90,11 @@ Wall-clock benchmarks are only meaningful on controlled local machines. Shared
 CI never executes a real benchmark job; CI only runs contract tests, the golden
 gate, byte-compilation, and deterministic fixtures.
 
+Future observable-language evidence is staged in
+[`docs/OBSERVABLE-LANGUAGE-PERFORMANCE-GATE-PLAN.md`](docs/OBSERVABLE-LANGUAGE-PERFORMANCE-GATE-PLAN.md).
+The plan is not authorized and does not set numeric thresholds before eligible
+baseline evidence exists.
+
 - Both runners (`async-runtime/run-async-bench.py` and
   `native-cpp/run-native-cpp-bench.py`) report per-core-metric medians with a
   deterministic bootstrap 95% confidence interval, coefficient of variation,
