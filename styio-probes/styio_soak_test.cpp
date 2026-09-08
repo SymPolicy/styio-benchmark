@@ -485,7 +485,7 @@ parity_catalog_path() {
   candidates.push_back(source_root.parent_path() / "styio-benchmark");
   candidates.push_back(fs::current_path() / "styio-benchmark");
   for (const fs::path& candidate : candidates) {
-    const fs::path contract = candidate / "workloads" / "parity-v1" / "contract.json";
+    const fs::path contract = candidate / "workloads" / "parity-v2" / "contract.json";
     std::error_code ec;
     if (fs::is_regular_file(contract, ec)) {
       return contract;
@@ -499,12 +499,12 @@ load_parity_catalog() {
   ParityCatalog catalog;
   const fs::path contract_path = parity_catalog_path();
   if (contract_path.empty()) {
-    catalog.error = "parity-v1 contract is unavailable";
+    catalog.error = "parity-v2 contract is unavailable";
     return catalog;
   }
   std::ifstream in(contract_path);
   if (!in) {
-    catalog.error = "parity-v1 contract cannot be read";
+    catalog.error = "parity-v2 contract cannot be read";
     return catalog;
   }
 
@@ -524,52 +524,70 @@ load_parity_catalog() {
     if (line.find("\"diagnostics\"") != std::string::npos) {
       break;
     }
+    if (line.find("\"cells\": [") != std::string::npos) {
+      in_phase_cells = true;
+      continue;
+    }
     if (line.find("\"token_targets\"") != std::string::npos) {
       in_token_targets = true;
     }
     if (in_token_targets && line.find('}') != std::string::npos) {
       in_token_targets = false;
     }
-    if (const auto small = json_int_on_line(line, "small")) {
+    if (const auto smoke = json_int_on_line(line, "smoke")) {
       if (in_token_targets || line.find("\"token_targets\"") != std::string::npos) {
-        catalog.token_targets[0] = *small;
+        catalog.token_targets[0] = *smoke;
       }
     }
-    if (const auto medium = json_int_on_line(line, "medium")) {
+    if (const auto development = json_int_on_line(line, "development")) {
       if (in_token_targets || line.find("token_targets") != std::string::npos) {
-        catalog.token_targets[1] = *medium;
+        catalog.token_targets[1] = *development;
       }
     }
-    if (const auto large = json_int_on_line(line, "large")) {
+    if (const auto reference = json_int_on_line(line, "reference")) {
       if (in_token_targets || line.find("token_targets") != std::string::npos) {
-        catalog.token_targets[2] = *large;
+        catalog.token_targets[2] = *reference;
       }
     }
 
-    const auto id = json_string_on_line(line, "id");
-    if (id.has_value() && id->rfind("compiler-phase/", 0) == 0) {
+    if (in_phase_cells
+        && line.find("\"algorithm_id\": \"compiler_phase.") != std::string::npos) {
       if (current.has_value()) {
-        catalog.phase_cells.push_back(*current);
-      }
-      ParityPhaseCell cell;
-      cell.id = *id;
-      const std::string phase_prefix = "compiler-phase/";
-      const size_t phase_end = cell.id.find('/', phase_prefix.size());
-      if (phase_end == std::string::npos) {
-        catalog.error = "parity-v1 phase cell id is malformed";
+        catalog.error = "parity-v2 phase cell is incomplete";
         return catalog;
       }
-      cell.phase = cell.id.substr(phase_prefix.size(), phase_end - phase_prefix.size());
-      cell.tier = cell.id.substr(phase_end + 1);
-      current = std::move(cell);
-      in_phase_cells = true;
+      current = ParityPhaseCell {};
       continue;
     }
     if (!in_phase_cells || !current.has_value()) {
       continue;
     }
+    const auto id = json_string_on_line(line, "id");
+    if (id.has_value() && id->rfind("compiler-phase/", 0) == 0) {
+      current->id = *id;
+      const std::string phase_prefix = "compiler-phase/";
+      const size_t phase_end = current->id.find('/', phase_prefix.size());
+      if (phase_end == std::string::npos) {
+        catalog.error = "parity-v2 phase cell id is malformed";
+        return catalog;
+      }
+      current->phase = current->id.substr(phase_prefix.size(), phase_end - phase_prefix.size());
+      current->tier = current->id.substr(phase_end + 1);
+      continue;
+    }
     if (const auto units = json_int_on_line(line, "work_units")) {
       current->work_units = *units;
+      if (current->id.empty() || current->source_digest.empty()
+          || current->expected_output_digest.empty()) {
+        catalog.error = "parity-v2 phase cell is incomplete";
+        return catalog;
+      }
+      catalog.phase_cells.push_back(*current);
+      current.reset();
+      if (catalog.phase_cells.size() == 15) {
+        in_phase_cells = false;
+      }
+      continue;
     }
     if (const auto digest = json_string_on_line(line, "styio")) {
       current->source_digest = *digest;
@@ -579,14 +597,15 @@ load_parity_catalog() {
     }
   }
   if (current.has_value()) {
-    catalog.phase_cells.push_back(*current);
+    catalog.error = "parity-v2 phase cell is incomplete";
+    return catalog;
   }
   if (catalog.phase_cells.size() != 15) {
-    catalog.error = "parity-v1 phase sweep is incomplete";
+    catalog.error = "parity-v2 phase sweep is incomplete";
     return catalog;
   }
   if (catalog.token_targets != std::array<int, 3> {1000, 16000, 128000}) {
-    catalog.error = "parity-v1 phase token targets are invalid";
+    catalog.error = "parity-v2 phase token targets are invalid";
   }
   return catalog;
 }
@@ -1926,10 +1945,10 @@ TEST(StyioSoakSingleThread, ParityPhaseSweepReport) {
 
   const char* tier_env = std::getenv("STYIO_PARITY_SWEEP_TIER");
   const std::string tier =
-    (tier_env != nullptr && tier_env[0] != '\0') ? tier_env : "small";
-  ASSERT_TRUE(tier == "small" || tier == "medium" || tier == "large")
+    (tier_env != nullptr && tier_env[0] != '\0') ? tier_env : "smoke";
+  ASSERT_TRUE(tier == "smoke" || tier == "development" || tier == "reference")
     << "unsupported parity sweep tier";
-  const int tier_index = tier == "small" ? 0 : (tier == "medium" ? 1 : 2);
+  const int tier_index = tier == "smoke" ? 0 : (tier == "development" ? 1 : 2);
   const int expected_work_units = catalog.token_targets[static_cast<size_t>(tier_index)];
 
   const int loops = read_env_i32("STYIO_PARITY_PHASE_ITERS", 1, 1, 100000);

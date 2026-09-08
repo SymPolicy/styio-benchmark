@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-"""Privacy-safe isolated RSS replay helper for the parity-v2 runner.
+"""Privacy-safe isolated RSS replay helper for the standard parity runner.
 
-The historical helper remains available to parity-v1 consumers.  This module
-loads the same wait4/process-tree implementation under a distinct public
-name, so parity-v2 can evolve its report schema without importing the old
-runner.  The helper returns numeric process facts only; it never exposes
-commands, paths, or child text.
+This module exposes the shared wait4/process-tree implementation under the
+standard runner's public name. The helper returns numeric process facts only;
+it never exposes commands, paths, or child text.
 """
 
 from __future__ import annotations

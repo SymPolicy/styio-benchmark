@@ -1,0 +1,51 @@
+# Codex R1-R4 targeted verification
+date: 2026-09-08
+
+Command:
+.venv/bin/python -m pytest -q tests/test_styio_analyzer.py
+Result: 31 passed in 145.55s.
+
+After public build-configuration and cross-field consistency changes:
+.venv/bin/python -m pytest -q tests/test_styio_analyzer.py tests/test_standard_parity_gate.py tests/test_standard_parity_catalog.py tests/test_standard_cpp_strength.py
+Result: 60 passed in 262.44s. No skips or failures.
+
+After the final custom-configuration privacy guard and selection-shape checks:
+.venv/bin/python -m pytest -q tests/test_styio_analyzer.py -k 'verify or build_configuration or runtime_probe or native_cxx_alias'
+Result: 21 passed, 13 deselected in 34.40s. Deselected tests are not new passes.
+The final complete regression must cover the final source state.
+
+Behavior evidence includes:
+- Real Clang C++ linking through a clang++ symlink after all four resolution paths.
+- Runtime input observation: a live embedded tree wins over a neighboring CMakeCache;
+  removing the cache does not change that fact; actual fallback is observed only after
+  the embedded runtime becomes unavailable. These are controlled compiler fixtures.
+- Actual compare/shared-core retained and RSS failure paths preserve completed pairs,
+  an unfinished pair's raw and normalized values, and preflight correctness.
+- Partial-sample normalization, pairing, statistics and RSS mutations are rejected.
+- Source/input identity and catalog coverage mutations are rejected.
+- Custom CMake definitions are not copied into public configuration.
+
+One-time migration inspection (not a permanent test):
+- Removed walk_runtime_root and cmake_source_root production heuristics.
+- Removed permanent source-string migration assertions from Analyzer tests.
+Result: both checks passed.
+
+py_compile passed for the two Analyzer modules and its tests.
+git diff --check passed for the edited tracked entrypoint/specification and parity adapter.
+
+These checks are not real A/A or A/B performance evidence. Real runs are stored
+separately in codex-aa/ and codex-ab/ after collection completes.
+
+After real collection, before the final complete regression:
+- Real relocated Styio binary, with its original embedded runtime still present:
+  native_build_probe returned mismatch, as required. No CMakeCache was adjacent
+  to the relocated binary. Temporary files were removed. Evidence:
+  codex-relocated-runtime.json. This is an untimed binding counterexample.
+- Independent standard-library arithmetic checks of 3 A/A and 9 A/B cells passed;
+  see codex-aa/arithmetic-check.json and codex-ab/arithmetic-check.json.
+- Public-report privacy validation passed for the six new results/recompute/
+  arithmetic JSON files. Both generated summaries passed the local-path scan.
+
+The final source state was then covered by the single complete regression:
+catalog-check pass, cpp-strength pass, 72 passed and 1 skipped.
+See codex-final-regression.txt for the command, duration and skip disclosure.

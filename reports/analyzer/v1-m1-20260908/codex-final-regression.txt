@@ -1,0 +1,18 @@
+# Codex R1-R4 final complete regression
+date: 2026-09-08
+One run, after source review, focused checks and real A/A + A/B collection.
+STYIO_ROOT: isolated clean candidate checkout at ec6ba02.
+Local paths and raw subprocess output are excluded from this public record.
+
+Command: .venv/bin/python tools/standard_parity_gate.py catalog-check --contract workloads/parity-v2/contract.json
+Result: {"check": "catalog-check", "decision": "pass", "exit_code": 0}
+
+Command: .venv/bin/python tools/standard_parity_gate.py cpp-strength --contract workloads/parity-v2/contract.json
+Result: {"check": "cpp-strength", "decision": "pass", "exit_code": 0}
+
+Command: .venv/bin/python -m pytest -q -rs
+Result: {"check": "pytest", "exit_code": 0, "summary": "72 passed, 1 skipped in 189.78s (0:03:09)"}
+
+Skipped: 1 parser scaling test; the separate perf-parity-baseline compiler build is unavailable. A skip is not a pass.
+The five async-runtime black-box tests executed and passed with the isolated Styio checkout.
+All three final checks exited 0. No source/test edits or repeated full regression followed this run.

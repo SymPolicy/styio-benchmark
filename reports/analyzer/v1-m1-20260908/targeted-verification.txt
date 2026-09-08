@@ -1,0 +1,19 @@
+# Targeted verification after F1-F5 fixes
+date: 2026-09-08
+
+Command:
+
+.venv/bin/python -m pytest -q \
+  tests/test_styio_analyzer.py \
+  tests/test_standard_parity_gate.py \
+  tests/test_standard_parity_catalog.py \
+  tests/test_standard_cpp_strength.py
+
+Result: 45 passed in 160.38s. No skips. No failures.
+
+These tests cover the original AC-01..AC-07 suite plus the F1-F5
+acceptance counterexamples. They are not real A/A or A/B evidence.
+
+F5 removed the permanent source-string migration gate. Sampler
+reuse is still checked by the adapter calling measure_paired_cell
+and by calibrate_batch_count / ratio_dimension behavior.

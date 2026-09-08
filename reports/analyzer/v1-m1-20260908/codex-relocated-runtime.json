@@ -1,0 +1,19 @@
+{
+  "decision": "pass",
+  "kind": "real Styio binary relocated while its embedded runtime tree remains present",
+  "revision": "ec6ba022519fd960c4457e0c890df2dd65366256",
+  "neighbor_cmake_cache": "absent",
+  "intended_runtime_marker": "present",
+  "actual_binding": {
+    "runtime_binding": "mismatch",
+    "runtime_marker": "present",
+    "binding_basis": "native_build_probe",
+    "native_configuration": {
+      "optimization": "O3",
+      "lto": "disabled",
+      "target": "compiler-default"
+    }
+  },
+  "expected_binding": "mismatch",
+  "note": "One untimed native-build observation; the observer intentionally stops before linking. This is a binding counterexample, not a performance measurement."
+}

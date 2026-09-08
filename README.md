@@ -22,6 +22,49 @@ matching Styio checkout; other benchmark routes should stay black-box.
 - `regressions/`: minimized regression artifact area.
 - `docs/`: benchmark coverage, regression templates, and migration notes.
 
+## Analyzer implementation documents
+
+Styio Analyzer v1 compares two Styio builds on the existing parity-v2 corpus.
+The CLI is `tools/styio_analyzer.py`. LNT history, broader corpora, and
+optimization diagnostics remain later deliveries.
+
+- [System design](docs/STYIO-ANALYZER-DESIGN.md)
+- [v1 behavior specification](docs/STYIO-ANALYZER-V1.md)
+- [Cursor implementation and independent acceptance plan](docs/STYIO-ANALYZER-IMPLEMENTATION-PLAN.md)
+- [Cursor starting prompt](docs/prompts/styio-analyzer-v1.cursor.md)
+
+```bash
+python3 tools/styio_analyzer.py compare \
+  --baseline-root /path/to/baseline \
+  --baseline-build-dir /path/to/baseline/build \
+  --candidate-root /path/to/candidate \
+  --candidate-build-dir /path/to/candidate/build \
+  --contract workloads/parity-v2/contract.json \
+  --family llvm-scalar-chain \
+  --scale smoke \
+  --out-dir reports/analyzer/example
+
+python3 tools/styio_analyzer.py verify \
+  --contract workloads/parity-v2/contract.json \
+  --report reports/analyzer/example/results.json
+```
+
+`compare` exits 0 when selected cells were executed and required evidence is
+valid. A performance regression or no-difference result does not change that
+exit code. `verify` exits 0 when the report is consistent and coverage is
+disclosed; that is not performance acceptance of the candidate.
+
+Before timing, Analyzer observes each compiler's actual runtime source selection
+with a temporary CXX probe. It retains the CXX invocation name (including
+`clang++` symlinks), records the driver/target and public build configuration,
+and reports unconfirmed or different conditions as incomparable. Probe calls
+are excluded from all performance samples.
+
+Interrupted cells retain completed pairs and any unfinished pair's raw and
+normalized values. `verify` checks these values even when fewer samples than
+requested were collected. Pair-order metadata describes the completed prefix;
+partial metrics do not publish aggregate statistics.
+
 ## Quick Start
 
 Run the async runtime smoke contract against a Styio checkout:
@@ -58,38 +101,37 @@ async-runtime/run-async-bench.py \
 Run the canonical Styio/C++ parity evidence route:
 
 ```bash
-python3 tools/parity_gate.py run \
-  --contract workloads/parity-v1/contract.json \
+python3 tools/standard_parity_gate.py run \
+  --contract workloads/parity-v2/contract.json \
+  --family clbg-fannkuch-redux --scale smoke \
   --styio-root /path/to/styio \
-  --build-dir /path/to/styio/build/perf-parity \
-  --out-dir reports/perf-parity/run \
-  --sizes small --warmups 3 --repetitions 11
+  --build-dir /path/to/styio/build \
+  --out-dir reports/standard-parity/shards/clbg-fannkuch-redux
 ```
 
-The runner measures only the three frozen catalog routes: fresh optimized
-native build plus execution for compile-and-run, fresh native build, and
-execution of artifacts built outside the timed region. Short cells use one
-equal calibrated batch count for both implementations and retain normalized
-samples (the faster side sets a 500 ms minimum-time floor). With eleven
-repetitions, bounded whole-cell retries select the first complete attempt below
-the fixed 5% CV gate and preserve every rejected attempt as privacy-safe audit
-evidence; no sample is discarded. It validates both outputs against the
-independent catalog digest before retaining paired samples. `run` writes
-evidence only; parity thresholds are applied separately:
+The standard runner validates exact outputs, calibrates one equal-work batch
+for both implementations to a 500 ms minimum retained interval, performs three
+warm-ups and eleven retained reproducibly interleaved pairs, and keeps every
+raw and normalized sample. Time is observer-free; process-tree RSS comes from
+an isolated replay. Results carry paired 95% bootstrap intervals and are scored
+separately by scale and by `compile-and-run`, `native-build`, and `native-run`.
+Compiler-phase records remain diagnostic and never enter the primary
+`native-run` claim. Full rules are in
+[`docs/STANDARD-PARITY.md`](docs/STANDARD-PARITY.md).
+
+After running all reference shards with the explicit controlled-run
+attestation and merging them, apply the strict gate:
 
 ```bash
-python3 tools/parity_gate.py verify \
-  --contract workloads/parity-v1/contract.json \
-  --report reports/perf-parity/run/results.json \
-  --mode final --privacy strict --require-all
+python3 tools/standard_parity_gate.py verify \
+  --contract workloads/parity-v2/contract.json \
+  --report reports/standard-parity/final/results.json \
+  --privacy strict --require-all
 ```
 
-Reports contain stable workload, toolchain-version, sample, RSS, phase
-provenance, calibration, focus-budget, and statistic fields only. Paths,
-commands, host identity, environment values, URLs, and raw subprocess text are
-rejected recursively before serialization. The phase sweep uses one isolated
-probe pass and one Clang time trace per sample/tier, shared by all five phase
-cells.
+Strict reference timing is intentionally not run on shared hosted CI machines;
+CI validates the frozen catalog, C++ baseline strength, privacy rules,
+statistics, aggregation, and fail-closed verifier.
 
 Run the benchmark-owned core corpus through a Styio compiler:
 

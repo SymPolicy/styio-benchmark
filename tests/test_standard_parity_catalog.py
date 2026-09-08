@@ -37,9 +37,24 @@ def test_catalog_is_standards_derived_and_complete() -> None:
     assert catalog["scales"]["smoke"]["official"] is False
     assert tuple(route["id"] for route in catalog["routes"]) == ("compile-and-run", "native-build", "native-run")
     assert len(catalog["workloads"]) == 11
-    assert {workload["standard_family"] for workload in catalog["workloads"]} == {"CLBG", "LLVM-TestSuite"}
+    assert {workload["standard_family"] for workload in catalog["workloads"]} == {"CLBG-Style", "LLVM-TestSuite-Style"}
+    assert all(workload["provenance"]["authority"] == "Project-Microkernel" for workload in catalog["workloads"])
+    assert all("not an official suite program" in workload["provenance"]["official_description"] for workload in catalog["workloads"])
     assert len(catalog["compiler_phase_sweep"]["cells"]) == 15
     assert {case["id"] for case in catalog["unsupported_cases"]} == {"bit-packed", "byte-buffer", "object-node", "regular-expression", "arbitrary-precision"}
+    measurement = catalog["measurement_contract"]
+    assert measurement["minimum_sample_time_s"] == 0.5
+    assert measurement["minimum_time_scope"] == "workload-route-cells"
+    assert measurement["compiler_phase_policy"] == "diagnostic-shared-probe"
+    assert measurement["pair_order"] == "deterministic-random-interleaving-v1"
+    assert measurement["confidence_interval"] == {
+        "level": 0.95,
+        "method": "paired-hierarchical-percentile-bootstrap",
+        "resamples": 10000,
+    }
+    assert measurement["primary_route"] == "native-run"
+    assert measurement["controlled_reference_required"] is True
+    assert measurement["required_memory_geomean_ratio"] == 1.1
 
 
 def test_catalog_digests_are_generated_from_independent_sources() -> None:

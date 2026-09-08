@@ -16,6 +16,7 @@ import importlib.util
 import json
 import math
 import os
+import random
 import re
 import shutil
 import statistics
@@ -28,19 +29,43 @@ from typing import Any, Iterable, Mapping, Sequence
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def _load_measurement_core() -> Any:
+    path = Path(__file__).resolve().parent / "measurement_core.py"
+    spec = importlib.util.spec_from_file_location("styio_measurement_core", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("measurement_core_missing")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+_measurement_core = _load_measurement_core()
 CATALOG_DEFAULT = ROOT / "workloads" / "parity-v2" / "contract.json"
-REPORT_SCHEMA = "styio.parity.standard.report.v2"
-MERGED_SCHEMA = "styio.parity.standard.merged.v2"
-REPORT_VERSION = 2
-RUNNER_VERSION = "standard-parity-gate-2"
+REPORT_SCHEMA = "styio.parity.standard.report.v3"
+MERGED_SCHEMA = "styio.parity.standard.merged.v3"
+VERDICT_SCHEMA = "styio.parity.standard.verdict.v3"
+REPORT_VERSION = 3
+RUNNER_VERSION = "standard-parity-gate-3"
 ROUTES = ("compile-and-run", "native-build", "native-run")
+PRIMARY_ROUTE = "native-run"
 SCALES = ("smoke", "development", "reference")
 PHASES = ("tokenize", "parse", "semantic-analysis", "lowering", "llvm-emission")
 REQUIRED_REPETITIONS = 11
 DEFAULT_WARMUPS = 3
+MIN_SAMPLE_DURATION_S = 0.5
+CALIBRATION_TARGET_DURATION_S = 0.75
+MAX_BATCH_COUNT = 20_000
+CONFIDENCE_LEVEL = 0.95
+BOOTSTRAP_RESAMPLES = 10_000
+BOOTSTRAP_SEED = 0x53545949
 MAX_CV_PCT = 5.0
 MAX_CASE_RATIO = 1.10
 MAX_GEOMEAN_RATIO = 1.05
+MAX_MEMORY_CASE_RATIO = 1.15
+MAX_MEMORY_GEOMEAN_RATIO = 1.10
 CPP_FLAGS = ("-std=c++20", "-O3", "-DNDEBUG", "-fno-lto")
 CPP_STANDARD = "C++20"
 HEX_DIGEST = re.compile(r"^[0-9a-f]{64}$")
@@ -54,28 +79,11 @@ FORBIDDEN_KEY_RE = re.compile(
 )
 
 
-class GateError(RuntimeError):
-    """Fail-closed error carrying a privacy-safe stable reason code."""
-
-    def __init__(self, reason_code: str, message: str = "") -> None:
-        self.reason_code = reason_code
-        super().__init__(message or reason_code)
-
-
-class PrivacyError(GateError):
-    pass
-
-
-def _sha256(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()
-
-
-def _canonical_json(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-
-
-def contract_digest(contract: Mapping[str, Any]) -> str:
-    return _sha256(_canonical_json(contract))
+GateError = _measurement_core.ReasonError
+PrivacyError = _measurement_core.PrivacyError
+_sha256 = _measurement_core.sha256
+_canonical_json = _measurement_core.canonical_json
+contract_digest = _measurement_core.contract_digest
 
 
 def _load_generators(catalog_path: Path) -> Any:
@@ -209,6 +217,19 @@ def validate_catalog(catalog: Mapping[str, Any], catalog_path: Path | None = Non
     all_ids: set[str] = set()
     for workload in workloads:
         family = str(workload["id"])
+        _require(workload.get("standard_family") in {"CLBG-Style", "LLVM-TestSuite-Style"}, "catalog_workload_lineage")
+        workload_algorithm = workload.get("algorithm_id")
+        _require(isinstance(workload_algorithm, str) and workload_algorithm, "catalog_workload_algorithm")
+        workload_unit = workload.get("work_unit")
+        _require(isinstance(workload_unit, str) and workload_unit, "catalog_workload_unit")
+        workload_provenance = workload.get("provenance")
+        _require(
+            isinstance(workload_provenance, dict)
+            and workload_provenance.get("authority") == "Project-Microkernel"
+            and workload_provenance.get("official_description") == "not an official suite program; independent project microkernel"
+            and isinstance(workload_provenance.get("methodology_url"), str),
+            "catalog_workload_provenance",
+        )
         input_gen, output_gen = _expected_family_generators(generators, family)
         source = workload.get("source")
         _require(isinstance(source, dict) and set(source) == {"styio", "cpp", "source_digest"}, "catalog_sources")
@@ -238,6 +259,8 @@ def validate_catalog(catalog: Mapping[str, Any], catalog_path: Path | None = Non
                 cell = next((candidate for candidate in cells if candidate.get("id") == f"{family}/{scale}/{route}"), None)
                 _require(isinstance(cell, dict), "catalog_cell_missing")
                 _validate_cell(cell, family=family, scale=scale, route=route, size=size, source_digests=source_digests, input_digest=expected_input, output_digest=expected_output, required=scale == "reference")
+                _require(cell.get("algorithm_id") == workload_algorithm, "catalog_cell_algorithm_mismatch")
+                _require(cell.get("work_unit") == workload_unit, "catalog_cell_work_unit_mismatch")
                 _require(cell["id"] not in all_ids, "catalog_duplicate_cell")
                 all_ids.add(cell["id"]); seen.add(cell["id"])
         _require(len(seen) == len(cells), "catalog_extra_cell")
@@ -274,6 +297,41 @@ def validate_catalog(catalog: Mapping[str, Any], catalog_path: Path | None = Non
     measurement = catalog.get("measurement_contract")
     _require(isinstance(measurement, dict) and measurement.get("warmups") == DEFAULT_WARMUPS and measurement.get("retained_repetitions") == REQUIRED_REPETITIONS, "catalog_measurement")
     _require(measurement.get("max_cv_pct") == MAX_CV_PCT and measurement.get("required_case_ratio") == MAX_CASE_RATIO and measurement.get("required_geomean_ratio") == MAX_GEOMEAN_RATIO, "catalog_thresholds")
+    _require(
+        measurement.get("minimum_sample_time_s") == MIN_SAMPLE_DURATION_S
+        and measurement.get("minimum_time_scope") == "workload-route-cells"
+        and measurement.get("calibration_target_time_s") == CALIBRATION_TARGET_DURATION_S
+        and measurement.get("maximum_batch_count") == MAX_BATCH_COUNT
+        and measurement.get("pair_order") == "deterministic-random-interleaving-v1",
+        "catalog_timing_method",
+    )
+    confidence = measurement.get("confidence_interval")
+    _require(
+        isinstance(confidence, dict)
+        and confidence.get("level") == CONFIDENCE_LEVEL
+        and confidence.get("resamples") == BOOTSTRAP_RESAMPLES
+        and confidence.get("method") == "paired-hierarchical-percentile-bootstrap",
+        "catalog_confidence_method",
+    )
+    _require(
+        measurement.get("required_memory_case_ratio") == MAX_MEMORY_CASE_RATIO
+        and measurement.get("required_memory_geomean_ratio") == MAX_MEMORY_GEOMEAN_RATIO
+        and measurement.get("primary_route") == PRIMARY_ROUTE
+        and measurement.get("controlled_reference_required") is True,
+        "catalog_memory_and_control",
+    )
+    _require(
+        measurement.get("aggregate_policy") == "equal-weight workload cells, separated by scale and route; compiler phases are diagnostic only",
+        "catalog_aggregate_policy",
+    )
+    _require(measurement.get("compiler_phase_policy") == "diagnostic-shared-probe", "catalog_phase_policy")
+    provenance = catalog.get("provenance")
+    _require(
+        isinstance(provenance, dict)
+        and provenance.get("standard") == "standards-derived measurement over independent project microkernels"
+        and provenance.get("workload_lineage") == "clbg-* and llvm-* identifiers are historical style labels, not claims that official suite programs are included",
+        "catalog_provenance_scope",
+    )
     serialized = json.dumps(catalog, sort_keys=True)
     _require("cached-jit" not in serialized and "runtime-only" not in serialized and "full-cli" not in serialized, "catalog_retired_route")
 
@@ -291,76 +349,36 @@ def load_catalog(path: str | Path = CATALOG_DEFAULT) -> tuple[dict[str, Any], Pa
 
 
 def _public_key_allowed(key: str) -> bool:
-    return not FORBIDDEN_KEY_RE.search(key)
+    return _measurement_core.public_key_allowed(key)
 
 
 def _public_string_allowed(value: str) -> bool:
-    return not ("\x00" in value or "\n" in value or "\r" in value or URL_RE.search(value) or ABS_PATH_RE.search(value) or SECRET_RE.search(value))
+    return _measurement_core.public_string_allowed(value)
 
 
-def validate_public_report(value: Any, *, strict: bool = True, _location: str = "report") -> None:
-    if isinstance(value, dict):
-        for key, child in value.items():
-            if not isinstance(key, str) or (strict and not _public_key_allowed(key)):
-                raise PrivacyError("privacy_forbidden_key", _location)
-            validate_public_report(child, strict=strict, _location=f"{_location}.{key}")
-    elif isinstance(value, (list, tuple)):
-        for index, child in enumerate(value):
-            validate_public_report(child, strict=strict, _location=f"{_location}[{index}]")
-    elif isinstance(value, str):
-        if strict and not _public_string_allowed(value):
-            raise PrivacyError("privacy_forbidden_value", _location)
-    elif isinstance(value, (int, bool)) or value is None:
-        return
-    elif isinstance(value, float):
-        if not math.isfinite(value):
-            raise PrivacyError("privacy_nonfinite_number", _location)
-    else:
-        raise PrivacyError("privacy_nonserializable", _location)
+validate_public_report = _measurement_core.validate_public_report
+assert_public_report = _measurement_core.assert_public_report
+write_public_json = _measurement_core.write_public_json
+median = _measurement_core.median
+sample_cv_pct = _measurement_core.sample_cv_pct
+geometric_mean = _measurement_core.geometric_mean
+_percentile = _measurement_core.percentile
+bootstrap_geomean_ratio_ci = _measurement_core.bootstrap_geomean_ratio_ci
+paired_log_ratios = _measurement_core.paired_log_ratios
+ratio_dimension = _measurement_core.ratio_dimension
+calibrate_batch_count = _measurement_core.calibrate_batch_count
+normalize_batched_elapsed = _measurement_core.normalize_batched_elapsed
 
 
-def assert_public_report(value: Any, *, strict: bool = True) -> Any:
-    validate_public_report(value, strict=strict)
-    return value
-
-
-def write_public_json(path: Path, payload: Mapping[str, Any]) -> None:
-    assert_public_report(payload, strict=True)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-
-def median(values: Sequence[float]) -> float:
-    if not values:
-        raise ValueError("median requires samples")
-    return float(statistics.median(values))
-
-
-def sample_cv_pct(values: Sequence[float]) -> float:
-    if len(values) < 2:
-        return 0.0
-    mean = statistics.fmean(values)
-    if mean == 0:
-        return 0.0 if all(value == 0 for value in values) else math.inf
-    return float(statistics.stdev(values) / abs(mean) * 100.0)
-
-
-def geometric_mean(values: Sequence[float]) -> float:
-    if not values or any(value <= 0 or not math.isfinite(value) for value in values):
-        raise ValueError("geometric mean requires finite positive values")
-    return float(math.exp(statistics.fmean(math.log(value) for value in values)))
-
-
-def paired_log_ratios(styio: Sequence[float], cpp: Sequence[float], *, reciprocal: bool = False) -> list[float]:
-    if len(styio) != len(cpp) or not styio or any(a <= 0 or b <= 0 for a, b in zip(styio, cpp)):
-        raise ValueError("paired samples must have equal positive length")
-    return [math.log((b / a) if reciprocal else (a / b)) for a, b in zip(styio, cpp)]
-
-
-def ratio_dimension(styio: Sequence[float], cpp: Sequence[float], *, reciprocal: bool = False) -> dict[str, Any]:
-    left, right = list(styio), list(cpp)
-    ratios = [(b / a) if reciprocal else (a / b) for a, b in zip(left, right)]
-    return {"styio_samples": left, "cpp_samples": right, "styio_median": median(left), "cpp_median": median(right), "styio_cv_pct": sample_cv_pct(left), "cpp_cv_pct": sample_cv_pct(right), "median_ratio": median(ratios), "geomean_ratio": geometric_mean(ratios), "paired_log_ratios": [math.log(value) for value in ratios]}
+def _interleaved_pair_orders(identity: str, count: int, stage: str) -> tuple[tuple[str, str], ...]:
+    return _measurement_core.interleaved_pair_orders(
+        identity,
+        count,
+        stage,
+        left="styio",
+        right="cpp",
+        runner_version=RUNNER_VERSION,
+    )
 
 
 _ratio_dimension = ratio_dimension
@@ -441,8 +459,12 @@ def _toolchain(styio_root: Path, build_dir: Path, styio_executable: Path | None 
     text = (version_proc.stdout + version_proc.stderr).decode("utf-8", errors="replace")
     if "clang" not in text.lower():
         raise GateError("clang_toolchain_required")
+    styio_version_proc = subprocess.run([str(styio_executable), "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False, timeout=10)
+    styio_version_text = (styio_version_proc.stdout + styio_version_proc.stderr).decode("utf-8", errors="replace")
     phase_probe = build_dir / "bin" / "styio_soak_test"
     return Path(styio_executable), Path(cxx), {
+        "styio_version": _public_version(styio_version_text),
+        "styio_backend": "native-aot",
         "compiler_family": "clang",
         "compiler_version": _public_version(text),
         "target_class": "portable",
@@ -485,17 +507,10 @@ def _digest_output(output: bytes) -> str:
 
 
 def _load_rss_helper() -> Any:
-    helper_path = ROOT / "native-cpp" / "standard_process_tree_rss.py"
-    spec = importlib.util.spec_from_file_location("standard_parity_process_tree_rss", helper_path)
-    if spec is None or spec.loader is None:
-        raise GateError("rss_helper_missing")
-    module = importlib.util.module_from_spec(spec)
-    sys.modules[spec.name] = module
-    spec.loader.exec_module(module)
-    return module
+    return _measurement_core.load_rss_helper()
 
 
-PHASE_TIER_NAMES = {"smoke": "small", "development": "medium", "reference": "large"}
+PHASE_TIER_NAMES = {scale: scale for scale in SCALES}
 PHASE_FOCUS_NAMES = {
     "lexer": "tokenize",
     "parser": "parse",
@@ -690,11 +705,12 @@ def _collect_phase_evidence(*, build_dir: Path, styio_root: Path, cxx: Path, sou
                         cpp_times[phase].append(values[phase])
                     cpp_rss.append(rss)
 
-        for index in range(warmups):
-            for implementation in (("styio", "cpp") if index % 2 == 0 else ("cpp", "styio")):
+        schedule_identity = f"compiler-phase/{scale}"
+        for index, order in enumerate(_interleaved_pair_orders(schedule_identity, warmups, "phase-warmup")):
+            for implementation in order:
                 collect(implementation, "warmup", index)
-        for index in range(repetitions):
-            for implementation in (("styio", "cpp") if index % 2 == 0 else ("cpp", "styio")):
+        for index, order in enumerate(_interleaved_pair_orders(schedule_identity, repetitions, "phase-retained")):
+            for implementation in order:
                 collect(implementation, "retained", index)
     except (GateError, OSError, ValueError) as exc:
         return {
@@ -746,6 +762,7 @@ def _phase_record(cell: Mapping[str, Any], *, evidence: Mapping[str, Any], corre
         "algorithm_id": cell.get("algorithm_id"),
         "focus_owner": cell.get("focus_owner"),
         "phase": phase,
+        "score_eligible": False,
         "status": status,
         "correctness": dict(correctness),
         "repetitions": repetitions,
@@ -817,78 +834,157 @@ def _measure_phase_shard(cells: Sequence[Mapping[str, Any]], *, catalog_path: Pa
         return [_phase_record(cell, evidence=evidence, correctness=correctness, warmups=warmups, repetitions=repetitions) for cell in cells]
 
 
-def _measure_cell(cell: Mapping[str, Any], *, catalog: Mapping[str, Any], catalog_path: Path, styio: Path, cxx: Path, styio_root: Path, warmups: int, repetitions: int, timeout_s: float) -> dict[str, Any]:
-    generators = _load_generators(catalog_path)
-    styio_source, cpp_source, input_bytes = _source_pair(catalog_path, cell, generators)
-    expected = str(cell["expected_output_digest"])
-    family = str(cell["family"]); route = str(cell["route"])
-    implementation_samples: dict[str, list[float]] = {"styio": [], "cpp": []}
-    rss_samples: dict[str, list[float]] = {"styio": [], "cpp": []}
-    correctness = {"styio": False, "cpp": False}
-    with tempfile.TemporaryDirectory(prefix="standard-parity-cell-") as temporary:
-        temp = Path(temporary)
-        rss_helper = _load_rss_helper()
-        input_path = temp / "input.bin"
-        input_path.write_bytes(input_bytes)
-        artifacts: dict[str, Path] = {}
-        for implementation, executable, source in (("styio", styio, styio_source), ("cpp", cxx, cpp_source)):
-            artifact = temp / f"{implementation}.bin"
-            elapsed, code, output, _ = _run(_compile_command(executable, source, artifact, styio=implementation == "styio"), cwd=styio_root, timeout_s=timeout_s)
-            if code != 0 or not artifact.exists():
-                return {"id": cell["id"], "family": family, "scale": cell["scale"], "route": route, "status": "incomplete", "correctness": correctness, "repetitions": repetitions, "warmups": warmups, "source_digests": cell.get("source_digest"), "input_digest": cell.get("input_digest"), "expected_output_digest": expected, "reason_codes": ["compile_failed"]}
-            artifacts[implementation] = artifact
-            elapsed_run, run_code, run_output, _ = _run([str(artifact)], cwd=styio_root, input_bytes=input_bytes, timeout_s=timeout_s)
-            correctness[implementation] = run_code == 0 and _digest_output(run_output) == expected
-            if not correctness[implementation]:
-                return {"id": cell["id"], "family": family, "scale": cell["scale"], "route": route, "status": "incomplete", "correctness": correctness, "repetitions": repetitions, "warmups": warmups, "source_digests": cell.get("source_digest"), "input_digest": cell.get("input_digest"), "expected_output_digest": expected, "reason_codes": ["correctness_output_digest"]}
-        def measure_one(implementation: str, index: int) -> tuple[float, float]:
-            artifact = artifacts[implementation]
-            if route == "compile-and-run":
-                fresh = temp / f"{implementation}-{index}.bin"
-                build_command = _compile_command(styio if implementation == "styio" else cxx, styio_source if implementation == "styio" else cpp_source, fresh, styio=implementation == "styio")
-                build_elapsed, code, _, _ = _run(build_command, cwd=styio_root, timeout_s=timeout_s)
-                if code != 0: raise GateError("compile_failed")
-                run_elapsed, run_code, output, _ = _run([str(fresh)], cwd=styio_root, input_bytes=input_bytes, timeout_s=timeout_s)
-                if run_code != 0 or _digest_output(output) != expected: raise GateError("correctness_output_digest")
-                replay = rss_helper.run_process(build_command, cwd=styio_root, timeout_s=timeout_s, sample_process_tree=True)
-                if replay.returncode != 0: raise GateError("compile_failed")
-                fresh.unlink(missing_ok=True)
-                return build_elapsed + run_elapsed, max(float(replay.peak_rss_kib), 0.001)
-            if route == "native-build":
-                artifact = temp / f"build-{implementation}-{index}.bin"
-                build_command = _compile_command(styio if implementation == "styio" else cxx, styio_source if implementation == "styio" else cpp_source, artifact, styio=implementation == "styio")
-                elapsed, code, _, _ = _run(build_command, cwd=styio_root, timeout_s=timeout_s)
-                if code != 0: raise GateError("compile_failed")
-                replay = rss_helper.run_process(build_command, cwd=styio_root, timeout_s=timeout_s, sample_process_tree=True)
-                if replay.returncode != 0: raise GateError("compile_failed")
-                artifact.unlink(missing_ok=True)
-                return elapsed, max(float(replay.peak_rss_kib), 0.001)
-            elapsed, code, output, _ = _run([str(artifact)], cwd=styio_root, input_bytes=input_bytes, timeout_s=timeout_s)
-            if code != 0 or _digest_output(output) != expected: raise GateError("correctness_output_digest")
-            replay_output = temp / f"rss-replay-{implementation}-{index}.out"
-            replay = rss_helper.run_process([str(artifact)], cwd=styio_root, stdin_path=input_path, stdout_path=replay_output, timeout_s=timeout_s, sample_process_tree=True)
-            replay_output.unlink(missing_ok=True)
-            if replay.returncode != 0: raise GateError("correctness_output_digest")
-            return elapsed, max(float(replay.peak_rss_kib), 0.001)
-        for warmup_index in range(warmups):
-            for implementation in ("styio", "cpp") if warmup_index % 2 == 0 else ("cpp", "styio"):
-                measure_one(implementation, -warmup_index - 1)
-        for index in range(repetitions):
-            order = ("styio", "cpp") if index % 2 == 0 else ("cpp", "styio")
-            for implementation in order:
-                elapsed, rss = measure_one(implementation, index)
-                implementation_samples[implementation].append(elapsed)
-                rss_samples[implementation].append(rss)
-    time_ratio = ratio_dimension(implementation_samples["styio"], implementation_samples["cpp"])
-    memory_ratio = ratio_dimension(rss_samples["styio"], rss_samples["cpp"])
-    status = "pass" if correctness == {"styio": True, "cpp": True} else "incomplete"
-    record = {"id": cell["id"], "family": family, "scale": cell["scale"], "route": route, "required": bool(cell.get("required")), "work_units": cell["work_units"], "algorithm_id": cell.get("algorithm_id"), "focus_owner": cell.get("focus_owner"), "status": status, "correctness": correctness, "repetitions": repetitions, "warmups": warmups, "source_digests": cell.get("source_digest"), "input_digest": cell.get("input_digest"), "expected_output_digest": expected, "time_samples_s": implementation_samples, "peak_rss_samples_kib": rss_samples, "time": time_ratio, "peak_rss": memory_ratio, "throughput": ratio_dimension(implementation_samples["styio"], implementation_samples["cpp"], reciprocal=True), "reason_codes": []}
+def _batched_output_matches(output: Path, expected: bytes, count: int, *, repeated: bool) -> bool:
+    return _measurement_core.batched_output_matches(output, expected, count, repeated=repeated)
+
+
+def _incomplete_cell(
+    cell: Mapping[str, Any],
+    *,
+    correctness: Mapping[str, bool],
+    warmups: int,
+    repetitions: int,
+    reason: str,
+) -> dict[str, Any]:
+    record = _measurement_core.incomplete_cell(
+        cell,
+        left_name="styio",
+        right_name="cpp",
+        correctness=correctness,
+        warmups=warmups,
+        repetitions=repetitions,
+        reason=reason,
+    )
+    record.pop("side_names", None)
     return record
 
 
-def run_shard(catalog: Mapping[str, Any], catalog_path: Path, *, family: str, scale: str, styio_root: Path, build_dir: Path, output_dir: Path, warmups: int = DEFAULT_WARMUPS, repetitions: int = REQUIRED_REPETITIONS, timeout_s: float = 300.0) -> dict[str, Any]:
+def _measure_cell(cell: Mapping[str, Any], *, catalog: Mapping[str, Any], catalog_path: Path, styio: Path, cxx: Path, styio_root: Path, warmups: int, repetitions: int, timeout_s: float) -> dict[str, Any]:
+    del catalog
+    generators = _load_generators(catalog_path)
+    styio_source, cpp_source, input_bytes = _source_pair(catalog_path, cell, generators)
+    expected_digest = str(cell["expected_output_digest"])
+    expected_output = generators.reference_for(str(cell["family"]), int(cell["work_units"]))
+    left = _measurement_core.SideSpec("styio", styio, styio_source, styio_root, True)
+    right = _measurement_core.SideSpec("cpp", cxx, cpp_source, styio_root, False)
+    try:
+        record = _measurement_core.measure_paired_cell(
+            cell,
+            left=left,
+            right=right,
+            input_bytes=input_bytes,
+            expected_output=expected_output,
+            expected_digest=expected_digest,
+            warmups=warmups,
+            repetitions=repetitions,
+            timeout_s=timeout_s,
+            runner_version=RUNNER_VERSION,
+            ratio_numerator="styio",
+            ratio_denominator="cpp",
+        )
+    except _measurement_core.ReasonError as exc:
+        raise GateError(exc.reason_code) from exc
+    record.pop("side_names", None)
+    return record
+
+
+def _capability_disclosure(catalog: Mapping[str, Any]) -> dict[str, Any]:
+    supported = sorted(str(workload["id"]) for workload in catalog.get("workloads", []))
+    blocked = sorted(str(case["id"]) for case in catalog.get("unsupported_cases", []))
+    return {
+        "supported_family_count": len(supported),
+        "supported_family_ids": supported,
+        "blocked_case_count": len(blocked),
+        "blocked_case_ids": blocked,
+        "blocked_cases_scored": False,
+    }
+
+
+def _aggregate_dimension(cells: Sequence[Mapping[str, Any]], sample_key: str) -> dict[str, Any]:
+    groups: list[list[float]] = []
+    for cell in cells:
+        samples = cell.get(sample_key)
+        if not isinstance(samples, Mapping):
+            continue
+        styio = samples.get("styio")
+        cpp = samples.get("cpp")
+        if not isinstance(styio, list) or not isinstance(cpp, list):
+            continue
+        try:
+            groups.append(paired_log_ratios(styio, cpp))
+        except (TypeError, ValueError):
+            continue
+    if not groups:
+        return {"cell_count": 0}
+    case_ratios = [math.exp(statistics.fmean(group)) for group in groups]
+    return {
+        "cell_count": len(groups),
+        "geomean_ratio": math.exp(statistics.fmean(math.log(value) for value in case_ratios)),
+        "max_case_ratio": max(case_ratios),
+        "confidence_interval": bootstrap_geomean_ratio_ci(groups),
+    }
+
+
+def report_aggregates(cells: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Build route-separated summaries; never mix phases, scales, or routes."""
+
+    scales: dict[str, Any] = {}
+    for scale in SCALES:
+        routes: dict[str, Any] = {}
+        for route in ROUTES:
+            selected = [
+                cell
+                for cell in cells
+                if cell.get("family") != "compiler-phase"
+                and cell.get("scale") == scale
+                and cell.get("route") == route
+                and cell.get("status") == "pass"
+                and cell.get("correctness") == {"styio": True, "cpp": True}
+            ]
+            if selected:
+                routes[route] = {
+                    "time": _aggregate_dimension(selected, "time_samples_s"),
+                    "peak_rss": _aggregate_dimension(selected, "peak_rss_samples_kib"),
+                }
+        if routes:
+            scales[scale] = {"official": scale == "reference", "routes": routes}
+    phase_count = sum(1 for cell in cells if cell.get("family") == "compiler-phase")
+    return {
+        "policy": "equal-weight-cells-separated-by-scale-and-route",
+        "primary_route": PRIMARY_ROUTE,
+        "scales": scales,
+        "compiler_phases": {"diagnostic_only": True, "cell_count": phase_count},
+        "mixed_headline_score": False,
+    }
+
+
+def _measurement_metadata(warmups: int, repetitions: int, run_class: str) -> dict[str, Any]:
+    return {
+        "warmups": warmups,
+        "repetitions": repetitions,
+        "minimum_sample_time_s": MIN_SAMPLE_DURATION_S,
+        "minimum_time_scope": "workload-route-cells",
+        "calibration_target_time_s": CALIBRATION_TARGET_DURATION_S,
+        "maximum_batch_count": MAX_BATCH_COUNT,
+        "max_cv_pct": MAX_CV_PCT,
+        "observer_free_timing": True,
+        "isolated_memory_replay": True,
+        "sample_policy": "retain-all",
+        "pair_order": "deterministic-random-interleaving-v1",
+        "compiler_phase_policy": "diagnostic-shared-probe",
+        "confidence_interval": {
+            "level": CONFIDENCE_LEVEL,
+            "method": "paired-hierarchical-percentile-bootstrap",
+            "resamples": BOOTSTRAP_RESAMPLES,
+        },
+        "run_control_class": run_class,
+    }
+
+
+def run_shard(catalog: Mapping[str, Any], catalog_path: Path, *, family: str, scale: str, styio_root: Path, build_dir: Path, output_dir: Path, warmups: int = DEFAULT_WARMUPS, repetitions: int = REQUIRED_REPETITIONS, timeout_s: float = 300.0, run_class: str = "development") -> dict[str, Any]:
     _require(scale in (*SCALES, "all"), "unknown_scale")
     _require(warmups >= 0 and repetitions > 0, "invalid_repetition_budget")
+    _require(run_class in {"development", "controlled"}, "invalid_run_control")
     styio, cxx, toolchain = _toolchain(styio_root, build_dir)
     cells = deterministic_shard(catalog, family, scale)
     if family == "compiler-phase":
@@ -905,7 +1001,25 @@ def run_shard(catalog: Mapping[str, Any], catalog_path: Path, *, family: str, sc
         )
     else:
         report_cells = [_measure_cell(cell, catalog=catalog, catalog_path=catalog_path, styio=styio, cxx=cxx, styio_root=styio_root, warmups=warmups, repetitions=repetitions, timeout_s=timeout_s) for cell in cells]
-    report = {"schema": REPORT_SCHEMA, "schema_version": REPORT_VERSION, "catalog_id": catalog["catalog_id"], "contract_digest": contract_digest(catalog), "runner_version": RUNNER_VERSION, "selection": {"family": family, "scale": scale, "scale_classification": "all-labelled-scales" if scale == "all" else catalog["scales"][scale]["label"], "cell_ids": [cell["id"] for cell in cells]}, "toolchain": toolchain, "measurement": {"warmups": warmups, "repetitions": repetitions, "max_cv_pct": MAX_CV_PCT, "observer_free_timing": True, "isolated_memory_replay": True, "sample_policy": "retain-all"}, "cells": report_cells, "diagnostics": []}
+    report = {
+        "schema": REPORT_SCHEMA,
+        "schema_version": REPORT_VERSION,
+        "catalog_id": catalog["catalog_id"],
+        "contract_digest": contract_digest(catalog),
+        "runner_version": RUNNER_VERSION,
+        "selection": {
+            "family": family,
+            "scale": scale,
+            "scale_classification": "all-labelled-scales" if scale == "all" else catalog["scales"][scale]["label"],
+            "cell_ids": [cell["id"] for cell in cells],
+        },
+        "toolchain": toolchain,
+        "measurement": _measurement_metadata(warmups, repetitions, run_class),
+        "capabilities": _capability_disclosure(catalog),
+        "aggregates": report_aggregates(report_cells),
+        "cells": report_cells,
+        "diagnostics": [],
+    }
     write_public_json(output_dir / "results.json", report)
     return report
 
@@ -918,7 +1032,13 @@ def merge_reports(catalog: Mapping[str, Any], report_paths: Iterable[Path], outp
         except (OSError, json.JSONDecodeError) as exc:
             raise GateError("report_unreadable") from exc
         assert_public_report(report)
-        _require(report.get("schema") == REPORT_SCHEMA and report.get("contract_digest") == contract_digest(catalog), "merge_contract_mismatch")
+        _require(
+            report.get("schema") == REPORT_SCHEMA
+            and report.get("schema_version") == REPORT_VERSION
+            and report.get("runner_version") == RUNNER_VERSION
+            and report.get("contract_digest") == contract_digest(catalog),
+            "merge_contract_mismatch",
+        )
         selected_ids = report.get("selection", {}).get("cell_ids") if isinstance(report.get("selection"), Mapping) else None
         report_ids = [str(cell.get("id")) for cell in report.get("cells", [])]
         _require(isinstance(selected_ids, list) and set(selected_ids) == set(report_ids), "merge_selection_mismatch")
@@ -927,13 +1047,34 @@ def merge_reports(catalog: Mapping[str, Any], report_paths: Iterable[Path], outp
     _require(reports, "merge_empty")
     base_toolchain = reports[0].get("toolchain")
     base_measurement = reports[0].get("measurement")
+    expected_capabilities = _capability_disclosure(catalog)
     all_cells: list[dict[str, Any]] = []; identities: set[str] = set()
     for report in reports:
-        _require(report.get("toolchain") == base_toolchain and report.get("measurement") == base_measurement, "merge_environment_mismatch")
+        _require(
+            report.get("toolchain") == base_toolchain
+            and report.get("measurement") == base_measurement
+            and report.get("capabilities") == expected_capabilities,
+            "merge_environment_mismatch",
+        )
         for cell in report.get("cells", []):
             identity = str(cell.get("id")); _require(identity not in identities, "merge_duplicate_cell")
             identities.add(identity); all_cells.append(cell)
-    merged = {"schema": MERGED_SCHEMA, "schema_version": REPORT_VERSION, "catalog_id": catalog["catalog_id"], "contract_digest": contract_digest(catalog), "runner_version": RUNNER_VERSION, "toolchain": base_toolchain, "measurement": base_measurement, "shards": len(reports), "selection": {"cell_ids": sorted(identities)}, "cells": sorted(all_cells, key=lambda cell: str(cell.get("id"))), "diagnostics": []}
+    sorted_cells = sorted(all_cells, key=lambda cell: str(cell.get("id")))
+    merged = {
+        "schema": MERGED_SCHEMA,
+        "schema_version": REPORT_VERSION,
+        "catalog_id": catalog["catalog_id"],
+        "contract_digest": contract_digest(catalog),
+        "runner_version": RUNNER_VERSION,
+        "toolchain": base_toolchain,
+        "measurement": base_measurement,
+        "capabilities": expected_capabilities,
+        "aggregates": report_aggregates(sorted_cells),
+        "shards": len(reports),
+        "selection": {"cell_ids": sorted(identities)},
+        "cells": sorted_cells,
+        "diagnostics": [],
+    }
     write_public_json(output_dir / "results.json", merged)
     return merged
 
@@ -944,55 +1085,276 @@ def _required_ids(catalog: Mapping[str, Any], *, scale: str = "reference") -> se
     return ids
 
 
-def verify_report(report: Mapping[str, Any], catalog: Mapping[str, Any], *, require_all: bool = False, max_cv_pct: float = MAX_CV_PCT, max_geomean_ratio: float = MAX_GEOMEAN_RATIO, max_case_ratio: float = MAX_CASE_RATIO, privacy: str = "strict") -> dict[str, Any]:
+def _catalog_cells_by_id(catalog: Mapping[str, Any]) -> dict[str, Mapping[str, Any]]:
+    cells = {
+        str(cell["id"]): cell
+        for workload in catalog.get("workloads", [])
+        for cell in workload.get("cells", [])
+    }
+    cells.update(
+        {str(cell["id"]): cell for cell in catalog.get("compiler_phase_sweep", {}).get("cells", [])}
+    )
+    return cells
+
+
+def _positive_samples(value: Any, repetitions: int) -> list[float] | None:
+    if not isinstance(value, list) or len(value) != repetitions:
+        return None
+    if any(isinstance(item, bool) or not isinstance(item, (int, float)) or float(item) <= 0 or not math.isfinite(float(item)) for item in value):
+        return None
+    return [float(item) for item in value]
+
+
+def verify_report(
+    report: Mapping[str, Any],
+    catalog: Mapping[str, Any],
+    *,
+    require_all: bool = False,
+    max_cv_pct: float = MAX_CV_PCT,
+    max_geomean_ratio: float = MAX_GEOMEAN_RATIO,
+    max_case_ratio: float = MAX_CASE_RATIO,
+    max_memory_geomean_ratio: float = MAX_MEMORY_GEOMEAN_RATIO,
+    max_memory_case_ratio: float = MAX_MEMORY_CASE_RATIO,
+    privacy: str = "strict",
+) -> dict[str, Any]:
+    _require(privacy in {"strict", "off"}, "invalid_privacy_mode")
+    threshold_values = (
+        max_cv_pct,
+        max_geomean_ratio,
+        max_case_ratio,
+        max_memory_geomean_ratio,
+        max_memory_case_ratio,
+    )
+    _require(
+        all(not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(float(value)) and float(value) > 0 for value in threshold_values),
+        "invalid_threshold",
+    )
     if privacy == "strict":
         assert_public_report(report)
     reasons: list[str] = []
-    if report.get("contract_digest") != contract_digest(catalog): reasons.append("contract_mismatch")
+    failed_routes: list[dict[str, str]] = []
+    if require_all and (
+        max_cv_pct > MAX_CV_PCT
+        or max_geomean_ratio > MAX_GEOMEAN_RATIO
+        or max_case_ratio > MAX_CASE_RATIO
+        or max_memory_geomean_ratio > MAX_MEMORY_GEOMEAN_RATIO
+        or max_memory_case_ratio > MAX_MEMORY_CASE_RATIO
+    ):
+        reasons.append("threshold_relaxed")
+    if report.get("schema") not in {REPORT_SCHEMA, MERGED_SCHEMA} or report.get("schema_version") != REPORT_VERSION:
+        reasons.append("report_schema")
+    if report.get("runner_version") != RUNNER_VERSION:
+        reasons.append("runner_version")
+    if report.get("contract_digest") != contract_digest(catalog):
+        reasons.append("contract_mismatch")
+    if report.get("capabilities") != _capability_disclosure(catalog):
+        reasons.append("capability_disclosure")
+    toolchain = report.get("toolchain") if isinstance(report.get("toolchain"), Mapping) else {}
+    toolchain_valid = (
+        toolchain.get("styio_backend") == "native-aot"
+        and toolchain.get("compiler_family") == "clang"
+        and toolchain.get("target_class") == "portable"
+        and toolchain.get("optimization") == "O3"
+        and toolchain.get("lto") is False
+        and toolchain.get("threads") == 1
+        and toolchain.get("runner") == RUNNER_VERSION
+        and isinstance(toolchain.get("phase_probe_available"), bool)
+        and isinstance(toolchain.get("styio_version"), str)
+        and isinstance(toolchain.get("compiler_version"), str)
+        and (toolchain.get("styio_version") == "unknown" or PUBLIC_VERSION.fullmatch(str(toolchain.get("styio_version"))) is not None)
+        and (toolchain.get("compiler_version") == "unknown" or PUBLIC_VERSION.fullmatch(str(toolchain.get("compiler_version"))) is not None)
+    )
+    if not toolchain_valid:
+        reasons.append("toolchain_contract")
+    elif require_all and (toolchain.get("styio_version") == "unknown" or toolchain.get("compiler_version") == "unknown"):
+        reasons.append("toolchain_version")
+    measurement = report.get("measurement") if isinstance(report.get("measurement"), Mapping) else {}
+    if require_all:
+        required_measurement = _measurement_metadata(DEFAULT_WARMUPS, REQUIRED_REPETITIONS, "controlled")
+        for key, expected in required_measurement.items():
+            if measurement.get(key) != expected:
+                reasons.append("run_control" if key == "run_control_class" else "measurement_contract")
     cells = report.get("cells") if isinstance(report.get("cells"), list) else []
-    seen: set[str] = set(); ratios: list[float] = []
+    catalog_cells = _catalog_cells_by_id(catalog)
+    seen: set[str] = set()
+    valid_reference_cells: dict[str, list[Mapping[str, Any]]] = {route: [] for route in ROUTES}
     for cell in cells:
         identity = cell.get("id")
-        if identity not in _catalog_cell_ids(catalog): reasons.append("unknown_cell")
-        if identity in seen: reasons.append("duplicate_cell")
-        seen.add(identity)
-        if cell.get("status") != "pass" or cell.get("correctness") != {"styio": True, "cpp": True}:
-            reasons.append("correctness_failed"); continue
-        repetitions = int(cell.get("repetitions", 0))
-        if require_all and repetitions != REQUIRED_REPETITIONS: reasons.append("repetitions")
-        time_data = cell.get("time") if isinstance(cell.get("time"), Mapping) else {}
-        if not isinstance(cell.get("time_samples_s"), Mapping): reasons.append("samples_missing"); continue
-        for implementation in ("styio", "cpp"):
-            values = cell["time_samples_s"].get(implementation, [])
-            if not isinstance(values, list) or len(values) != repetitions or any(not isinstance(value, (int, float)) or value <= 0 or not math.isfinite(float(value)) for value in values): reasons.append("samples_malformed")
-            elif require_all and sample_cv_pct(values) > max_cv_pct: reasons.append("noise_cv")
-        ratio = time_data.get("geomean_ratio")
-        if isinstance(ratio, (int, float)) and math.isfinite(float(ratio)) and ratio > 0:
-            ratios.append(float(ratio))
-            if require_all and ratio > max_case_ratio: reasons.append("case_ratio")
-        else: reasons.append("ratio_missing")
+        if identity not in catalog_cells:
+            reasons.append("unknown_cell")
+        if identity in seen:
+            reasons.append("duplicate_cell")
+        if isinstance(identity, str):
+            seen.add(identity)
+        expected_cell = catalog_cells.get(str(identity))
+        if expected_cell is not None:
+            identity_fields = ("family", "scale", "route", "required", "work_units", "algorithm_id", "focus_owner")
+            contract_matches = all(cell.get(field) == expected_cell.get(field) for field in identity_fields)
+            contract_matches = contract_matches and cell.get("source_digests") == expected_cell.get("source_digest")
+            contract_matches = contract_matches and cell.get("input_digest") == expected_cell.get("input_digest")
+            contract_matches = contract_matches and cell.get("expected_output_digest") == expected_cell.get("expected_output_digest")
+            if not contract_matches:
+                reasons.append("cell_contract_mismatch")
+                continue
+        if cell.get("correctness") != {"styio": True, "cpp": True}:
+            reasons.append("correctness_failed")
+            continue
+        if cell.get("status") != "pass":
+            reasons.append("minimum_sample_time" if "minimum_sample_time" in cell.get("reason_codes", []) else "cell_incomplete")
+            continue
+        repetitions_value = cell.get("repetitions")
+        repetitions = repetitions_value if isinstance(repetitions_value, int) and not isinstance(repetitions_value, bool) else 0
+        if repetitions <= 0:
+            reasons.append("repetitions")
+            continue
+        is_reference = cell.get("scale") == "reference" and bool(cell.get("required"))
+        is_phase = cell.get("family") == "compiler-phase"
+        if require_all and is_reference and repetitions != REQUIRED_REPETITIONS:
+            reasons.append("repetitions")
+        time_samples = cell.get("time_samples_s") if isinstance(cell.get("time_samples_s"), Mapping) else {}
+        rss_samples = cell.get("peak_rss_samples_kib") if isinstance(cell.get("peak_rss_samples_kib"), Mapping) else {}
+        styio_time = _positive_samples(time_samples.get("styio"), repetitions)
+        cpp_time = _positive_samples(time_samples.get("cpp"), repetitions)
+        styio_rss = _positive_samples(rss_samples.get("styio"), repetitions)
+        cpp_rss = _positive_samples(rss_samples.get("cpp"), repetitions)
+        if styio_time is None or cpp_time is None:
+            reasons.append("samples_malformed")
+            continue
+        if styio_rss is None or cpp_rss is None:
+            reasons.append("memory_samples_malformed")
+            continue
+        # Phase buckets share one compiler probe and are diagnostic.  They are
+        # required for attribution, but never enter a native performance score.
+        if is_phase:
+            continue
+        try:
+            time_ratio = geometric_mean([a / b for a, b in zip(styio_time, cpp_time)])
+            memory_ratio = geometric_mean([a / b for a, b in zip(styio_rss, cpp_rss)])
+        except ValueError:
+            reasons.append("ratio_missing")
+            continue
+        reported_time = cell.get("time") if isinstance(cell.get("time"), Mapping) else {}
+        reported_memory = cell.get("peak_rss") if isinstance(cell.get("peak_rss"), Mapping) else {}
+        reported_time_ratio = reported_time.get("geomean_ratio")
+        reported_memory_ratio = reported_memory.get("geomean_ratio")
+        if (
+            isinstance(reported_time_ratio, bool)
+            or not isinstance(reported_time_ratio, (int, float))
+            or not math.isfinite(float(reported_time_ratio))
+            or not math.isclose(float(reported_time_ratio), time_ratio, rel_tol=1e-12, abs_tol=1e-15)
+        ):
+            reasons.append("ratio_mismatch")
+        if (
+            isinstance(reported_memory_ratio, bool)
+            or not isinstance(reported_memory_ratio, (int, float))
+            or not math.isfinite(float(reported_memory_ratio))
+            or not math.isclose(float(reported_memory_ratio), memory_ratio, rel_tol=1e-12, abs_tol=1e-15)
+        ):
+            reasons.append("memory_ratio_mismatch")
+        if require_all and is_reference:
+            if sample_cv_pct(styio_time) > max_cv_pct or sample_cv_pct(cpp_time) > max_cv_pct:
+                reasons.append("noise_cv")
+            if time_ratio > max_case_ratio:
+                reasons.append("case_ratio")
+            if memory_ratio > max_memory_case_ratio:
+                reasons.append("memory_case_ratio")
+            batch = cell.get("batch") if isinstance(cell.get("batch"), Mapping) else {}
+            batch_count = batch.get("count")
+            raw_samples = cell.get("raw_batch_time_samples_s") if isinstance(cell.get("raw_batch_time_samples_s"), Mapping) else {}
+            raw_styio = _positive_samples(raw_samples.get("styio"), repetitions)
+            raw_cpp = _positive_samples(raw_samples.get("cpp"), repetitions)
+            batch_valid = (
+                isinstance(batch_count, int)
+                and not isinstance(batch_count, bool)
+                and 0 < batch_count <= MAX_BATCH_COUNT
+                and batch.get("equal_work") is True
+                and batch.get("minimum_sample_time_s") == MIN_SAMPLE_DURATION_S
+                and batch.get("target_sample_time_s") == CALIBRATION_TARGET_DURATION_S
+                and batch.get("maximum_count") == MAX_BATCH_COUNT
+                and batch.get("retained_floor_met") is True
+                and raw_styio is not None
+                and raw_cpp is not None
+            )
+            if not batch_valid:
+                reasons.append("minimum_sample_time")
+            else:
+                normalized = all(
+                    math.isclose(raw / batch_count, normalized_value, rel_tol=1e-12, abs_tol=1e-15)
+                    for raw_values, normalized_values in ((raw_styio, styio_time), (raw_cpp, cpp_time))
+                    for raw, normalized_value in zip(raw_values, normalized_values)
+                )
+                if not normalized or median(raw_styio) < MIN_SAMPLE_DURATION_S or median(raw_cpp) < MIN_SAMPLE_DURATION_S:
+                    reasons.append("minimum_sample_time")
+            schedule = cell.get("sample_schedule") if isinstance(cell.get("sample_schedule"), Mapping) else {}
+            expected_orders = _interleaved_pair_orders(str(identity), repetitions, "retained")
+            expected_codes = ["AB" if order == ("styio", "cpp") else "BA" for order in expected_orders]
+            if (
+                schedule.get("strategy") != "deterministic-random-interleaving-v1"
+                or schedule.get("ab_count") != expected_codes.count("AB")
+                or schedule.get("ba_count") != expected_codes.count("BA")
+                or schedule.get("schedule_digest") != _sha256("".join(expected_codes).encode("ascii"))
+            ):
+                reasons.append("sample_schedule")
+            route = cell.get("route")
+            if route in valid_reference_cells:
+                valid_reference_cells[str(route)].append(cell)
     if require_all:
         required = _required_ids(catalog)
-        if not required.issubset(seen): reasons.append("missing_required_cells")
-        if len(ratios) != len(required): reasons.append("required_cell_count")
-        if ratios:
-            geomean = geometric_mean(ratios)
-            if geomean > max_geomean_ratio: reasons.append("geomean_ratio")
-        else: geomean = None
-    else:
-        geomean = geometric_mean(ratios) if ratios else None
-    return {"schema": "styio.parity.standard.verdict.v2", "decision": "pass" if not reasons else "fail", "reason_codes": sorted(set(reasons)), "cell_count": len(cells), "required_cell_count": len(_required_ids(catalog)), "geomean_ratio": geomean, "thresholds": {"max_cv_pct": max_cv_pct, "max_case_ratio": max_case_ratio, "max_geomean_ratio": max_geomean_ratio}}
+        if not required.issubset(seen):
+            reasons.append("missing_required_cells")
+        expected_route_count = len(catalog["workloads"])
+        for route in ROUTES:
+            selected = valid_reference_cells[route]
+            if len(selected) != expected_route_count:
+                reasons.append("required_route_cell_count")
+                failed_routes.append({"route": route, "reason_code": "required_route_cell_count"})
+                continue
+            time_summary = _aggregate_dimension(selected, "time_samples_s")
+            memory_summary = _aggregate_dimension(selected, "peak_rss_samples_kib")
+            time_upper = time_summary.get("confidence_interval", {}).get("upper")
+            memory_upper = memory_summary.get("confidence_interval", {}).get("upper")
+            if not isinstance(time_upper, (int, float)) or time_summary.get("geomean_ratio", math.inf) > max_geomean_ratio or time_upper > max_geomean_ratio:
+                reasons.append("route_time_confidence")
+                failed_routes.append({"route": route, "reason_code": "route_time_confidence"})
+            if not isinstance(memory_upper, (int, float)) or memory_summary.get("geomean_ratio", math.inf) > max_memory_geomean_ratio or memory_upper > max_memory_geomean_ratio:
+                reasons.append("route_memory_confidence")
+                failed_routes.append({"route": route, "reason_code": "route_memory_confidence"})
+    computed_aggregates = report_aggregates(cells)
+    if require_all and report.get("aggregates") != computed_aggregates:
+        reasons.append("aggregate_mismatch")
+    route_summaries = computed_aggregates.get("scales", {}).get("reference", {}).get("routes", {})
+    primary_summary = route_summaries.get(PRIMARY_ROUTE)
+    return {
+        "schema": VERDICT_SCHEMA,
+        "decision": "pass" if not reasons else "fail",
+        "reason_codes": sorted(set(reasons)),
+        "failed_routes": sorted(failed_routes, key=lambda item: (item["route"], item["reason_code"])),
+        "cell_count": len(cells),
+        "required_cell_count": len(_required_ids(catalog)),
+        "primary_route": PRIMARY_ROUTE,
+        "primary_route_summary": primary_summary,
+        "reference_routes": route_summaries,
+        "capabilities": _capability_disclosure(catalog),
+        "thresholds": {
+            "max_cv_pct": max_cv_pct,
+            "max_case_ratio": max_case_ratio,
+            "max_geomean_ratio": max_geomean_ratio,
+            "max_memory_case_ratio": max_memory_case_ratio,
+            "max_memory_geomean_ratio": max_memory_geomean_ratio,
+            "confidence_level": CONFIDENCE_LEVEL,
+        },
+    }
 
 
 def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Run and verify the standards-derived Styio/C++ parity-v2 suite.")
+    parser = argparse.ArgumentParser(description="Run and verify the standards-derived Styio/C++ parity suite.")
     parser.add_argument("--contract", default=str(CATALOG_DEFAULT))
     sub = parser.add_subparsers(dest="operation", required=True)
     catalog_check = sub.add_parser("catalog-check"); catalog_check.add_argument("--contract", default=str(CATALOG_DEFAULT))
     strength = sub.add_parser("cpp-strength"); strength.add_argument("--contract", default=str(CATALOG_DEFAULT)); strength.add_argument("--json", action="store_true")
-    run = sub.add_parser("run"); run.add_argument("--contract", default=str(CATALOG_DEFAULT)); run.add_argument("--family", required=True); run.add_argument("--scale", choices=(*SCALES, "all"), default="all"); run.add_argument("--styio-root", required=True); run.add_argument("--build-dir", required=True); run.add_argument("--out-dir", required=True); run.add_argument("--warmups", type=int, default=DEFAULT_WARMUPS); run.add_argument("--repetitions", type=int, default=REQUIRED_REPETITIONS); run.add_argument("--timeout-s", type=float, default=300.0)
+    run = sub.add_parser("run"); run.add_argument("--contract", default=str(CATALOG_DEFAULT)); run.add_argument("--family", required=True); run.add_argument("--scale", choices=(*SCALES, "all"), default="all"); run.add_argument("--styio-root", required=True); run.add_argument("--build-dir", required=True); run.add_argument("--out-dir", required=True); run.add_argument("--warmups", type=int, default=DEFAULT_WARMUPS); run.add_argument("--repetitions", type=int, default=REQUIRED_REPETITIONS); run.add_argument("--timeout-s", type=float, default=300.0); run.add_argument("--run-class", choices=("development", "controlled"), default="development")
     merge = sub.add_parser("merge"); merge.add_argument("--contract", default=str(CATALOG_DEFAULT)); merge.add_argument("--reports-dir", required=True); merge.add_argument("--out-dir", required=True)
-    verify = sub.add_parser("verify"); verify.add_argument("--contract", default=str(CATALOG_DEFAULT)); verify.add_argument("--report", required=True); verify.add_argument("--require-all", action="store_true"); verify.add_argument("--max-cv-pct", type=float, default=MAX_CV_PCT); verify.add_argument("--max-geomean-ratio", type=float, default=MAX_GEOMEAN_RATIO); verify.add_argument("--max-case-ratio", type=float, default=MAX_CASE_RATIO); verify.add_argument("--privacy", choices=("strict", "off"), default="strict")
+    verify = sub.add_parser("verify"); verify.add_argument("--contract", default=str(CATALOG_DEFAULT)); verify.add_argument("--report", required=True); verify.add_argument("--require-all", action="store_true"); verify.add_argument("--max-cv-pct", type=float, default=MAX_CV_PCT); verify.add_argument("--max-geomean-ratio", type=float, default=MAX_GEOMEAN_RATIO); verify.add_argument("--max-case-ratio", type=float, default=MAX_CASE_RATIO); verify.add_argument("--max-memory-geomean-ratio", type=float, default=MAX_MEMORY_GEOMEAN_RATIO); verify.add_argument("--max-memory-case-ratio", type=float, default=MAX_MEMORY_CASE_RATIO); verify.add_argument("--privacy", choices=("strict", "off"), default="strict")
     return parser
 
 
@@ -1001,26 +1363,26 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         catalog, catalog_path = load_catalog(args.contract)
         if args.operation == "catalog-check":
-            print(json.dumps({"schema": "styio.parity.catalog.audit.v2", "decision": "pass", "catalog_id": catalog["catalog_id"], "contract_digest": contract_digest(catalog), "families": len(catalog["workloads"]), "required_cells": len(_required_ids(catalog))}, sort_keys=True))
+            print(json.dumps({"schema": "styio.parity.catalog.audit.v3", "decision": "pass", "catalog_id": catalog["catalog_id"], "contract_digest": contract_digest(catalog), "families": len(catalog["workloads"]), "required_cells": len(_required_ids(catalog))}, sort_keys=True))
             return 0
         if args.operation == "cpp-strength":
             result = validate_cpp_strength(catalog, catalog_path)
             print(json.dumps(result, sort_keys=True))
             return 0 if result["pass"] else 2
         if args.operation == "run":
-            run_shard(catalog, catalog_path, family=args.family, scale=args.scale, styio_root=Path(args.styio_root).resolve(), build_dir=Path(args.build_dir).resolve(), output_dir=Path(args.out_dir).resolve(), warmups=args.warmups, repetitions=args.repetitions, timeout_s=args.timeout_s)
+            run_shard(catalog, catalog_path, family=args.family, scale=args.scale, styio_root=Path(args.styio_root).resolve(), build_dir=Path(args.build_dir).resolve(), output_dir=Path(args.out_dir).resolve(), warmups=args.warmups, repetitions=args.repetitions, timeout_s=args.timeout_s, run_class=args.run_class)
             return 0
         if args.operation == "merge":
             paths = sorted(Path(args.reports_dir).glob("**/results.json"))
             merge_reports(catalog, paths, Path(args.out_dir).resolve())
             return 0
         report = json.loads(Path(args.report).read_text(encoding="utf-8"))
-        verdict = verify_report(report, catalog, require_all=args.require_all, max_cv_pct=args.max_cv_pct, max_geomean_ratio=args.max_geomean_ratio, max_case_ratio=args.max_case_ratio, privacy=args.privacy)
+        verdict = verify_report(report, catalog, require_all=args.require_all, max_cv_pct=args.max_cv_pct, max_geomean_ratio=args.max_geomean_ratio, max_case_ratio=args.max_case_ratio, max_memory_geomean_ratio=args.max_memory_geomean_ratio, max_memory_case_ratio=args.max_memory_case_ratio, privacy=args.privacy)
         print(json.dumps(verdict, sort_keys=True))
         return 0 if verdict["decision"] == "pass" else 2
     except (GateError, PrivacyError, OSError, ValueError) as exc:
         reason = exc.reason_code if isinstance(exc, GateError) else "runtime_error"
-        print(json.dumps({"schema": "styio.parity.standard.error.v2", "decision": "fail", "reason_code": reason}, sort_keys=True), file=sys.stderr)
+        print(json.dumps({"schema": "styio.parity.standard.error.v3", "decision": "fail", "reason_code": reason}, sort_keys=True), file=sys.stderr)
         return 2
 
 

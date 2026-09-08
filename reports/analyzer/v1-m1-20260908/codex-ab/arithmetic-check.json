@@ -1,0 +1,88 @@
+{
+  "decision": "pass",
+  "cell_count": 9,
+  "method": "one-time independent Python standard-library arithmetic; no Analyzer or shared-core imports",
+  "checked": [
+    "raw batch normalization",
+    "retained counts and median duration floor",
+    "medians",
+    "sample CV",
+    "paired ratios and logs",
+    "artifact bytes delta and ratio"
+  ],
+  "limitations": "Bootstrap intervals and classification are checked by verify and fixed numerical tests, not reimplemented here. This is arithmetic evidence, not separate-agent acceptance or performance acceptance.",
+  "cells": [
+    {
+      "cell_id": "llvm-scalar-chain/smoke/compile-and-run",
+      "time_ratio": 1.6015471113095745,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.005036969894764,
+      "rss_status": "no_detected_change",
+      "artifact_ratio": 1.5134799353957014
+    },
+    {
+      "cell_id": "llvm-scalar-chain/smoke/native-build",
+      "time_ratio": 1.7476215208936017,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.0110635752349633,
+      "rss_status": "no_detected_change",
+      "artifact_ratio": 1.5134799353957014
+    },
+    {
+      "cell_id": "llvm-scalar-chain/smoke/native-run",
+      "time_ratio": 0.9228040524763871,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.0227272727272727,
+      "rss_status": "regressed",
+      "artifact_ratio": 1.5134799353957014
+    },
+    {
+      "cell_id": "llvm-control-diamonds/smoke/compile-and-run",
+      "time_ratio": 1.8362439002637985,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.0089342233913152,
+      "rss_status": "no_detected_change",
+      "artifact_ratio": 1.5134799353957014
+    },
+    {
+      "cell_id": "llvm-control-diamonds/smoke/native-build",
+      "time_ratio": 1.583327877219859,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.0117271151220366,
+      "rss_status": "no_detected_change",
+      "artifact_ratio": 1.5134799353957014
+    },
+    {
+      "cell_id": "llvm-control-diamonds/smoke/native-run",
+      "time_ratio": 0.8385011553262637,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.0459770114942528,
+      "rss_status": "regressed",
+      "artifact_ratio": 1.5134799353957014
+    },
+    {
+      "cell_id": "llvm-dense-matmul/smoke/compile-and-run",
+      "time_ratio": 1.718886846056375,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.007538581874007,
+      "rss_status": "no_detected_change",
+      "artifact_ratio": 1.5133859245915895
+    },
+    {
+      "cell_id": "llvm-dense-matmul/smoke/native-build",
+      "time_ratio": 1.8003257408741746,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.0205383736159928,
+      "rss_status": "regressed",
+      "artifact_ratio": 1.5133859245915895
+    },
+    {
+      "cell_id": "llvm-dense-matmul/smoke/native-run",
+      "time_ratio": 0.8016982205620086,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.0340909090909092,
+      "rss_status": "regressed",
+      "artifact_ratio": 1.5133859245915895
+    }
+  ]
+}

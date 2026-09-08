@@ -1,0 +1,40 @@
+{
+  "decision": "pass",
+  "cell_count": 3,
+  "method": "one-time independent Python standard-library arithmetic; no Analyzer or shared-core imports",
+  "checked": [
+    "raw batch normalization",
+    "retained counts and median duration floor",
+    "medians",
+    "sample CV",
+    "paired ratios and logs",
+    "artifact bytes delta and ratio"
+  ],
+  "limitations": "Bootstrap intervals and classification are checked by verify and fixed numerical tests, not reimplemented here. This is arithmetic evidence, not separate-agent acceptance or performance acceptance.",
+  "cells": [
+    {
+      "cell_id": "llvm-scalar-chain/smoke/compile-and-run",
+      "time_ratio": 1.0643036610739733,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.0053974272470396,
+      "rss_status": "no_detected_change",
+      "artifact_ratio": 1.0
+    },
+    {
+      "cell_id": "llvm-scalar-chain/smoke/native-build",
+      "time_ratio": 1.0710259220552225,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.002993482564821,
+      "rss_status": "no_detected_change",
+      "artifact_ratio": 1.0
+    },
+    {
+      "cell_id": "llvm-scalar-chain/smoke/native-run",
+      "time_ratio": 0.9368258452797279,
+      "time_status": "inconclusive",
+      "rss_ratio": 1.0,
+      "rss_status": "no_detected_change",
+      "artifact_ratio": 1.0
+    }
+  ]
+}

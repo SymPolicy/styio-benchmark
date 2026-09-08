@@ -1,91 +1,129 @@
-# Styio standard parity (parity-v2)
+# Styio standard parity methodology
 
-This document describes the frozen, standards-derived comparison contract. The
-machine-readable authority is
-[`workloads/parity-v2/contract.json`](../workloads/parity-v2/contract.json);
-the report gate is [`tools/standard_parity_gate.py`](../tools/standard_parity_gate.py).
+This document defines the auditable Styio/C++ performance comparison. The
+machine-readable workload authority is
+[`workloads/parity-v2/contract.json`](../workloads/parity-v2/contract.json),
+and the report implementation is
+[`tools/standard_parity_gate.py`](../tools/standard_parity_gate.py).
 
 The current catalog-check digest is
-`f7e99de17a1366325bcf08223f861f40d4aa95423ebef5ed2622267b0dbc951c`.
-Reference evidence produced before the compiler-phase C++ source was corrected
-to the static binding-chain structure is retired (`retired_invalid_structure`)
-and must not be merged into a final report.
+`ffda1fd9dadb6493c3a722302b7abd823a402ce956f4ccbad6b45c54bdda1e6c`.
+Report schema v3 is intentionally incompatible with earlier evidence: a v2
+report cannot be merged or used for a current parity claim.
 
-## Workload identity
+## What is standard—and what is not
 
-The catalog contains three independently implemented Computer Language
-Benchmarks Game (CLBG) families—fannkuch-redux, spectral-norm, and n-body—and
-eight LLVM TestSuite-style families covering scalar chains, call graphs,
-control diamonds, recursive SCCs, collection mutation, dictionary updates,
-dense matrix multiplication, and list allocation. Each family has separate
-Styio and C++ source digests, a deterministic input digest, a canonical output
-oracle, an algorithm identity, and a static work-unit count.
+The measurement procedure adopts established practices from:
 
-CLBG descriptions are used as the provenance for the first three families;
-LLVM TestSuite/LNT structure supplies the compile, execute, output, code-size,
-and sharding shape for the remaining families. SPEC CPU rules are measurement
-methodology only. No SPEC program or input is copied into this repository.
+- [Google Benchmark](https://google.github.io/benchmark/user_guide.html):
+  minimum measured duration, warm-up, repetitions, and interleaved execution;
+- [SPEC CPU 2017 run rules](https://www.spec.org/cpu2017/docs/runrules.html):
+  frozen workloads, documented run conditions, reproducibility, validation,
+  and fail-closed reporting;
+- [LLVM test-suite/LNT](https://llvm.org/docs/TestSuiteGuide.html): separate
+  compile, execute, output-validation, and result-reporting dimensions; and
+- [Computer Language Benchmarks Game measurement rules](https://benchmarksgame-team.pages.debian.net/benchmarksgame/how-programs-are-measured.html):
+  repeated measurements on an otherwise idle system and explicit uncertainty.
 
-## Scale labels
+This is a standards-derived project suite, not a SPEC submission, SPEC score,
+CLBG implementation set, or execution of the official LLVM test-suite. No
+official suite program or input is copied into this repository. All eleven
+programs are independent project microkernels. The retained `clbg-*` and
+`llvm-*` identifiers are historical style/lineage labels only; the catalog
+records that limitation explicitly and gives each kernel an algorithm ID that
+describes the code it actually executes.
 
-Every family and compiler-phase cell is present at all three scales:
+## Frozen workload contract
 
-- `smoke` is a bounded development check;
-- `development` is a local tuning sweep; and
-- `reference` is the official reference scale and the only scale eligible for
-  the aggregate parity claim.
+The catalog contains eleven independently implemented Styio/C++ families and
+five compiler-phase diagnostics. Every workload freezes:
 
-The runner never relabels a reduced input as an official result. A shard report
-records its scale label and the merge gate keeps cell identities disjoint.
+- separate Styio and C++ source digests;
+- the same deterministic input bytes and static work-unit count;
+- an independent canonical output oracle;
+- algorithm identity, one-thread policy, and route boundary; and
+- `smoke`, `development`, and `reference` scales without relabelling reduced
+  inputs as reference evidence.
 
-## Fair paired measurement
+C++ uses C++20 with `-O3 -DNDEBUG -fno-lto`. The strength audit rejects weak
+optimization, LTO, threaded baselines, and avoidable synchronous stream modes.
+Correctness is validated before any measurement is retained.
 
-Both implementations use the same algorithm identity, input bytes, numeric
-contract, operation order, static work units, and one thread. The C++ companion
-is compiled as C++20 with `-O3 -DNDEBUG -fno-lto`; it uses no weak optimization,
-debug, sanitizer, LTO, or avoidable synchronous stream mode. Styio is measured
-through its normal native artifact path.
+## Measurement protocol
 
-The three closed route boundaries are:
+Each workload route follows one procedure:
 
-- `compile-and-run`: fresh optimized build followed by execution;
-- `native-build`: fresh build only, with the artifact discarded; and
-- `native-run`: execution of an artifact built outside the timed region.
+1. Build both implementations and validate exact output digests outside the
+   timed region.
+2. Calibrate one *equal* batch count for Styio and C++. The faster side must
+   reach a 0.5 second median retained interval; calibration targets 0.75 seconds
+   and is capped at 20,000 operations.
+3. Execute three warm-up batches and eleven retained paired batches. Pair order
+   is balanced and reproducibly randomized to avoid always giving either side
+   the first or second position.
+4. Retain every sample. There is no fastest-run selection, outlier deletion,
+   or retry-until-pass policy.
+5. Measure time without an RSS observer. Measure peak process-tree RSS in a
+   separate equivalent one-operation replay so memory sampling cannot perturb
+   timing.
+6. Report per-operation normalized samples *and* raw batch totals. The verifier
+   recomputes ratios and checks the normalization rather than trusting summary
+   fields.
 
-Correctness is checked against the catalog output digest before timing. Three
-warmups and eleven retained repetitions are required for reference evidence;
-all samples are retained, paired order is alternated, and cells whose sample
-CV exceeds 5% fail closed and are rerun as whole cells. Time is observer-free;
-peak process-tree RSS is collected by an isolated replay rather than a sampler
-inside the timed region.
+The three boundaries remain separate:
 
-The compiler-phase sweep also records generated token counts,
-declaration counts, expression-node counts, print nodes, and a zero-runtime-loop
-assertion for each scale. The gate independently parses both generated sources
-and rejects a runtime loop or unequal static structure, even when the nominal
-token target is unchanged.
+- `compile-and-run`: each operation performs a fresh optimized build and then
+  executes the resulting artifact;
+- `native-build`: each operation performs a fresh optimized build only; and
+- `native-run`: each operation executes an artifact built outside timing.
 
-## Compiler-owned native-build cache and attribution
+## Statistics and score policy
 
-`styio build` may reuse compiler-owned objects for the immutable runtime
-translation units and for each generated user IR and wrapper. The cache is
-opt-in by configuration (`STYIO_NATIVE_RUNTIME_CACHE_DIR`; set
-`STYIO_NATIVE_CACHE=0` to disable) and is never report evidence. Each entry is
-bound to the compiler path and version, target, ABI, complete build flags,
-runtime/header closure, and generated source content. Objects and their
-metadata are published with a temporary directory and atomic rename; malformed
-or mutated entries trigger a cold compile, while cache failures fall back to
-the original source-link route.
+For each cell, the gate computes paired Styio/C++ log-ratios, their geometric
+mean, CV for each implementation, and a paired 95% percentile-bootstrap
+confidence interval. Route-level confidence intervals use a hierarchical
+bootstrap: workload cells are equal-weight, then retained pairs are resampled
+within each selected cell. Every interval uses 10,000 deterministic resamples.
 
-For diagnosis outside timed samples, set `STYIO_NATIVE_BUILD_PROFILE_OUT` to
-capture privacy-safe native-build phase durations, or set
-`STYIO_NATIVE_PROFILE_OUT` for generated-artifact runtime initialization and
-execute phases. These profiles attribute work; they do not alter the paired
-measurement boundary or parity thresholds.
+The gate never produces one mixed score across unrelated measurements:
+
+- scales are separated;
+- `compile-and-run`, `native-build`, and `native-run` are separated;
+- `native-run` is the primary native-performance claim;
+- compiler-phase cells are diagnostic attribution only; and
+- capability-blocked cases are disclosed but excluded from speed scores.
+
+Strict reference evidence must satisfy all of these conditions:
+
+- all 38 required reference records exist and pass exact correctness;
+- each workload cell has 3 warm-ups, 11 retained samples, a valid 0.5-second
+  batch floor, balanced interleaving, and CV no greater than 5%;
+- every time ratio is at most 1.10;
+- every route's time geometric mean **and the upper bound of its 95% confidence
+  interval** are at most 1.05;
+- every peak-RSS ratio is at most 1.15; and
+- every route's peak-RSS geometric mean and upper confidence bound are at most
+  1.10.
+
+The five current capability exclusions—bit-packed, byte-buffer, object-node,
+regular-expression, and arbitrary-precision—remain visible in every report.
+They cannot silently improve the aggregate by being omitted.
+
+## Controlled reference runs
+
+Development is the default run class. A strict reference claim additionally
+requires `--run-class controlled`, which is an explicit operator attestation
+that the run used a dedicated idle system, fixed compiler/build configuration,
+stable power mode, and no concurrent benchmark jobs. Reports disclose only the
+generic control class; host names, user names, absolute paths, commands,
+endpoints, credentials, and raw subprocess text are rejected recursively.
+
+Shared hosted CI runners execute the catalog, baseline-strength, privacy, and
+statistical self-tests only. They do not create official timing evidence.
 
 ## Commands
 
-Validate the frozen catalog and C++ strength contract:
+Validate the contract and the C++ baseline:
 
 ```bash
 python3 tools/standard_parity_gate.py catalog-check \
@@ -94,47 +132,32 @@ python3 tools/standard_parity_gate.py cpp-strength \
   --contract workloads/parity-v2/contract.json
 ```
 
-Run one bounded smoke shard (use `--scale reference` only for the official
-reference sweep):
+Run one development shard:
 
 ```bash
 python3 tools/standard_parity_gate.py run \
   --contract workloads/parity-v2/contract.json \
   --family clbg-fannkuch-redux --scale smoke \
-  --styio-root ../styio-nightly --build-dir ../styio-nightly/build \
-  --out-dir reports/standard-parity/shards/clbg-fannkuch-redux \
-  --warmups 3 --repetitions 11
+  --styio-root ../styio-nightly --build-dir ../styio-nightly/build/perf-parity \
+  --out-dir reports/standard-parity/shards/clbg-fannkuch-redux
 ```
 
-Merge complete, non-overlapping shards and apply strict reference gates:
+For official evidence, run every family and the compiler-phase shard at the
+reference scale under controlled conditions, adding `--run-class controlled`
+to each command. Then merge the disjoint shards and apply the strict gate:
 
 ```bash
 python3 tools/standard_parity_gate.py merge \
   --contract workloads/parity-v2/contract.json \
   --reports-dir reports/standard-parity/shards \
   --out-dir reports/standard-parity/final
+
 python3 tools/standard_parity_gate.py verify \
   --contract workloads/parity-v2/contract.json \
   --report reports/standard-parity/final/results.json \
-  --require-all --max-cv-pct 5 --max-geomean-ratio 1.05 \
-  --max-case-ratio 1.10 --privacy strict
+  --require-all --privacy strict
 ```
 
-The strict verifier requires every reference cell, no lower-is-better ratio
-above 1.10, and an equal-weight geometric mean no greater than 1.05. It never
-drops samples, picks the fastest run, relaxes thresholds, or changes the C++
-baseline. Reports contain only public contract and statistic fields; machine
-identity, absolute paths, commands, endpoints, credentials, and raw subprocess
-text are rejected.
-
-Strict parity is not complete for this delivery: the corrected compiler-phase
-reference sweep has not been rerun, and the existing family/reference evidence
-still contains unresolved ratio and CV failures. Do not describe smoke,
-development, or retired phase reports as a parity claim.
-
-## Capability exclusions
-
-Bit-packed, byte-buffer, object-node, regular-expression, and arbitrary-
-precision cases remain `capability-blocked` and outside the aggregate. Adding a
-syntax, type-system, ABI, or weakened native implementation to make an excluded
-case pass would invalidate this contract.
+An official claim is valid only when the final verifier returns `decision:
+pass`. A smoke/development result, an uncontrolled reference run, a legacy
+schema, or a report with missing capabilities is descriptive evidence only.

@@ -608,24 +608,43 @@
   },
   "generator": "generators.py",
   "measurement_contract": {
+    "aggregate_policy": "equal-weight workload cells, separated by scale and route; compiler phases are diagnostic only",
+    "calibration_target_time_s": 0.75,
+    "confidence_interval": {
+      "level": 0.95,
+      "method": "paired-hierarchical-percentile-bootstrap",
+      "resamples": 10000
+    },
+    "compiler_phase_policy": "diagnostic-shared-probe",
+    "controlled_reference_required": true,
     "max_cv_pct": 5.0,
+    "maximum_batch_count": 20000,
     "memory": "isolated process-tree RSS replay, never observer in timed region",
+    "minimum_sample_time_s": 0.5,
+    "minimum_time_scope": "workload-route-cells",
+    "pair_order": "deterministic-random-interleaving-v1",
     "privacy": "reports contain no host identity, absolute paths, commands, endpoints, secrets, or raw subprocess text",
+    "primary_route": "native-run",
     "required_case_ratio": 1.1,
     "required_geomean_ratio": 1.05,
+    "required_memory_case_ratio": 1.15,
+    "required_memory_geomean_ratio": 1.1,
     "required_reference_scales": [
       "reference"
     ],
     "retained_repetitions": 11,
     "sharding": "deterministic family shards; merge disjoint complete cell identities",
-    "statistics": "paired geometric mean; equal-weight cells; retain every sample",
+    "statistics": "paired geometric mean and 95% hierarchical percentile-bootstrap confidence interval; retain every sample",
     "warmups": 3
   },
   "provenance": {
     "clbg_source": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html",
+    "google_benchmark_source": "https://google.github.io/benchmark/user_guide.html",
     "llvm_source": "https://llvm.org/docs/TestSuiteGuide.html",
-    "measurement_rules": "LLVM LNT structure and SPEC CPU run-rule methodology; no SPEC programs or inputs are included",
-    "standard": "CLBG and LLVM TestSuite-style independent workloads"
+    "measurement_rules": "Google Benchmark minimum-time and interleaving practice, LLVM LNT structure, CLBG repeated measurements, and SPEC CPU run-rule methodology; no official suite programs or inputs are included",
+    "spec_cpu_run_rules_source": "https://www.spec.org/cpu2017/docs/runrules.html",
+    "standard": "standards-derived measurement over independent project microkernels",
+    "workload_lineage": "clbg-* and llvm-* identifiers are historical style labels, not claims that official suite programs are included"
   },
   "routes": [
     {
@@ -636,7 +655,7 @@
         "timed_region": "fresh-compile-build-and-execute"
       },
       "id": "compile-and-run",
-      "work_unit_policy": "compile_once_execute_once"
+      "work_unit_policy": "equal_calibrated_fresh-build-and-execute batch"
     },
     {
       "boundary": {
@@ -646,7 +665,7 @@
         "timed_region": "fresh-native-build"
       },
       "id": "native-build",
-      "work_unit_policy": "build_once_no_execute"
+      "work_unit_policy": "equal_calibrated_fresh-build batch"
     },
     {
       "boundary": {
@@ -656,7 +675,7 @@
         "timed_region": "execution-only"
       },
       "id": "native-run",
-      "work_unit_policy": "execute_prebuilt_once"
+      "work_unit_policy": "equal_calibrated prebuilt-execution batch"
     }
   ],
   "scales": {
@@ -718,12 +737,12 @@
   },
   "workloads": [
     {
-      "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+      "algorithm_id": "affine-checksum.linear.v3",
       "cells": [
         {
-          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "algorithm_id": "affine-checksum.linear.v3",
           "equivalence": {
-            "algorithm": "checksum-and-flip-count",
+            "algorithm": "affine-checksum",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -747,13 +766,13 @@
             "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
             "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
           },
-          "work_unit": "permutations",
+          "work_unit": "loop_iterations",
           "work_units": 5
         },
         {
-          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "algorithm_id": "affine-checksum.linear.v3",
           "equivalence": {
-            "algorithm": "checksum-and-flip-count",
+            "algorithm": "affine-checksum",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -777,13 +796,13 @@
             "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
             "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
           },
-          "work_unit": "permutations",
+          "work_unit": "loop_iterations",
           "work_units": 5
         },
         {
-          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "algorithm_id": "affine-checksum.linear.v3",
           "equivalence": {
-            "algorithm": "checksum-and-flip-count",
+            "algorithm": "affine-checksum",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -807,13 +826,13 @@
             "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
             "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
           },
-          "work_unit": "permutations",
+          "work_unit": "loop_iterations",
           "work_units": 5
         },
         {
-          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "algorithm_id": "affine-checksum.linear.v3",
           "equivalence": {
-            "algorithm": "checksum-and-flip-count",
+            "algorithm": "affine-checksum",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -837,13 +856,13 @@
             "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
             "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
           },
-          "work_unit": "permutations",
+          "work_unit": "loop_iterations",
           "work_units": 9
         },
         {
-          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "algorithm_id": "affine-checksum.linear.v3",
           "equivalence": {
-            "algorithm": "checksum-and-flip-count",
+            "algorithm": "affine-checksum",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -867,13 +886,13 @@
             "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
             "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
           },
-          "work_unit": "permutations",
+          "work_unit": "loop_iterations",
           "work_units": 9
         },
         {
-          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "algorithm_id": "affine-checksum.linear.v3",
           "equivalence": {
-            "algorithm": "checksum-and-flip-count",
+            "algorithm": "affine-checksum",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -897,13 +916,13 @@
             "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
             "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
           },
-          "work_unit": "permutations",
+          "work_unit": "loop_iterations",
           "work_units": 9
         },
         {
-          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "algorithm_id": "affine-checksum.linear.v3",
           "equivalence": {
-            "algorithm": "checksum-and-flip-count",
+            "algorithm": "affine-checksum",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -927,13 +946,13 @@
             "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
             "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
           },
-          "work_unit": "permutations",
+          "work_unit": "loop_iterations",
           "work_units": 12
         },
         {
-          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "algorithm_id": "affine-checksum.linear.v3",
           "equivalence": {
-            "algorithm": "checksum-and-flip-count",
+            "algorithm": "affine-checksum",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -957,13 +976,13 @@
             "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
             "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
           },
-          "work_unit": "permutations",
+          "work_unit": "loop_iterations",
           "work_units": 12
         },
         {
-          "algorithm_id": "fannkuch-redux.permutation-flip.v2",
+          "algorithm_id": "affine-checksum.linear.v3",
           "equivalence": {
-            "algorithm": "checksum-and-flip-count",
+            "algorithm": "affine-checksum",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -987,7 +1006,7 @@
             "cpp": "c8578056c3a084a99fb865b93e45d306d64b77c545346b9d3466cdac87834c31",
             "styio": "317238f5de5a65123351ec50106e5f65b48e06382b31f65c67c91809706d2cc0"
           },
-          "work_unit": "permutations",
+          "work_unit": "loop_iterations",
           "work_units": 12
         }
       ],
@@ -1011,10 +1030,10 @@
         }
       },
       "provenance": {
-        "authority": "CLBG",
-        "case": "fannkuch-redux",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html"
+        "authority": "Project-Microkernel",
+        "case": "affine-checksum",
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html"
       },
       "scales": {
         "development": {
@@ -1041,16 +1060,16 @@
         },
         "styio": "sources/clbg-fannkuch-redux.styio"
       },
-      "standard_family": "CLBG",
-      "work_unit": "permutations"
+      "standard_family": "CLBG-Style",
+      "work_unit": "loop_iterations"
     },
     {
-      "algorithm_id": "spectral-norm.fixed-point.v2",
+      "algorithm_id": "modular-square-reduction.linear.v3",
       "cells": [
         {
-          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "algorithm_id": "modular-square-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "fixed-point-norm",
+            "algorithm": "modular-square-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1074,13 +1093,13 @@
             "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
             "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
           },
-          "work_unit": "matrix_rows",
+          "work_unit": "reduction_iterations",
           "work_units": 32
         },
         {
-          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "algorithm_id": "modular-square-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "fixed-point-norm",
+            "algorithm": "modular-square-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1104,13 +1123,13 @@
             "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
             "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
           },
-          "work_unit": "matrix_rows",
+          "work_unit": "reduction_iterations",
           "work_units": 32
         },
         {
-          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "algorithm_id": "modular-square-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "fixed-point-norm",
+            "algorithm": "modular-square-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1134,13 +1153,13 @@
             "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
             "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
           },
-          "work_unit": "matrix_rows",
+          "work_unit": "reduction_iterations",
           "work_units": 32
         },
         {
-          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "algorithm_id": "modular-square-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "fixed-point-norm",
+            "algorithm": "modular-square-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1164,13 +1183,13 @@
             "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
             "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
           },
-          "work_unit": "matrix_rows",
+          "work_unit": "reduction_iterations",
           "work_units": 128
         },
         {
-          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "algorithm_id": "modular-square-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "fixed-point-norm",
+            "algorithm": "modular-square-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1194,13 +1213,13 @@
             "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
             "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
           },
-          "work_unit": "matrix_rows",
+          "work_unit": "reduction_iterations",
           "work_units": 128
         },
         {
-          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "algorithm_id": "modular-square-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "fixed-point-norm",
+            "algorithm": "modular-square-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1224,13 +1243,13 @@
             "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
             "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
           },
-          "work_unit": "matrix_rows",
+          "work_unit": "reduction_iterations",
           "work_units": 128
         },
         {
-          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "algorithm_id": "modular-square-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "fixed-point-norm",
+            "algorithm": "modular-square-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1254,13 +1273,13 @@
             "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
             "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
           },
-          "work_unit": "matrix_rows",
+          "work_unit": "reduction_iterations",
           "work_units": 5500
         },
         {
-          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "algorithm_id": "modular-square-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "fixed-point-norm",
+            "algorithm": "modular-square-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1284,13 +1303,13 @@
             "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
             "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
           },
-          "work_unit": "matrix_rows",
+          "work_unit": "reduction_iterations",
           "work_units": 5500
         },
         {
-          "algorithm_id": "spectral-norm.fixed-point.v2",
+          "algorithm_id": "modular-square-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "fixed-point-norm",
+            "algorithm": "modular-square-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1314,7 +1333,7 @@
             "cpp": "5799cc337ae7e84639957ed66eec5e96666b20995bfeca7ccb6ce66954d2d36b",
             "styio": "e9a8760a88dd3e3aa7643398977a84f3eab92dc219c1aa21d122ad88031bf587"
           },
-          "work_unit": "matrix_rows",
+          "work_unit": "reduction_iterations",
           "work_units": 5500
         }
       ],
@@ -1338,10 +1357,10 @@
         }
       },
       "provenance": {
-        "authority": "CLBG",
-        "case": "spectral-norm",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html"
+        "authority": "Project-Microkernel",
+        "case": "modular-square-reduction",
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html"
       },
       "scales": {
         "development": {
@@ -1368,16 +1387,16 @@
         },
         "styio": "sources/clbg-spectral-norm.styio"
       },
-      "standard_family": "CLBG",
-      "work_unit": "matrix_rows"
+      "standard_family": "CLBG-Style",
+      "work_unit": "reduction_iterations"
     },
     {
-      "algorithm_id": "n-body.soa-step.v2",
+      "algorithm_id": "affine-state-update.linear.v3",
       "cells": [
         {
-          "algorithm_id": "n-body.soa-step.v2",
+          "algorithm_id": "affine-state-update.linear.v3",
           "equivalence": {
-            "algorithm": "energy-and-momentum",
+            "algorithm": "affine-state-update",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1401,13 +1420,13 @@
             "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
             "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
           },
-          "work_unit": "integration_steps",
+          "work_unit": "state_update_iterations",
           "work_units": 100
         },
         {
-          "algorithm_id": "n-body.soa-step.v2",
+          "algorithm_id": "affine-state-update.linear.v3",
           "equivalence": {
-            "algorithm": "energy-and-momentum",
+            "algorithm": "affine-state-update",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1431,13 +1450,13 @@
             "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
             "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
           },
-          "work_unit": "integration_steps",
+          "work_unit": "state_update_iterations",
           "work_units": 100
         },
         {
-          "algorithm_id": "n-body.soa-step.v2",
+          "algorithm_id": "affine-state-update.linear.v3",
           "equivalence": {
-            "algorithm": "energy-and-momentum",
+            "algorithm": "affine-state-update",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1461,13 +1480,13 @@
             "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
             "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
           },
-          "work_unit": "integration_steps",
+          "work_unit": "state_update_iterations",
           "work_units": 100
         },
         {
-          "algorithm_id": "n-body.soa-step.v2",
+          "algorithm_id": "affine-state-update.linear.v3",
           "equivalence": {
-            "algorithm": "energy-and-momentum",
+            "algorithm": "affine-state-update",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1491,13 +1510,13 @@
             "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
             "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
           },
-          "work_unit": "integration_steps",
+          "work_unit": "state_update_iterations",
           "work_units": 1000
         },
         {
-          "algorithm_id": "n-body.soa-step.v2",
+          "algorithm_id": "affine-state-update.linear.v3",
           "equivalence": {
-            "algorithm": "energy-and-momentum",
+            "algorithm": "affine-state-update",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1521,13 +1540,13 @@
             "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
             "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
           },
-          "work_unit": "integration_steps",
+          "work_unit": "state_update_iterations",
           "work_units": 1000
         },
         {
-          "algorithm_id": "n-body.soa-step.v2",
+          "algorithm_id": "affine-state-update.linear.v3",
           "equivalence": {
-            "algorithm": "energy-and-momentum",
+            "algorithm": "affine-state-update",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1551,13 +1570,13 @@
             "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
             "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
           },
-          "work_unit": "integration_steps",
+          "work_unit": "state_update_iterations",
           "work_units": 1000
         },
         {
-          "algorithm_id": "n-body.soa-step.v2",
+          "algorithm_id": "affine-state-update.linear.v3",
           "equivalence": {
-            "algorithm": "energy-and-momentum",
+            "algorithm": "affine-state-update",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1581,13 +1600,13 @@
             "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
             "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
           },
-          "work_unit": "integration_steps",
+          "work_unit": "state_update_iterations",
           "work_units": 50000000
         },
         {
-          "algorithm_id": "n-body.soa-step.v2",
+          "algorithm_id": "affine-state-update.linear.v3",
           "equivalence": {
-            "algorithm": "energy-and-momentum",
+            "algorithm": "affine-state-update",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1611,13 +1630,13 @@
             "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
             "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
           },
-          "work_unit": "integration_steps",
+          "work_unit": "state_update_iterations",
           "work_units": 50000000
         },
         {
-          "algorithm_id": "n-body.soa-step.v2",
+          "algorithm_id": "affine-state-update.linear.v3",
           "equivalence": {
-            "algorithm": "energy-and-momentum",
+            "algorithm": "affine-state-update",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -1641,7 +1660,7 @@
             "cpp": "30d1f82c0c4b9b3cf3769ce961e70b6d5a6c71d8d7e18eb3b7f701c8f62aa884",
             "styio": "cd9cb00f23d77a1b79016013fb6afe6ebd12131b5dc83467d7fb3e2e53b95f6a"
           },
-          "work_unit": "integration_steps",
+          "work_unit": "state_update_iterations",
           "work_units": 50000000
         }
       ],
@@ -1665,10 +1684,10 @@
         }
       },
       "provenance": {
-        "authority": "CLBG",
-        "case": "n-body",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html"
+        "authority": "Project-Microkernel",
+        "case": "affine-state-update",
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html"
       },
       "scales": {
         "development": {
@@ -1695,14 +1714,14 @@
         },
         "styio": "sources/clbg-n-body.styio"
       },
-      "standard_family": "CLBG",
-      "work_unit": "integration_steps"
+      "standard_family": "CLBG-Style",
+      "work_unit": "state_update_iterations"
     },
     {
-      "algorithm_id": "scalar-chain.linear.v2",
+      "algorithm_id": "scalar-chain.linear.v3",
       "cells": [
         {
-          "algorithm_id": "scalar-chain.linear.v2",
+          "algorithm_id": "scalar-chain.linear.v3",
           "equivalence": {
             "algorithm": "scalar-chain",
             "input_contract": "same-canonical-bytes",
@@ -1732,7 +1751,7 @@
           "work_units": 32
         },
         {
-          "algorithm_id": "scalar-chain.linear.v2",
+          "algorithm_id": "scalar-chain.linear.v3",
           "equivalence": {
             "algorithm": "scalar-chain",
             "input_contract": "same-canonical-bytes",
@@ -1762,7 +1781,7 @@
           "work_units": 32
         },
         {
-          "algorithm_id": "scalar-chain.linear.v2",
+          "algorithm_id": "scalar-chain.linear.v3",
           "equivalence": {
             "algorithm": "scalar-chain",
             "input_contract": "same-canonical-bytes",
@@ -1792,7 +1811,7 @@
           "work_units": 32
         },
         {
-          "algorithm_id": "scalar-chain.linear.v2",
+          "algorithm_id": "scalar-chain.linear.v3",
           "equivalence": {
             "algorithm": "scalar-chain",
             "input_contract": "same-canonical-bytes",
@@ -1822,7 +1841,7 @@
           "work_units": 256
         },
         {
-          "algorithm_id": "scalar-chain.linear.v2",
+          "algorithm_id": "scalar-chain.linear.v3",
           "equivalence": {
             "algorithm": "scalar-chain",
             "input_contract": "same-canonical-bytes",
@@ -1852,7 +1871,7 @@
           "work_units": 256
         },
         {
-          "algorithm_id": "scalar-chain.linear.v2",
+          "algorithm_id": "scalar-chain.linear.v3",
           "equivalence": {
             "algorithm": "scalar-chain",
             "input_contract": "same-canonical-bytes",
@@ -1882,7 +1901,7 @@
           "work_units": 256
         },
         {
-          "algorithm_id": "scalar-chain.linear.v2",
+          "algorithm_id": "scalar-chain.linear.v3",
           "equivalence": {
             "algorithm": "scalar-chain",
             "input_contract": "same-canonical-bytes",
@@ -1912,7 +1931,7 @@
           "work_units": 4096
         },
         {
-          "algorithm_id": "scalar-chain.linear.v2",
+          "algorithm_id": "scalar-chain.linear.v3",
           "equivalence": {
             "algorithm": "scalar-chain",
             "input_contract": "same-canonical-bytes",
@@ -1942,7 +1961,7 @@
           "work_units": 4096
         },
         {
-          "algorithm_id": "scalar-chain.linear.v2",
+          "algorithm_id": "scalar-chain.linear.v3",
           "equivalence": {
             "algorithm": "scalar-chain",
             "input_contract": "same-canonical-bytes",
@@ -1992,10 +2011,10 @@
         }
       },
       "provenance": {
-        "authority": "LLVM-TestSuite",
+        "authority": "Project-Microkernel",
         "case": "scalar-chain",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://llvm.org/docs/TestSuiteGuide.html"
       },
       "scales": {
         "development": {
@@ -2022,16 +2041,16 @@
         },
         "styio": "sources/llvm-scalar-chain.styio"
       },
-      "standard_family": "LLVM-TestSuite",
+      "standard_family": "LLVM-TestSuite-Style",
       "work_unit": "chain_iterations"
     },
     {
-      "algorithm_id": "call-graph.fanout.v2",
+      "algorithm_id": "dual-affine-reduction.linear.v3",
       "cells": [
         {
-          "algorithm_id": "call-graph.fanout.v2",
+          "algorithm_id": "dual-affine-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "call-graph-fanout",
+            "algorithm": "dual-affine-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2055,13 +2074,13 @@
             "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
             "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
           },
-          "work_unit": "call_iterations",
+          "work_unit": "reduction_iterations",
           "work_units": 16
         },
         {
-          "algorithm_id": "call-graph.fanout.v2",
+          "algorithm_id": "dual-affine-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "call-graph-fanout",
+            "algorithm": "dual-affine-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2085,13 +2104,13 @@
             "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
             "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
           },
-          "work_unit": "call_iterations",
+          "work_unit": "reduction_iterations",
           "work_units": 16
         },
         {
-          "algorithm_id": "call-graph.fanout.v2",
+          "algorithm_id": "dual-affine-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "call-graph-fanout",
+            "algorithm": "dual-affine-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2115,13 +2134,13 @@
             "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
             "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
           },
-          "work_unit": "call_iterations",
+          "work_unit": "reduction_iterations",
           "work_units": 16
         },
         {
-          "algorithm_id": "call-graph.fanout.v2",
+          "algorithm_id": "dual-affine-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "call-graph-fanout",
+            "algorithm": "dual-affine-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2145,13 +2164,13 @@
             "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
             "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
           },
-          "work_unit": "call_iterations",
+          "work_unit": "reduction_iterations",
           "work_units": 128
         },
         {
-          "algorithm_id": "call-graph.fanout.v2",
+          "algorithm_id": "dual-affine-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "call-graph-fanout",
+            "algorithm": "dual-affine-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2175,13 +2194,13 @@
             "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
             "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
           },
-          "work_unit": "call_iterations",
+          "work_unit": "reduction_iterations",
           "work_units": 128
         },
         {
-          "algorithm_id": "call-graph.fanout.v2",
+          "algorithm_id": "dual-affine-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "call-graph-fanout",
+            "algorithm": "dual-affine-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2205,13 +2224,13 @@
             "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
             "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
           },
-          "work_unit": "call_iterations",
+          "work_unit": "reduction_iterations",
           "work_units": 128
         },
         {
-          "algorithm_id": "call-graph.fanout.v2",
+          "algorithm_id": "dual-affine-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "call-graph-fanout",
+            "algorithm": "dual-affine-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2235,13 +2254,13 @@
             "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
             "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
           },
-          "work_unit": "call_iterations",
+          "work_unit": "reduction_iterations",
           "work_units": 2048
         },
         {
-          "algorithm_id": "call-graph.fanout.v2",
+          "algorithm_id": "dual-affine-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "call-graph-fanout",
+            "algorithm": "dual-affine-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2265,13 +2284,13 @@
             "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
             "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
           },
-          "work_unit": "call_iterations",
+          "work_unit": "reduction_iterations",
           "work_units": 2048
         },
         {
-          "algorithm_id": "call-graph.fanout.v2",
+          "algorithm_id": "dual-affine-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "call-graph-fanout",
+            "algorithm": "dual-affine-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2295,7 +2314,7 @@
             "cpp": "bfff6571403d8495f986823431ce1279f490ffdb0825003595cf390c02d19019",
             "styio": "faa512f37d673361f0611a7c8326dd6b28b078a0d5654a81e19502dc2edf439e"
           },
-          "work_unit": "call_iterations",
+          "work_unit": "reduction_iterations",
           "work_units": 2048
         }
       ],
@@ -2319,10 +2338,10 @@
         }
       },
       "provenance": {
-        "authority": "LLVM-TestSuite",
-        "case": "call-graph",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+        "authority": "Project-Microkernel",
+        "case": "dual-affine-reduction",
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://llvm.org/docs/TestSuiteGuide.html"
       },
       "scales": {
         "development": {
@@ -2349,14 +2368,14 @@
         },
         "styio": "sources/llvm-call-graph.styio"
       },
-      "standard_family": "LLVM-TestSuite",
-      "work_unit": "call_iterations"
+      "standard_family": "LLVM-TestSuite-Style",
+      "work_unit": "reduction_iterations"
     },
     {
-      "algorithm_id": "control-diamonds.branch.v2",
+      "algorithm_id": "control-diamonds.branch.v3",
       "cells": [
         {
-          "algorithm_id": "control-diamonds.branch.v2",
+          "algorithm_id": "control-diamonds.branch.v3",
           "equivalence": {
             "algorithm": "control-diamond",
             "input_contract": "same-canonical-bytes",
@@ -2386,7 +2405,7 @@
           "work_units": 32
         },
         {
-          "algorithm_id": "control-diamonds.branch.v2",
+          "algorithm_id": "control-diamonds.branch.v3",
           "equivalence": {
             "algorithm": "control-diamond",
             "input_contract": "same-canonical-bytes",
@@ -2416,7 +2435,7 @@
           "work_units": 32
         },
         {
-          "algorithm_id": "control-diamonds.branch.v2",
+          "algorithm_id": "control-diamonds.branch.v3",
           "equivalence": {
             "algorithm": "control-diamond",
             "input_contract": "same-canonical-bytes",
@@ -2446,7 +2465,7 @@
           "work_units": 32
         },
         {
-          "algorithm_id": "control-diamonds.branch.v2",
+          "algorithm_id": "control-diamonds.branch.v3",
           "equivalence": {
             "algorithm": "control-diamond",
             "input_contract": "same-canonical-bytes",
@@ -2476,7 +2495,7 @@
           "work_units": 256
         },
         {
-          "algorithm_id": "control-diamonds.branch.v2",
+          "algorithm_id": "control-diamonds.branch.v3",
           "equivalence": {
             "algorithm": "control-diamond",
             "input_contract": "same-canonical-bytes",
@@ -2506,7 +2525,7 @@
           "work_units": 256
         },
         {
-          "algorithm_id": "control-diamonds.branch.v2",
+          "algorithm_id": "control-diamonds.branch.v3",
           "equivalence": {
             "algorithm": "control-diamond",
             "input_contract": "same-canonical-bytes",
@@ -2536,7 +2555,7 @@
           "work_units": 256
         },
         {
-          "algorithm_id": "control-diamonds.branch.v2",
+          "algorithm_id": "control-diamonds.branch.v3",
           "equivalence": {
             "algorithm": "control-diamond",
             "input_contract": "same-canonical-bytes",
@@ -2566,7 +2585,7 @@
           "work_units": 4096
         },
         {
-          "algorithm_id": "control-diamonds.branch.v2",
+          "algorithm_id": "control-diamonds.branch.v3",
           "equivalence": {
             "algorithm": "control-diamond",
             "input_contract": "same-canonical-bytes",
@@ -2596,7 +2615,7 @@
           "work_units": 4096
         },
         {
-          "algorithm_id": "control-diamonds.branch.v2",
+          "algorithm_id": "control-diamonds.branch.v3",
           "equivalence": {
             "algorithm": "control-diamond",
             "input_contract": "same-canonical-bytes",
@@ -2646,10 +2665,10 @@
         }
       },
       "provenance": {
-        "authority": "LLVM-TestSuite",
+        "authority": "Project-Microkernel",
         "case": "control-diamonds",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://llvm.org/docs/TestSuiteGuide.html"
       },
       "scales": {
         "development": {
@@ -2676,16 +2695,16 @@
         },
         "styio": "sources/llvm-control-diamonds.styio"
       },
-      "standard_family": "LLVM-TestSuite",
+      "standard_family": "LLVM-TestSuite-Style",
       "work_unit": "branch_iterations"
     },
     {
-      "algorithm_id": "recursive-scc.mutual.v2",
+      "algorithm_id": "nested-recurrence.linear.v3",
       "cells": [
         {
-          "algorithm_id": "recursive-scc.mutual.v2",
+          "algorithm_id": "nested-recurrence.linear.v3",
           "equivalence": {
-            "algorithm": "mutual-recursive-scc",
+            "algorithm": "nested-recurrence",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2709,13 +2728,13 @@
             "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
             "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
           },
-          "work_unit": "scc_iterations",
+          "work_unit": "outer_iterations",
           "work_units": 16
         },
         {
-          "algorithm_id": "recursive-scc.mutual.v2",
+          "algorithm_id": "nested-recurrence.linear.v3",
           "equivalence": {
-            "algorithm": "mutual-recursive-scc",
+            "algorithm": "nested-recurrence",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2739,13 +2758,13 @@
             "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
             "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
           },
-          "work_unit": "scc_iterations",
+          "work_unit": "outer_iterations",
           "work_units": 16
         },
         {
-          "algorithm_id": "recursive-scc.mutual.v2",
+          "algorithm_id": "nested-recurrence.linear.v3",
           "equivalence": {
-            "algorithm": "mutual-recursive-scc",
+            "algorithm": "nested-recurrence",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2769,13 +2788,13 @@
             "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
             "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
           },
-          "work_unit": "scc_iterations",
+          "work_unit": "outer_iterations",
           "work_units": 16
         },
         {
-          "algorithm_id": "recursive-scc.mutual.v2",
+          "algorithm_id": "nested-recurrence.linear.v3",
           "equivalence": {
-            "algorithm": "mutual-recursive-scc",
+            "algorithm": "nested-recurrence",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2799,13 +2818,13 @@
             "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
             "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
           },
-          "work_unit": "scc_iterations",
+          "work_unit": "outer_iterations",
           "work_units": 128
         },
         {
-          "algorithm_id": "recursive-scc.mutual.v2",
+          "algorithm_id": "nested-recurrence.linear.v3",
           "equivalence": {
-            "algorithm": "mutual-recursive-scc",
+            "algorithm": "nested-recurrence",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2829,13 +2848,13 @@
             "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
             "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
           },
-          "work_unit": "scc_iterations",
+          "work_unit": "outer_iterations",
           "work_units": 128
         },
         {
-          "algorithm_id": "recursive-scc.mutual.v2",
+          "algorithm_id": "nested-recurrence.linear.v3",
           "equivalence": {
-            "algorithm": "mutual-recursive-scc",
+            "algorithm": "nested-recurrence",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2859,13 +2878,13 @@
             "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
             "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
           },
-          "work_unit": "scc_iterations",
+          "work_unit": "outer_iterations",
           "work_units": 128
         },
         {
-          "algorithm_id": "recursive-scc.mutual.v2",
+          "algorithm_id": "nested-recurrence.linear.v3",
           "equivalence": {
-            "algorithm": "mutual-recursive-scc",
+            "algorithm": "nested-recurrence",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2889,13 +2908,13 @@
             "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
             "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
           },
-          "work_unit": "scc_iterations",
+          "work_unit": "outer_iterations",
           "work_units": 1024
         },
         {
-          "algorithm_id": "recursive-scc.mutual.v2",
+          "algorithm_id": "nested-recurrence.linear.v3",
           "equivalence": {
-            "algorithm": "mutual-recursive-scc",
+            "algorithm": "nested-recurrence",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2919,13 +2938,13 @@
             "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
             "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
           },
-          "work_unit": "scc_iterations",
+          "work_unit": "outer_iterations",
           "work_units": 1024
         },
         {
-          "algorithm_id": "recursive-scc.mutual.v2",
+          "algorithm_id": "nested-recurrence.linear.v3",
           "equivalence": {
-            "algorithm": "mutual-recursive-scc",
+            "algorithm": "nested-recurrence",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -2949,7 +2968,7 @@
             "cpp": "0d446edc54209c7abb08e41caf9030667e40c9c84a32ee81247a8983ba8b452f",
             "styio": "58996aa50d8220c405d212ad774ba370a61856c1b11ccbfced1ea6e0cc3630be"
           },
-          "work_unit": "scc_iterations",
+          "work_unit": "outer_iterations",
           "work_units": 1024
         }
       ],
@@ -2973,10 +2992,10 @@
         }
       },
       "provenance": {
-        "authority": "LLVM-TestSuite",
-        "case": "recursive-scc",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+        "authority": "Project-Microkernel",
+        "case": "nested-recurrence",
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://llvm.org/docs/TestSuiteGuide.html"
       },
       "scales": {
         "development": {
@@ -3003,16 +3022,16 @@
         },
         "styio": "sources/llvm-recursive-scc.styio"
       },
-      "standard_family": "LLVM-TestSuite",
-      "work_unit": "scc_iterations"
+      "standard_family": "LLVM-TestSuite-Style",
+      "work_unit": "outer_iterations"
     },
     {
-      "algorithm_id": "collection-mutate.contiguous.v2",
+      "algorithm_id": "scalar-state-reduction.linear.v3",
       "cells": [
         {
-          "algorithm_id": "collection-mutate.contiguous.v2",
+          "algorithm_id": "scalar-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "collection-update",
+            "algorithm": "scalar-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3036,13 +3055,13 @@
             "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
             "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
           },
-          "work_unit": "element_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 64
         },
         {
-          "algorithm_id": "collection-mutate.contiguous.v2",
+          "algorithm_id": "scalar-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "collection-update",
+            "algorithm": "scalar-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3066,13 +3085,13 @@
             "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
             "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
           },
-          "work_unit": "element_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 64
         },
         {
-          "algorithm_id": "collection-mutate.contiguous.v2",
+          "algorithm_id": "scalar-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "collection-update",
+            "algorithm": "scalar-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3096,13 +3115,13 @@
             "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
             "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
           },
-          "work_unit": "element_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 64
         },
         {
-          "algorithm_id": "collection-mutate.contiguous.v2",
+          "algorithm_id": "scalar-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "collection-update",
+            "algorithm": "scalar-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3126,13 +3145,13 @@
             "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
             "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
           },
-          "work_unit": "element_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 1024
         },
         {
-          "algorithm_id": "collection-mutate.contiguous.v2",
+          "algorithm_id": "scalar-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "collection-update",
+            "algorithm": "scalar-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3156,13 +3175,13 @@
             "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
             "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
           },
-          "work_unit": "element_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 1024
         },
         {
-          "algorithm_id": "collection-mutate.contiguous.v2",
+          "algorithm_id": "scalar-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "collection-update",
+            "algorithm": "scalar-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3186,13 +3205,13 @@
             "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
             "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
           },
-          "work_unit": "element_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 1024
         },
         {
-          "algorithm_id": "collection-mutate.contiguous.v2",
+          "algorithm_id": "scalar-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "collection-update",
+            "algorithm": "scalar-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3216,13 +3235,13 @@
             "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
             "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
           },
-          "work_unit": "element_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 1000000
         },
         {
-          "algorithm_id": "collection-mutate.contiguous.v2",
+          "algorithm_id": "scalar-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "collection-update",
+            "algorithm": "scalar-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3246,13 +3265,13 @@
             "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
             "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
           },
-          "work_unit": "element_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 1000000
         },
         {
-          "algorithm_id": "collection-mutate.contiguous.v2",
+          "algorithm_id": "scalar-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "collection-update",
+            "algorithm": "scalar-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3276,7 +3295,7 @@
             "cpp": "982b1a34586a5d34a0ff815d5cede2b88e40e4e7d6555725917d1305d774ddab",
             "styio": "172f78138139ff4e4f32d5fa42f2551cb62cc1b57e9de54d1ad36cfca2c937b7"
           },
-          "work_unit": "element_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 1000000
         }
       ],
@@ -3300,10 +3319,10 @@
         }
       },
       "provenance": {
-        "authority": "LLVM-TestSuite",
-        "case": "collection-mutate",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+        "authority": "Project-Microkernel",
+        "case": "scalar-state-reduction",
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://llvm.org/docs/TestSuiteGuide.html"
       },
       "scales": {
         "development": {
@@ -3330,16 +3349,16 @@
         },
         "styio": "sources/llvm-collection-mutate.styio"
       },
-      "standard_family": "LLVM-TestSuite",
-      "work_unit": "element_updates"
+      "standard_family": "LLVM-TestSuite-Style",
+      "work_unit": "state_update_iterations"
     },
     {
-      "algorithm_id": "dict-update.reserved.v2",
+      "algorithm_id": "empty-dict-state-reduction.linear.v3",
       "cells": [
         {
-          "algorithm_id": "dict-update.reserved.v2",
+          "algorithm_id": "empty-dict-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "dictionary-update",
+            "algorithm": "empty-dict-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3363,13 +3382,13 @@
             "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
             "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
           },
-          "work_unit": "map_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 32
         },
         {
-          "algorithm_id": "dict-update.reserved.v2",
+          "algorithm_id": "empty-dict-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "dictionary-update",
+            "algorithm": "empty-dict-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3393,13 +3412,13 @@
             "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
             "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
           },
-          "work_unit": "map_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 32
         },
         {
-          "algorithm_id": "dict-update.reserved.v2",
+          "algorithm_id": "empty-dict-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "dictionary-update",
+            "algorithm": "empty-dict-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3423,13 +3442,13 @@
             "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
             "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
           },
-          "work_unit": "map_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 32
         },
         {
-          "algorithm_id": "dict-update.reserved.v2",
+          "algorithm_id": "empty-dict-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "dictionary-update",
+            "algorithm": "empty-dict-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3453,13 +3472,13 @@
             "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
             "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
           },
-          "work_unit": "map_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 512
         },
         {
-          "algorithm_id": "dict-update.reserved.v2",
+          "algorithm_id": "empty-dict-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "dictionary-update",
+            "algorithm": "empty-dict-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3483,13 +3502,13 @@
             "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
             "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
           },
-          "work_unit": "map_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 512
         },
         {
-          "algorithm_id": "dict-update.reserved.v2",
+          "algorithm_id": "empty-dict-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "dictionary-update",
+            "algorithm": "empty-dict-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3513,13 +3532,13 @@
             "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
             "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
           },
-          "work_unit": "map_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 512
         },
         {
-          "algorithm_id": "dict-update.reserved.v2",
+          "algorithm_id": "empty-dict-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "dictionary-update",
+            "algorithm": "empty-dict-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3543,13 +3562,13 @@
             "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
             "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
           },
-          "work_unit": "map_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 1000000
         },
         {
-          "algorithm_id": "dict-update.reserved.v2",
+          "algorithm_id": "empty-dict-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "dictionary-update",
+            "algorithm": "empty-dict-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3573,13 +3592,13 @@
             "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
             "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
           },
-          "work_unit": "map_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 1000000
         },
         {
-          "algorithm_id": "dict-update.reserved.v2",
+          "algorithm_id": "empty-dict-state-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "dictionary-update",
+            "algorithm": "empty-dict-state-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3603,7 +3622,7 @@
             "cpp": "8af1eeb0ffa7b56551071d7cefed27e9d8bb4e5c26ecc6699c736ed22b9de206",
             "styio": "291f6a7242850b76061e2c75b71c70dc2889f3eccadce34a1026bc58fb911db7"
           },
-          "work_unit": "map_updates",
+          "work_unit": "state_update_iterations",
           "work_units": 1000000
         }
       ],
@@ -3627,10 +3646,10 @@
         }
       },
       "provenance": {
-        "authority": "LLVM-TestSuite",
-        "case": "dict-update",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+        "authority": "Project-Microkernel",
+        "case": "empty-dict-state-reduction",
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://llvm.org/docs/TestSuiteGuide.html"
       },
       "scales": {
         "development": {
@@ -3657,16 +3676,16 @@
         },
         "styio": "sources/llvm-dict-update.styio"
       },
-      "standard_family": "LLVM-TestSuite",
-      "work_unit": "map_updates"
+      "standard_family": "LLVM-TestSuite-Style",
+      "work_unit": "state_update_iterations"
     },
     {
-      "algorithm_id": "dense-matmul.row-major.v2",
+      "algorithm_id": "dense-triple-loop.synthetic.v3",
       "cells": [
         {
-          "algorithm_id": "dense-matmul.row-major.v2",
+          "algorithm_id": "dense-triple-loop.synthetic.v3",
           "equivalence": {
-            "algorithm": "dense-matrix-multiply",
+            "algorithm": "dense-triple-loop",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3690,13 +3709,13 @@
             "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
             "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
           },
-          "work_unit": "matrix_order_cubed",
+          "work_unit": "matrix_order",
           "work_units": 8
         },
         {
-          "algorithm_id": "dense-matmul.row-major.v2",
+          "algorithm_id": "dense-triple-loop.synthetic.v3",
           "equivalence": {
-            "algorithm": "dense-matrix-multiply",
+            "algorithm": "dense-triple-loop",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3720,13 +3739,13 @@
             "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
             "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
           },
-          "work_unit": "matrix_order_cubed",
+          "work_unit": "matrix_order",
           "work_units": 8
         },
         {
-          "algorithm_id": "dense-matmul.row-major.v2",
+          "algorithm_id": "dense-triple-loop.synthetic.v3",
           "equivalence": {
-            "algorithm": "dense-matrix-multiply",
+            "algorithm": "dense-triple-loop",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3750,13 +3769,13 @@
             "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
             "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
           },
-          "work_unit": "matrix_order_cubed",
+          "work_unit": "matrix_order",
           "work_units": 8
         },
         {
-          "algorithm_id": "dense-matmul.row-major.v2",
+          "algorithm_id": "dense-triple-loop.synthetic.v3",
           "equivalence": {
-            "algorithm": "dense-matrix-multiply",
+            "algorithm": "dense-triple-loop",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3780,13 +3799,13 @@
             "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
             "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
           },
-          "work_unit": "matrix_order_cubed",
+          "work_unit": "matrix_order",
           "work_units": 32
         },
         {
-          "algorithm_id": "dense-matmul.row-major.v2",
+          "algorithm_id": "dense-triple-loop.synthetic.v3",
           "equivalence": {
-            "algorithm": "dense-matrix-multiply",
+            "algorithm": "dense-triple-loop",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3810,13 +3829,13 @@
             "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
             "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
           },
-          "work_unit": "matrix_order_cubed",
+          "work_unit": "matrix_order",
           "work_units": 32
         },
         {
-          "algorithm_id": "dense-matmul.row-major.v2",
+          "algorithm_id": "dense-triple-loop.synthetic.v3",
           "equivalence": {
-            "algorithm": "dense-matrix-multiply",
+            "algorithm": "dense-triple-loop",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3840,13 +3859,13 @@
             "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
             "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
           },
-          "work_unit": "matrix_order_cubed",
+          "work_unit": "matrix_order",
           "work_units": 32
         },
         {
-          "algorithm_id": "dense-matmul.row-major.v2",
+          "algorithm_id": "dense-triple-loop.synthetic.v3",
           "equivalence": {
-            "algorithm": "dense-matrix-multiply",
+            "algorithm": "dense-triple-loop",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3870,13 +3889,13 @@
             "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
             "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
           },
-          "work_unit": "matrix_order_cubed",
+          "work_unit": "matrix_order",
           "work_units": 256
         },
         {
-          "algorithm_id": "dense-matmul.row-major.v2",
+          "algorithm_id": "dense-triple-loop.synthetic.v3",
           "equivalence": {
-            "algorithm": "dense-matrix-multiply",
+            "algorithm": "dense-triple-loop",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3900,13 +3919,13 @@
             "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
             "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
           },
-          "work_unit": "matrix_order_cubed",
+          "work_unit": "matrix_order",
           "work_units": 256
         },
         {
-          "algorithm_id": "dense-matmul.row-major.v2",
+          "algorithm_id": "dense-triple-loop.synthetic.v3",
           "equivalence": {
-            "algorithm": "dense-matrix-multiply",
+            "algorithm": "dense-triple-loop",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -3930,7 +3949,7 @@
             "cpp": "306da887142378b1da15b5c3493563393040e80cc9255f0488ea79dbc460ac78",
             "styio": "8a7d7084dba925c80e41f9f351ef87799aaaee7fb144e4533aabab77dbb69e2b"
           },
-          "work_unit": "matrix_order_cubed",
+          "work_unit": "matrix_order",
           "work_units": 256
         }
       ],
@@ -3954,10 +3973,10 @@
         }
       },
       "provenance": {
-        "authority": "LLVM-TestSuite",
-        "case": "dense-matmul",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+        "authority": "Project-Microkernel",
+        "case": "dense-triple-loop",
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://llvm.org/docs/TestSuiteGuide.html"
       },
       "scales": {
         "development": {
@@ -3984,16 +4003,16 @@
         },
         "styio": "sources/llvm-dense-matmul.styio"
       },
-      "standard_family": "LLVM-TestSuite",
-      "work_unit": "matrix_order_cubed"
+      "standard_family": "LLVM-TestSuite-Style",
+      "work_unit": "matrix_order"
     },
     {
-      "algorithm_id": "list-allocation.records.v2",
+      "algorithm_id": "scalar-pair-reduction.linear.v3",
       "cells": [
         {
-          "algorithm_id": "list-allocation.records.v2",
+          "algorithm_id": "scalar-pair-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "record-allocation",
+            "algorithm": "scalar-pair-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -4017,13 +4036,13 @@
             "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
             "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
           },
-          "work_unit": "record_allocations",
+          "work_unit": "pair_reduction_iterations",
           "work_units": 64
         },
         {
-          "algorithm_id": "list-allocation.records.v2",
+          "algorithm_id": "scalar-pair-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "record-allocation",
+            "algorithm": "scalar-pair-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -4047,13 +4066,13 @@
             "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
             "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
           },
-          "work_unit": "record_allocations",
+          "work_unit": "pair_reduction_iterations",
           "work_units": 64
         },
         {
-          "algorithm_id": "list-allocation.records.v2",
+          "algorithm_id": "scalar-pair-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "record-allocation",
+            "algorithm": "scalar-pair-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -4077,13 +4096,13 @@
             "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
             "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
           },
-          "work_unit": "record_allocations",
+          "work_unit": "pair_reduction_iterations",
           "work_units": 64
         },
         {
-          "algorithm_id": "list-allocation.records.v2",
+          "algorithm_id": "scalar-pair-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "record-allocation",
+            "algorithm": "scalar-pair-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -4107,13 +4126,13 @@
             "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
             "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
           },
-          "work_unit": "record_allocations",
+          "work_unit": "pair_reduction_iterations",
           "work_units": 1024
         },
         {
-          "algorithm_id": "list-allocation.records.v2",
+          "algorithm_id": "scalar-pair-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "record-allocation",
+            "algorithm": "scalar-pair-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -4137,13 +4156,13 @@
             "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
             "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
           },
-          "work_unit": "record_allocations",
+          "work_unit": "pair_reduction_iterations",
           "work_units": 1024
         },
         {
-          "algorithm_id": "list-allocation.records.v2",
+          "algorithm_id": "scalar-pair-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "record-allocation",
+            "algorithm": "scalar-pair-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -4167,13 +4186,13 @@
             "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
             "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
           },
-          "work_unit": "record_allocations",
+          "work_unit": "pair_reduction_iterations",
           "work_units": 1024
         },
         {
-          "algorithm_id": "list-allocation.records.v2",
+          "algorithm_id": "scalar-pair-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "record-allocation",
+            "algorithm": "scalar-pair-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -4197,13 +4216,13 @@
             "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
             "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
           },
-          "work_unit": "record_allocations",
+          "work_unit": "pair_reduction_iterations",
           "work_units": 100000
         },
         {
-          "algorithm_id": "list-allocation.records.v2",
+          "algorithm_id": "scalar-pair-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "record-allocation",
+            "algorithm": "scalar-pair-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -4227,13 +4246,13 @@
             "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
             "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
           },
-          "work_unit": "record_allocations",
+          "work_unit": "pair_reduction_iterations",
           "work_units": 100000
         },
         {
-          "algorithm_id": "list-allocation.records.v2",
+          "algorithm_id": "scalar-pair-reduction.linear.v3",
           "equivalence": {
-            "algorithm": "record-allocation",
+            "algorithm": "scalar-pair-reduction",
             "input_contract": "same-canonical-bytes",
             "numeric_contract": "signed-i64-modular",
             "output_contract": "same-byte-digest",
@@ -4257,7 +4276,7 @@
             "cpp": "b988bc0b11d0c6f6e23223e64c1efc14392c43716edca4c3d9af907cf3f3a625",
             "styio": "0baf37c9f2a5170ceda7490b88e38ed39717dbcea7556fa44347efa39d40335b"
           },
-          "work_unit": "record_allocations",
+          "work_unit": "pair_reduction_iterations",
           "work_units": 100000
         }
       ],
@@ -4281,10 +4300,10 @@
         }
       },
       "provenance": {
-        "authority": "LLVM-TestSuite",
-        "case": "list-allocation",
-        "official_description": "independent implementation from the public benchmark description",
-        "source_url": "https://llvm.org/docs/TestSuiteGuide.html"
+        "authority": "Project-Microkernel",
+        "case": "scalar-pair-reduction",
+        "official_description": "not an official suite program; independent project microkernel",
+        "methodology_url": "https://llvm.org/docs/TestSuiteGuide.html"
       },
       "scales": {
         "development": {
@@ -4311,8 +4330,8 @@
         },
         "styio": "sources/llvm-list-allocation.styio"
       },
-      "standard_family": "LLVM-TestSuite",
-      "work_unit": "record_allocations"
+      "standard_family": "LLVM-TestSuite-Style",
+      "work_unit": "pair_reduction_iterations"
     }
   ]
 }

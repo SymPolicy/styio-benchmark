@@ -1,0 +1,1105 @@
+{
+  "capabilities": {
+    "blocked_case_count": 5,
+    "blocked_case_ids": [
+      "arbitrary-precision",
+      "bit-packed",
+      "byte-buffer",
+      "object-node",
+      "regular-expression"
+    ],
+    "blocked_cases_scored": false,
+    "corpus_kind": "project-microkernel",
+    "official_suite": false,
+    "selected_family_ids": [
+      "llvm-scalar-chain"
+    ],
+    "selected_is_full_catalog": false,
+    "supported_family_count": 11,
+    "supported_family_ids": [
+      "clbg-fannkuch-redux",
+      "clbg-spectral-norm",
+      "clbg-n-body",
+      "llvm-scalar-chain",
+      "llvm-call-graph",
+      "llvm-control-diamonds",
+      "llvm-recursive-scc",
+      "llvm-collection-mutate",
+      "llvm-dict-update",
+      "llvm-dense-matmul",
+      "llvm-list-allocation"
+    ]
+  },
+  "catalog_id": "parity-v2",
+  "cells": [
+    {
+      "algorithm_id": "scalar-chain.linear.v3",
+      "artifact_bytes": {
+        "baseline": 389824,
+        "candidate": 389824,
+        "comparison_status": "direct_observation",
+        "delta": 0,
+        "origin": "untimed-native-artifact",
+        "ratio": 1.0
+      },
+      "batch": {
+        "calibration_attempts": [
+          {
+            "batch_count": 1,
+            "elapsed_s": {
+              "baseline": 23.609415624989197,
+              "candidate": 16.761673083994538
+            }
+          }
+        ],
+        "count": 1,
+        "equal_work": true,
+        "maximum_count": 20000,
+        "minimum_sample_time_s": 0.5,
+        "retained_floor_met": true,
+        "target_sample_time_s": 0.75
+      },
+      "collection_complete": true,
+      "correctness": {
+        "baseline": true,
+        "candidate": true
+      },
+      "expected_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+      "family": "llvm-scalar-chain",
+      "focus_owner": "frontend-parser",
+      "id": "llvm-scalar-chain/smoke/compile-and-run",
+      "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+      "pair_orders": [
+        "baseline,candidate",
+        "baseline,candidate",
+        "baseline,candidate",
+        "candidate,baseline",
+        "candidate,baseline",
+        "baseline,candidate",
+        "candidate,baseline",
+        "baseline,candidate",
+        "baseline,candidate",
+        "candidate,baseline",
+        "candidate,baseline"
+      ],
+      "peak_rss": {
+        "baseline_cv_pct": 1.038733153903937,
+        "baseline_median": 265072.0,
+        "baseline_samples": [
+          266000.0,
+          264608.0,
+          270560.0,
+          267728.0,
+          269040.0,
+          264176.0,
+          268288.0,
+          264496.0,
+          263952.0,
+          260944.0,
+          265072.0
+        ],
+        "candidate_cv_pct": 1.1740701815605892,
+        "candidate_median": 268736.0,
+        "candidate_samples": [
+          268944.0,
+          271888.0,
+          269008.0,
+          261296.0,
+          268736.0,
+          271136.0,
+          271488.0,
+          267840.0,
+          264624.0,
+          266816.0,
+          266688.0
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.9991173711347907,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.015993392927154
+        },
+        "geomean_ratio": 1.0080546497696763,
+        "median_ratio": 1.0110676691729323,
+        "paired_log_ratios": [
+          0.011006870709339332,
+          0.02714073125199351,
+          -0.005752766213697801,
+          -0.024317675417830295,
+          -0.0011305823702860267,
+          0.0260049923265769,
+          0.011856909123749705,
+          0.012563658990454175,
+          0.002542682081868781,
+          0.022253457343769687,
+          0.006077948603806582
+        ]
+      },
+      "peak_rss_samples_kib": {
+        "baseline": [
+          266000.0,
+          264608.0,
+          270560.0,
+          267728.0,
+          269040.0,
+          264176.0,
+          268288.0,
+          264496.0,
+          263952.0,
+          260944.0,
+          265072.0
+        ],
+        "candidate": [
+          268944.0,
+          271888.0,
+          269008.0,
+          261296.0,
+          268736.0,
+          271136.0,
+          271488.0,
+          267840.0,
+          264624.0,
+          266816.0,
+          266688.0
+        ]
+      },
+      "raw_batch_time_samples_s": {
+        "baseline": [
+          5.321333083033096,
+          3.8713020000141114,
+          4.207935040991288,
+          3.851476832991466,
+          3.636112249980215,
+          3.8237113340292126,
+          3.755583291989751,
+          4.30997570900945,
+          3.7184354169876315,
+          3.7942511669825763,
+          4.504034792014863
+        ],
+        "candidate": [
+          3.8307243330054916,
+          4.814639583986718,
+          5.033051708014682,
+          4.54673833301058,
+          4.180587125010788,
+          3.804509792011231,
+          4.066013665986247,
+          4.062202166009229,
+          3.793720041983761,
+          3.7646793329622597,
+          3.9134622089914046
+        ]
+      },
+      "reason_codes": [],
+      "repetitions": 11,
+      "required": false,
+      "route": "compile-and-run",
+      "rss_comparison_reason": "interval_contains_one",
+      "rss_comparison_status": "no_detected_change",
+      "sample_schedule": {
+        "ab_count": 6,
+        "ba_count": 5,
+        "schedule_digest": "ede3c4e210f83ab827e8307d3b838cbfc42eff8d5b0ef03d3576cbaf8a637c30",
+        "strategy": "deterministic-random-interleaving-v1"
+      },
+      "scale": "smoke",
+      "side_names": [
+        "baseline",
+        "candidate"
+      ],
+      "source_digests": {
+        "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+        "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+      },
+      "status": "pass",
+      "throughput": {
+        "baseline_cv_pct": 12.193188052167987,
+        "baseline_median": 3.851476832991466,
+        "baseline_samples": [
+          5.321333083033096,
+          3.8713020000141114,
+          4.207935040991288,
+          3.851476832991466,
+          3.636112249980215,
+          3.8237113340292126,
+          3.755583291989751,
+          4.30997570900945,
+          3.7184354169876315,
+          3.7942511669825763,
+          4.504034792014863
+        ],
+        "candidate_cv_pct": 10.589686114688545,
+        "candidate_median": 4.062202166009229,
+        "candidate_samples": [
+          3.8307243330054916,
+          4.814639583986718,
+          5.033051708014682,
+          4.54673833301058,
+          4.180587125010788,
+          3.804509792011231,
+          4.066013665986247,
+          4.062202166009229,
+          3.793720041983761,
+          3.7646793329622597,
+          3.9134622089914046
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.8969096378853454,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.0756777869325733
+        },
+        "geomean_ratio": 0.9765705115177652,
+        "median_ratio": 0.9801554610875391,
+        "paired_log_ratios": [
+          0.32866994528063265,
+          -0.21807030512130773,
+          -0.17905446324786004,
+          -0.16595345828382826,
+          -0.1395366495314557,
+          0.005034353948451717,
+          -0.07941946567337867,
+          0.05920703615310573,
+          -0.02004408613572925,
+          0.007824383327355612,
+          0.1405511578594846
+        ]
+      },
+      "time": {
+        "baseline_cv_pct": 12.193188052167987,
+        "baseline_median": 3.851476832991466,
+        "baseline_samples": [
+          5.321333083033096,
+          3.8713020000141114,
+          4.207935040991288,
+          3.851476832991466,
+          3.636112249980215,
+          3.8237113340292126,
+          3.755583291989751,
+          4.30997570900945,
+          3.7184354169876315,
+          3.7942511669825763,
+          4.504034792014863
+        ],
+        "candidate_cv_pct": 10.589686114688545,
+        "candidate_median": 4.062202166009229,
+        "candidate_samples": [
+          3.8307243330054916,
+          4.814639583986718,
+          5.033051708014682,
+          4.54673833301058,
+          4.180587125010788,
+          3.804509792011231,
+          4.066013665986247,
+          4.062202166009229,
+          3.793720041983761,
+          3.7646793329622597,
+          3.9134622089914046
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.9296464168778917,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.1149395187209883
+        },
+        "geomean_ratio": 1.0239915993836648,
+        "median_ratio": 1.0202463177529433,
+        "paired_log_ratios": [
+          -0.3286699452806326,
+          0.21807030512130773,
+          0.17905446324785998,
+          0.1659534582838283,
+          0.13953664953145575,
+          -0.005034353948451809,
+          0.07941946567337874,
+          -0.05920703615310579,
+          0.020044086135729347,
+          -0.007824383327355532,
+          -0.14055115785948452
+        ]
+      },
+      "time_comparison_reason": "noise_cv",
+      "time_comparison_status": "inconclusive",
+      "time_samples_s": {
+        "baseline": [
+          5.321333083033096,
+          3.8713020000141114,
+          4.207935040991288,
+          3.851476832991466,
+          3.636112249980215,
+          3.8237113340292126,
+          3.755583291989751,
+          4.30997570900945,
+          3.7184354169876315,
+          3.7942511669825763,
+          4.504034792014863
+        ],
+        "candidate": [
+          3.8307243330054916,
+          4.814639583986718,
+          5.033051708014682,
+          4.54673833301058,
+          4.180587125010788,
+          3.804509792011231,
+          4.066013665986247,
+          4.062202166009229,
+          3.793720041983761,
+          3.7646793329622597,
+          3.9134622089914046
+        ]
+      },
+      "warmups": 3,
+      "work_units": 32
+    },
+    {
+      "algorithm_id": "scalar-chain.linear.v3",
+      "artifact_bytes": {
+        "baseline": 389824,
+        "candidate": 389824,
+        "comparison_status": "direct_observation",
+        "delta": 0,
+        "origin": "untimed-native-artifact",
+        "ratio": 1.0
+      },
+      "batch": {
+        "calibration_attempts": [
+          {
+            "batch_count": 1,
+            "elapsed_s": {
+              "baseline": 3.3636597499717027,
+              "candidate": 4.456838499987498
+            }
+          }
+        ],
+        "count": 1,
+        "equal_work": true,
+        "maximum_count": 20000,
+        "minimum_sample_time_s": 0.5,
+        "retained_floor_met": true,
+        "target_sample_time_s": 0.75
+      },
+      "collection_complete": true,
+      "correctness": {
+        "baseline": true,
+        "candidate": true
+      },
+      "expected_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+      "family": "llvm-scalar-chain",
+      "focus_owner": "frontend-parser",
+      "id": "llvm-scalar-chain/smoke/native-build",
+      "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+      "pair_orders": [
+        "candidate,baseline",
+        "candidate,baseline",
+        "candidate,baseline",
+        "baseline,candidate",
+        "candidate,baseline",
+        "candidate,baseline",
+        "baseline,candidate",
+        "baseline,candidate",
+        "baseline,candidate",
+        "baseline,candidate",
+        "baseline,candidate"
+      ],
+      "peak_rss": {
+        "baseline_cv_pct": 1.3440970802022472,
+        "baseline_median": 265984.0,
+        "baseline_samples": [
+          271376.0,
+          267680.0,
+          263168.0,
+          272560.0,
+          266864.0,
+          263216.0,
+          265984.0,
+          260816.0,
+          267904.0,
+          264320.0,
+          264064.0
+        ],
+        "candidate_cv_pct": 1.0419741772659183,
+        "candidate_median": 268768.0,
+        "candidate_samples": [
+          265104.0,
+          270864.0,
+          271024.0,
+          268768.0,
+          270864.0,
+          264496.0,
+          264880.0,
+          268512.0,
+          270112.0,
+          271568.0,
+          265648.0
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.998125022431857,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.0174943115554629
+        },
+        "geomean_ratio": 1.008191250059558,
+        "median_ratio": 1.0082417582417582,
+        "paired_log_ratios": [
+          -0.023383111302541768,
+          0.011824612656380027,
+          0.029414766331490257,
+          -0.014010219409494505,
+          0.01487768456007667,
+          0.004851140433591859,
+          -0.004159263357661933,
+          0.02908042782372498,
+          0.008207980417829582,
+          0.027052078086562265,
+          0.005980626156698562
+        ]
+      },
+      "peak_rss_samples_kib": {
+        "baseline": [
+          271376.0,
+          267680.0,
+          263168.0,
+          272560.0,
+          266864.0,
+          263216.0,
+          265984.0,
+          260816.0,
+          267904.0,
+          264320.0,
+          264064.0
+        ],
+        "candidate": [
+          265104.0,
+          270864.0,
+          271024.0,
+          268768.0,
+          270864.0,
+          264496.0,
+          264880.0,
+          268512.0,
+          270112.0,
+          271568.0,
+          265648.0
+        ]
+      },
+      "raw_batch_time_samples_s": {
+        "baseline": [
+          4.088425915979315,
+          4.477472457976546,
+          3.815119291015435,
+          4.738340625015553,
+          5.028033792041242,
+          3.6490057909977622,
+          3.819104916998185,
+          4.931033083004877,
+          3.9751415419741534,
+          3.5873741670511663,
+          7.821644000010565
+        ],
+        "candidate": [
+          4.897819166013505,
+          3.7276297920034267,
+          4.543752875004429,
+          4.144727292004973,
+          4.2783458339981735,
+          4.745774834009353,
+          4.387853000022005,
+          4.131401083024684,
+          4.208525916968938,
+          5.754912416974548,
+          5.640458458045032
+        ]
+      },
+      "reason_codes": [],
+      "repetitions": 11,
+      "required": false,
+      "route": "native-build",
+      "rss_comparison_reason": "interval_contains_one",
+      "rss_comparison_status": "no_detected_change",
+      "sample_schedule": {
+        "ab_count": 6,
+        "ba_count": 5,
+        "schedule_digest": "b2ef66420d53bfd9bffe9ae08fdede2d1bb54ed5be729a127fc46b83aa5c0341",
+        "strategy": "deterministic-random-interleaving-v1"
+      },
+      "scale": "smoke",
+      "side_names": [
+        "baseline",
+        "candidate"
+      ],
+      "source_digests": {
+        "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+        "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+      },
+      "status": "pass",
+      "throughput": {
+        "baseline_cv_pct": 26.50357264221993,
+        "baseline_median": 4.088425915979315,
+        "baseline_samples": [
+          4.088425915979315,
+          4.477472457976546,
+          3.815119291015435,
+          4.738340625015553,
+          5.028033792041242,
+          3.6490057909977622,
+          3.819104916998185,
+          4.931033083004877,
+          3.9751415419741534,
+          3.5873741670511663,
+          7.821644000010565
+        ],
+        "candidate_cv_pct": 13.816707578154197,
+        "candidate_median": 4.387853000022005,
+        "candidate_samples": [
+          4.897819166013505,
+          3.7276297920034267,
+          4.543752875004429,
+          4.144727292004973,
+          4.2783458339981735,
+          4.745774834009353,
+          4.387853000022005,
+          4.131401083024684,
+          4.208525916968938,
+          5.754912416974548,
+          5.640458458045032
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.8492063260115105,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.1105343960463296
+        },
+        "geomean_ratio": 0.9727189740651576,
+        "median_ratio": 0.944544864496671,
+        "paired_log_ratios": [
+          -0.1806300035261202,
+          0.1832861165559325,
+          -0.1747813618477395,
+          0.1338500009188791,
+          0.1614625639727392,
+          -0.2627999691068038,
+          -0.13882396116054507,
+          0.17693192168055114,
+          -0.057052092378153355,
+          -0.47263331837694184,
+          0.32692941354854654
+        ]
+      },
+      "time": {
+        "baseline_cv_pct": 26.50357264221993,
+        "baseline_median": 4.088425915979315,
+        "baseline_samples": [
+          4.088425915979315,
+          4.477472457976546,
+          3.815119291015435,
+          4.738340625015553,
+          5.028033792041242,
+          3.6490057909977622,
+          3.819104916998185,
+          4.931033083004877,
+          3.9751415419741534,
+          3.5873741670511663,
+          7.821644000010565
+        ],
+        "candidate_cv_pct": 13.816707578154197,
+        "candidate_median": 4.387853000022005,
+        "candidate_samples": [
+          4.897819166013505,
+          3.7276297920034267,
+          4.543752875004429,
+          4.144727292004973,
+          4.2783458339981735,
+          4.745774834009353,
+          4.387853000022005,
+          4.131401083024684,
+          4.208525916968938,
+          5.754912416974548,
+          5.640458458045032
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.9004673849451736,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.1775701267636738
+        },
+        "geomean_ratio": 1.028046153783585,
+        "median_ratio": 1.058710959730727,
+        "paired_log_ratios": [
+          0.18063000352612005,
+          -0.18328611655593255,
+          0.1747813618477395,
+          -0.13385000091887908,
+          -0.16146256397273917,
+          0.26279996910680375,
+          0.1388239611605451,
+          -0.1769319216805511,
+          0.05705209237815329,
+          0.4726333183769419,
+          -0.32692941354854665
+        ]
+      },
+      "time_comparison_reason": "noise_cv",
+      "time_comparison_status": "inconclusive",
+      "time_samples_s": {
+        "baseline": [
+          4.088425915979315,
+          4.477472457976546,
+          3.815119291015435,
+          4.738340625015553,
+          5.028033792041242,
+          3.6490057909977622,
+          3.819104916998185,
+          4.931033083004877,
+          3.9751415419741534,
+          3.5873741670511663,
+          7.821644000010565
+        ],
+        "candidate": [
+          4.897819166013505,
+          3.7276297920034267,
+          4.543752875004429,
+          4.144727292004973,
+          4.2783458339981735,
+          4.745774834009353,
+          4.387853000022005,
+          4.131401083024684,
+          4.208525916968938,
+          5.754912416974548,
+          5.640458458045032
+        ]
+      },
+      "warmups": 3,
+      "work_units": 32
+    },
+    {
+      "algorithm_id": "scalar-chain.linear.v3",
+      "artifact_bytes": {
+        "baseline": 389824,
+        "candidate": 389824,
+        "comparison_status": "direct_observation",
+        "delta": 0,
+        "origin": "untimed-native-artifact",
+        "ratio": 1.0
+      },
+      "batch": {
+        "calibration_attempts": [
+          {
+            "batch_count": 1,
+            "elapsed_s": {
+              "baseline": 0.05117583298124373,
+              "candidate": 0.031638999993447214
+            }
+          },
+          {
+            "batch_count": 24,
+            "elapsed_s": {
+              "baseline": 0.07502895902143791,
+              "candidate": 0.07614074996672571
+            }
+          },
+          {
+            "batch_count": 240,
+            "elapsed_s": {
+              "baseline": 0.49627870798576623,
+              "candidate": 0.5439602500409819
+            }
+          },
+          {
+            "batch_count": 363,
+            "elapsed_s": {
+              "baseline": 0.8397479589912109,
+              "candidate": 0.8332797080511227
+            }
+          }
+        ],
+        "count": 363,
+        "equal_work": true,
+        "maximum_count": 20000,
+        "minimum_sample_time_s": 0.5,
+        "retained_floor_met": true,
+        "target_sample_time_s": 0.75
+      },
+      "collection_complete": true,
+      "correctness": {
+        "baseline": true,
+        "candidate": true
+      },
+      "expected_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+      "family": "llvm-scalar-chain",
+      "focus_owner": "frontend-parser",
+      "id": "llvm-scalar-chain/smoke/native-run",
+      "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+      "pair_orders": [
+        "candidate,baseline",
+        "candidate,baseline",
+        "baseline,candidate",
+        "candidate,baseline",
+        "baseline,candidate",
+        "candidate,baseline",
+        "baseline,candidate",
+        "candidate,baseline",
+        "baseline,candidate",
+        "baseline,candidate",
+        "baseline,candidate"
+      ],
+      "peak_rss": {
+        "baseline_cv_pct": 0.0,
+        "baseline_median": 1456.0,
+        "baseline_samples": [
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0
+        ],
+        "candidate_cv_pct": 0.0,
+        "candidate_median": 1456.0,
+        "candidate_samples": [
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 1.0,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.0
+        },
+        "geomean_ratio": 1.0,
+        "median_ratio": 1.0,
+        "paired_log_ratios": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "peak_rss_samples_kib": {
+        "baseline": [
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0
+        ],
+        "candidate": [
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0,
+          1456.0
+        ]
+      },
+      "raw_batch_time_samples_s": {
+        "baseline": [
+          0.9501839589793235,
+          0.7986859999946319,
+          0.8724892919999547,
+          1.3041230830131099,
+          0.7710584159940481,
+          0.6824625000008382,
+          0.7389989160001278,
+          0.7732217920129187,
+          0.7597371670417488,
+          0.7549389170017093,
+          0.7477938340161927
+        ],
+        "candidate": [
+          0.8486254580202512,
+          0.7876501249847934,
+          1.0731432920438237,
+          0.9806469170143828,
+          0.8404816249967553,
+          0.7576077500125393,
+          0.7035761249717325,
+          0.6840382909867913,
+          0.7295078749884851,
+          0.7128199590370059,
+          1.1242922089877538
+        ]
+      },
+      "reason_codes": [],
+      "repetitions": 11,
+      "required": false,
+      "route": "native-run",
+      "rss_comparison_reason": "interval_contains_one",
+      "rss_comparison_status": "no_detected_change",
+      "sample_schedule": {
+        "ab_count": 6,
+        "ba_count": 5,
+        "schedule_digest": "455a544235c4bbeaeb969bd15badc9eb9141e89d4414d7b9369044cc6d29d8b6",
+        "strategy": "deterministic-random-interleaving-v1"
+      },
+      "scale": "smoke",
+      "side_names": [
+        "baseline",
+        "candidate"
+      ],
+      "source_digests": {
+        "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+        "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+      },
+      "status": "pass",
+      "throughput": {
+        "baseline_cv_pct": 20.676482143493015,
+        "baseline_median": 0.0021241278677521986,
+        "baseline_samples": [
+          0.002617586663854886,
+          0.0022002369145857625,
+          0.0024035517685949167,
+          0.00359262557303887,
+          0.0021241278677521986,
+          0.0018800619834733834,
+          0.0020358096859507653,
+          0.0021300875813028064,
+          0.002092939854109501,
+          0.0020797215344399707,
+          0.0020600381102374456
+        ],
+        "candidate_cv_pct": 18.279115706741507,
+        "candidate_median": 0.002169835055054527,
+        "candidate_samples": [
+          0.0023378111791191496,
+          0.002169835055054527,
+          0.0029563176089361536,
+          0.002701506658441826,
+          0.00231537637740153,
+          0.0020870736914945986,
+          0.0019382262395915496,
+          0.0018844030054732542,
+          0.0020096635674613918,
+          0.001963691347209383,
+          0.0030972237162197078
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.8859528946141223,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.093557954627286
+        },
+        "geomean_ratio": 0.9888139683910225,
+        "median_ratio": 1.0414379242358978,
+        "paired_log_ratios": [
+          0.11303767453735183,
+          0.01391388984662087,
+          -0.20699689587000797,
+          0.28507365356191605,
+          -0.0862109533964843,
+          -0.10445819101288427,
+          0.04912037448488421,
+          0.12255203409288638,
+          0.04060237767270243,
+          0.05740796468432171,
+          -0.40778165206521866
+        ]
+      },
+      "time": {
+        "baseline_cv_pct": 20.676482143493015,
+        "baseline_median": 0.0021241278677521986,
+        "baseline_samples": [
+          0.002617586663854886,
+          0.0022002369145857625,
+          0.0024035517685949167,
+          0.00359262557303887,
+          0.0021241278677521986,
+          0.0018800619834733834,
+          0.0020358096859507653,
+          0.0021300875813028064,
+          0.002092939854109501,
+          0.0020797215344399707,
+          0.0020600381102374456
+        ],
+        "candidate_cv_pct": 18.279115706741507,
+        "candidate_median": 0.002169835055054527,
+        "candidate_samples": [
+          0.0023378111791191496,
+          0.002169835055054527,
+          0.0029563176089361536,
+          0.002701506658441826,
+          0.00231537637740153,
+          0.0020870736914945986,
+          0.0019382262395915496,
+          0.0018844030054732542,
+          0.0020096635674613918,
+          0.001963691347209383,
+          0.0030972237162197078
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.9144462767340257,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.1287281819223434
+        },
+        "geomean_ratio": 1.011312574424064,
+        "median_ratio": 0.9602108553264942,
+        "paired_log_ratios": [
+          -0.11303767453735189,
+          -0.013913889846620965,
+          0.20699689587000808,
+          -0.2850736535619161,
+          0.0862109533964842,
+          0.1044581910128843,
+          -0.04912037448488412,
+          -0.1225520340928864,
+          -0.04060237767270238,
+          -0.057407964684321744,
+          0.40778165206521877
+        ]
+      },
+      "time_comparison_reason": "noise_cv",
+      "time_comparison_status": "inconclusive",
+      "time_samples_s": {
+        "baseline": [
+          0.002617586663854886,
+          0.0022002369145857625,
+          0.0024035517685949167,
+          0.00359262557303887,
+          0.0021241278677521986,
+          0.0018800619834733834,
+          0.0020358096859507653,
+          0.0021300875813028064,
+          0.002092939854109501,
+          0.0020797215344399707,
+          0.0020600381102374456
+        ],
+        "candidate": [
+          0.0023378111791191496,
+          0.002169835055054527,
+          0.0029563176089361536,
+          0.002701506658441826,
+          0.00231537637740153,
+          0.0020870736914945986,
+          0.0019382262395915496,
+          0.0018844030054732542,
+          0.0020096635674613918,
+          0.001963691347209383,
+          0.0030972237162197078
+        ]
+      },
+      "warmups": 3,
+      "work_units": 32
+    }
+  ],
+  "collection_complete": true,
+  "comparison_kind": "styio-revision",
+  "contract_digest": "ffda1fd9dadb6493c3a722302b7abd823a402ce956f4ccbad6b45c54bdda1e6c",
+  "measurement": {
+    "calibration_target_time_s": 0.75,
+    "confidence_interval": {
+      "level": 0.95,
+      "method": "paired-hierarchical-percentile-bootstrap",
+      "resamples": 10000
+    },
+    "isolated_memory_replay": true,
+    "max_cv_pct": 5.0,
+    "maximum_batch_count": 20000,
+    "minimum_sample_time_s": 0.5,
+    "minimum_time_scope": "workload-route-cells",
+    "native_cache": "disabled",
+    "native_cache_scope": "measured-child-only",
+    "observer_free_timing": true,
+    "pair_order": "deterministic-random-interleaving-v1",
+    "ratio_direction": "candidate_over_baseline",
+    "repetitions": 11,
+    "run_control_class": "development",
+    "sample_policy": "retain-all",
+    "warmups": 3
+  },
+  "performance_claim": "not-evaluated",
+  "runner_version": "styio-analyzer-1",
+  "schema": "styio.analyzer.comparison.v1",
+  "schema_version": 1,
+  "selection": {
+    "families": [
+      "llvm-scalar-chain"
+    ],
+    "incomplete": [],
+    "incomplete_cell_ids": [],
+    "observed_cell_ids": [
+      "llvm-scalar-chain/smoke/compile-and-run",
+      "llvm-scalar-chain/smoke/native-build",
+      "llvm-scalar-chain/smoke/native-run"
+    ],
+    "requested_cell_ids": [
+      "llvm-scalar-chain/smoke/compile-and-run",
+      "llvm-scalar-chain/smoke/native-build",
+      "llvm-scalar-chain/smoke/native-run"
+    ],
+    "scale": "smoke",
+    "scale_official": false,
+    "subset_of_catalog": true
+  },
+  "toolchains": {
+    "baseline": {
+      "artifact_digest": "ff4b24401b1de81ee818196005b31312d54d6a7990dbd0633979ee3b6a946586",
+      "backend": "native-aot",
+      "dirty": true,
+      "revision": "ec6ba022519fd960c4457e0c890df2dd65366256",
+      "role": "baseline",
+      "styio_version": "0.0.1",
+      "traceable": true
+    },
+    "candidate": {
+      "artifact_digest": "ff4b24401b1de81ee818196005b31312d54d6a7990dbd0633979ee3b6a946586",
+      "backend": "native-aot",
+      "dirty": true,
+      "revision": "ec6ba022519fd960c4457e0c890df2dd65366256",
+      "role": "candidate",
+      "styio_version": "0.0.1",
+      "traceable": true
+    },
+    "comparable": true,
+    "external": {
+      "compiler_family": "clang",
+      "compiler_version": "21.0.0",
+      "lto": false,
+      "optimization": "O3",
+      "present": true,
+      "threads": 1
+    },
+    "incomparable_reasons": []
+  }
+}

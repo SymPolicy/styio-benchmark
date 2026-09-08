@@ -19,6 +19,10 @@ summary; raw logs and machine-specific metadata are intentionally not stored.
 Curated `styio_core_bench` evidence lives under `reports/core/`; core comparison
 is provided by `tools/core-benchmark-compare.py`.
 
+Analyzer v1 comparison evidence lives under `reports/analyzer/`. Those files
+are Styio-revision comparisons, not Styio/C++ parity claims. `results.json`
+is the numeric source; `verify` only recomputes consistency.
+
 The active parity-v2 catalog digest is
 `f7e99de17a1366325bcf08223f861f40d4aa95423ebef5ed2622267b0dbc951c`. Phase
 reports generated before the static C++ binding-chain correction are retired

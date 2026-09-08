@@ -1,0 +1,32 @@
+# Final full regression after F1-F5 fixes
+date: 2026-09-08
+
+This record replaces the pre-fix green regression as proof of the current
+source state. The earlier 47 passed / 1 skipped run does not cover these
+fixes.
+
+## catalog-check
+{"catalog_id": "parity-v2", "contract_digest": "ffda1fd9dadb6493c3a722302b7abd823a402ce956f4ccbad6b45c54bdda1e6c", "decision": "pass", "families": 11, "required_cells": 38, "schema": "styio.parity.catalog.audit.v3"}
+exit:0
+
+## cpp-strength
+{"flags": ["-O3", "-DNDEBUG", "-fno-lto"], "language": "C++20", "pass": true, "schema": "styio.parity.cpp-strength.v2", "threads": 1, "violations": []}
+exit:0
+
+## pytest -q
+....s.............................................sssss                  [100%]
+49 passed, 6 skipped in 146.05s (0:02:26)
+exit:0
+
+Collected 55 items (tests + async-runtime). Analyzer file: 16 passed.
+
+## Skips (not passes)
+- tests/test_parser_scaling.py:34 — `build/perf-parity-baseline/bin/styio`
+  is absent. Pre-existing expectation, not created by Analyzer M1.
+- async-runtime/test_async_runtime_blackbox.py (5 tests) — default
+  STYIO_ROOT is not a Styio source checkout. These skips are environmental
+  and were not treated as passes. This final run did not set STYIO_ROOT to
+  a candidate tree.
+
+No failures. Catalog and C++ strength gates kept their previous pass
+semantics. No threshold or oracle was weakened.

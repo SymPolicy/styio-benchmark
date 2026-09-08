@@ -1,0 +1,1 @@
+{"cell_count": 9, "collection_complete": true, "decision": "fail", "incomplete_cell_count": 0, "note": "verify success is report consistency, not candidate performance acceptance", "performance_claim": "not-evaluated", "reason_codes": ["toolchain_binding_unconfirmed"], "schema": "styio.analyzer.verdict.v1"}

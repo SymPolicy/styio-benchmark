@@ -1,0 +1,1188 @@
+{
+  "capabilities": {
+    "blocked_case_count": 5,
+    "blocked_case_ids": [
+      "arbitrary-precision",
+      "bit-packed",
+      "byte-buffer",
+      "object-node",
+      "regular-expression"
+    ],
+    "blocked_cases_scored": false,
+    "corpus_kind": "project-microkernel",
+    "official_suite": false,
+    "selected_family_ids": [
+      "llvm-scalar-chain"
+    ],
+    "selected_is_full_catalog": false,
+    "supported_family_count": 11,
+    "supported_family_ids": [
+      "clbg-fannkuch-redux",
+      "clbg-spectral-norm",
+      "clbg-n-body",
+      "llvm-scalar-chain",
+      "llvm-call-graph",
+      "llvm-control-diamonds",
+      "llvm-recursive-scc",
+      "llvm-collection-mutate",
+      "llvm-dict-update",
+      "llvm-dense-matmul",
+      "llvm-list-allocation"
+    ]
+  },
+  "catalog_id": "parity-v2",
+  "cells": [
+    {
+      "algorithm_id": "scalar-chain.linear.v3",
+      "artifact_bytes": {
+        "baseline": 389824,
+        "candidate": 389824,
+        "comparison_status": "direct_observation",
+        "delta": 0,
+        "origin": "untimed-native-artifact",
+        "ratio": 1.0
+      },
+      "batch": {
+        "calibration_attempts": [
+          {
+            "batch_count": 1,
+            "elapsed_s": {
+              "baseline": 3.5476569160236977,
+              "candidate": 3.7566433750325814
+            }
+          }
+        ],
+        "count": 1,
+        "equal_work": true,
+        "maximum_count": 20000,
+        "minimum_sample_time_s": 0.5,
+        "retained_floor_met": true,
+        "target_sample_time_s": 0.75
+      },
+      "collection_complete": true,
+      "correctness": {
+        "baseline": true,
+        "candidate": true
+      },
+      "expected_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+      "family": "llvm-scalar-chain",
+      "focus_owner": "frontend-parser",
+      "id": "llvm-scalar-chain/smoke/compile-and-run",
+      "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+      "measurement_stage": "complete",
+      "pair_orders": [
+        "baseline,candidate",
+        "baseline,candidate",
+        "baseline,candidate",
+        "candidate,baseline",
+        "candidate,baseline",
+        "baseline,candidate",
+        "candidate,baseline",
+        "baseline,candidate",
+        "baseline,candidate",
+        "candidate,baseline",
+        "candidate,baseline"
+      ],
+      "peak_rss": {
+        "baseline_cv_pct": 1.007548279823789,
+        "baseline_median": 266016.0,
+        "baseline_samples": [
+          265424.0,
+          267296.0,
+          263840.0,
+          266224.0,
+          270080.0,
+          266240.0,
+          265312.0,
+          262464.0,
+          266016.0,
+          265376.0,
+          272080.0
+        ],
+        "candidate_cv_pct": 1.5789102052408803,
+        "candidate_median": 268288.0,
+        "candidate_samples": [
+          272224.0,
+          261392.0,
+          268288.0,
+          262032.0,
+          272880.0,
+          269552.0,
+          268256.0,
+          263968.0,
+          272784.0,
+          270320.0,
+          264672.0
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.9941366855765176,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.015332507619471
+        },
+        "geomean_ratio": 1.0053974272470396,
+        "median_ratio": 1.0110963695573514,
+        "paired_log_ratios": [
+          0.025296709443554576,
+          -0.02233546228934307,
+          0.016718171567124063,
+          -0.0158714259656399,
+          0.010313926702798014,
+          0.012363164011004426,
+          0.011035256521638708,
+          0.005713953908727069,
+          0.025123815874197764,
+          0.018458754137241167,
+          -0.027604817189444134
+        ]
+      },
+      "peak_rss_samples_kib": {
+        "baseline": [
+          265424.0,
+          267296.0,
+          263840.0,
+          266224.0,
+          270080.0,
+          266240.0,
+          265312.0,
+          262464.0,
+          266016.0,
+          265376.0,
+          272080.0
+        ],
+        "candidate": [
+          272224.0,
+          261392.0,
+          268288.0,
+          262032.0,
+          272880.0,
+          269552.0,
+          268256.0,
+          263968.0,
+          272784.0,
+          270320.0,
+          264672.0
+        ]
+      },
+      "raw_batch_time_samples_s": {
+        "baseline": [
+          3.503413124999497,
+          3.4268435000558384,
+          3.507915749971289,
+          3.4753343329648487,
+          3.5264808750362135,
+          3.7043368340237066,
+          4.056710332981311,
+          3.5563292920123786,
+          3.7772460830165073,
+          3.774411084013991,
+          3.831697624991648
+        ],
+        "candidate": [
+          3.428817666019313,
+          3.5478577080066316,
+          3.4553963750367984,
+          3.4892992500099353,
+          3.633159874996636,
+          3.828081417013891,
+          3.682774499990046,
+          5.216334457974881,
+          3.9037919999682344,
+          3.8606609160196967,
+          5.064014333009254
+        ]
+      },
+      "reason_codes": [],
+      "repetitions": 11,
+      "required": false,
+      "route": "compile-and-run",
+      "rss_comparison_reason": "interval_contains_one",
+      "rss_comparison_status": "no_detected_change",
+      "sample_schedule": {
+        "ab_count": 6,
+        "ba_count": 5,
+        "schedule_digest": "ede3c4e210f83ab827e8307d3b838cbfc42eff8d5b0ef03d3576cbaf8a637c30",
+        "strategy": "deterministic-random-interleaving-v1"
+      },
+      "scale": "smoke",
+      "side_names": [
+        "baseline",
+        "candidate"
+      ],
+      "source_digests": {
+        "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+        "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+      },
+      "status": "pass",
+      "throughput": {
+        "baseline_cv_pct": 5.3353005261998785,
+        "baseline_median": 3.5563292920123786,
+        "baseline_samples": [
+          3.503413124999497,
+          3.4268435000558384,
+          3.507915749971289,
+          3.4753343329648487,
+          3.5264808750362135,
+          3.7043368340237066,
+          4.056710332981311,
+          3.5563292920123786,
+          3.7772460830165073,
+          3.774411084013991,
+          3.831697624991648
+        ],
+        "candidate_cv_pct": 15.977869456601915,
+        "candidate_median": 3.682774499990046,
+        "candidate_samples": [
+          3.428817666019313,
+          3.5478577080066316,
+          3.4553963750367984,
+          3.4892992500099353,
+          3.633159874996636,
+          3.828081417013891,
+          3.682774499990046,
+          5.216334457974881,
+          3.9037919999682344,
+          3.8606609160196967,
+          5.064014333009254
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.8615170222108386,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.0070142487612936
+        },
+        "geomean_ratio": 0.93958147150496,
+        "median_ratio": 0.9706374055558121,
+        "paired_log_ratios": [
+          0.02152217391954095,
+          -0.03470438369510547,
+          0.015084881993664421,
+          -0.00401024277704723,
+          -0.02980230416324466,
+          -0.032859491616236455,
+          0.09670597403544158,
+          -0.38306602894528563,
+          -0.03295319379099466,
+          -0.022594024290369285,
+          -0.2788515660989033
+        ]
+      },
+      "time": {
+        "baseline_cv_pct": 5.3353005261998785,
+        "baseline_median": 3.5563292920123786,
+        "baseline_samples": [
+          3.503413124999497,
+          3.4268435000558384,
+          3.507915749971289,
+          3.4753343329648487,
+          3.5264808750362135,
+          3.7043368340237066,
+          4.056710332981311,
+          3.5563292920123786,
+          3.7772460830165073,
+          3.774411084013991,
+          3.831697624991648
+        ],
+        "candidate_cv_pct": 15.977869456601915,
+        "candidate_median": 3.682774499990046,
+        "candidate_samples": [
+          3.428817666019313,
+          3.5478577080066316,
+          3.4553963750367984,
+          3.4892992500099353,
+          3.633159874996636,
+          3.828081417013891,
+          3.682774499990046,
+          5.216334457974881,
+          3.9037919999682344,
+          3.8606609160196967,
+          5.064014333009254
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.9930346082310623,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.160743170737142
+        },
+        "geomean_ratio": 1.0643036610739733,
+        "median_ratio": 1.0302508375178208,
+        "paired_log_ratios": [
+          -0.021522173919540942,
+          0.0347043836951054,
+          -0.015084881993664496,
+          0.004010242777047205,
+          0.029802304163244753,
+          0.03285949161623647,
+          -0.09670597403544161,
+          0.3830660289452856,
+          0.03295319379099471,
+          0.02259402429036921,
+          0.2788515660989033
+        ]
+      },
+      "time_comparison_reason": "noise_cv",
+      "time_comparison_status": "inconclusive",
+      "time_samples_s": {
+        "baseline": [
+          3.503413124999497,
+          3.4268435000558384,
+          3.507915749971289,
+          3.4753343329648487,
+          3.5264808750362135,
+          3.7043368340237066,
+          4.056710332981311,
+          3.5563292920123786,
+          3.7772460830165073,
+          3.774411084013991,
+          3.831697624991648
+        ],
+        "candidate": [
+          3.428817666019313,
+          3.5478577080066316,
+          3.4553963750367984,
+          3.4892992500099353,
+          3.633159874996636,
+          3.828081417013891,
+          3.682774499990046,
+          5.216334457974881,
+          3.9037919999682344,
+          3.8606609160196967,
+          5.064014333009254
+        ]
+      },
+      "warmups": 3,
+      "work_units": 32
+    },
+    {
+      "algorithm_id": "scalar-chain.linear.v3",
+      "artifact_bytes": {
+        "baseline": 389824,
+        "candidate": 389824,
+        "comparison_status": "direct_observation",
+        "delta": 0,
+        "origin": "untimed-native-artifact",
+        "ratio": 1.0
+      },
+      "batch": {
+        "calibration_attempts": [
+          {
+            "batch_count": 1,
+            "elapsed_s": {
+              "baseline": 4.488165457965806,
+              "candidate": 3.460858292004559
+            }
+          }
+        ],
+        "count": 1,
+        "equal_work": true,
+        "maximum_count": 20000,
+        "minimum_sample_time_s": 0.5,
+        "retained_floor_met": true,
+        "target_sample_time_s": 0.75
+      },
+      "collection_complete": true,
+      "correctness": {
+        "baseline": true,
+        "candidate": true
+      },
+      "expected_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+      "family": "llvm-scalar-chain",
+      "focus_owner": "frontend-parser",
+      "id": "llvm-scalar-chain/smoke/native-build",
+      "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+      "measurement_stage": "complete",
+      "pair_orders": [
+        "candidate,baseline",
+        "candidate,baseline",
+        "candidate,baseline",
+        "baseline,candidate",
+        "candidate,baseline",
+        "candidate,baseline",
+        "baseline,candidate",
+        "baseline,candidate",
+        "baseline,candidate",
+        "baseline,candidate",
+        "baseline,candidate"
+      ],
+      "peak_rss": {
+        "baseline_cv_pct": 1.2443369530986284,
+        "baseline_median": 264880.0,
+        "baseline_samples": [
+          264880.0,
+          263216.0,
+          265328.0,
+          263856.0,
+          261632.0,
+          267568.0,
+          269648.0,
+          261712.0,
+          270864.0,
+          261216.0,
+          267392.0
+        ],
+        "candidate_cv_pct": 2.1106055863798634,
+        "candidate_median": 266032.0,
+        "candidate_samples": [
+          262944.0,
+          267952.0,
+          264832.0,
+          275760.0,
+          269984.0,
+          261104.0,
+          273040.0,
+          266032.0,
+          262320.0,
+          266576.0,
+          255888.0
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.9871292312539592,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.0181579906936453
+        },
+        "geomean_ratio": 1.002993482564821,
+        "median_ratio": 1.0125793627247375,
+        "paired_log_ratios": [
+          -0.007335811490213513,
+          0.01783287211505773,
+          -0.0018711337887197972,
+          0.044127422422195646,
+          0.03142376172214104,
+          -0.02445494425018817,
+          0.012500899864787505,
+          0.01637193978185383,
+          -0.03205171735850115,
+          0.020311729917767342,
+          -0.043975897745531026
+        ]
+      },
+      "peak_rss_samples_kib": {
+        "baseline": [
+          264880.0,
+          263216.0,
+          265328.0,
+          263856.0,
+          261632.0,
+          267568.0,
+          269648.0,
+          261712.0,
+          270864.0,
+          261216.0,
+          267392.0
+        ],
+        "candidate": [
+          262944.0,
+          267952.0,
+          264832.0,
+          275760.0,
+          269984.0,
+          261104.0,
+          273040.0,
+          266032.0,
+          262320.0,
+          266576.0,
+          255888.0
+        ]
+      },
+      "raw_batch_time_samples_s": {
+        "baseline": [
+          3.4187009159941226,
+          3.474270584003534,
+          3.384210542018991,
+          3.4942692919867113,
+          4.636151709011756,
+          3.541497582977172,
+          3.5318664590013213,
+          3.3306242920225486,
+          3.4907879589591175,
+          3.4871049579815008,
+          3.455876916006673
+        ],
+        "candidate": [
+          3.705675082979724,
+          3.986388583027292,
+          4.713656084029935,
+          3.513428542006295,
+          3.534461709030438,
+          3.4686716250143945,
+          4.412070165970363,
+          3.5813208750332706,
+          3.6611145000206307,
+          3.9696469160262495,
+          3.5244087500032037
+        ]
+      },
+      "reason_codes": [],
+      "repetitions": 11,
+      "required": false,
+      "route": "native-build",
+      "rss_comparison_reason": "interval_contains_one",
+      "rss_comparison_status": "no_detected_change",
+      "sample_schedule": {
+        "ab_count": 6,
+        "ba_count": 5,
+        "schedule_digest": "b2ef66420d53bfd9bffe9ae08fdede2d1bb54ed5be729a127fc46b83aa5c0341",
+        "strategy": "deterministic-random-interleaving-v1"
+      },
+      "scale": "smoke",
+      "side_names": [
+        "baseline",
+        "candidate"
+      ],
+      "source_digests": {
+        "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+        "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+      },
+      "status": "pass",
+      "throughput": {
+        "baseline_cv_pct": 10.085186316877474,
+        "baseline_median": 3.4871049579815008,
+        "baseline_samples": [
+          3.4187009159941226,
+          3.474270584003534,
+          3.384210542018991,
+          3.4942692919867113,
+          4.636151709011756,
+          3.541497582977172,
+          3.5318664590013213,
+          3.3306242920225486,
+          3.4907879589591175,
+          3.4871049579815008,
+          3.455876916006673
+        ],
+        "candidate_cv_pct": 10.718798955446143,
+        "candidate_median": 3.6611145000206307,
+        "candidate_samples": [
+          3.705675082979724,
+          3.986388583027292,
+          4.713656084029935,
+          3.513428542006295,
+          3.534461709030438,
+          3.4686716250143945,
+          4.412070165970363,
+          3.5813208750332706,
+          3.6611145000206307,
+          3.9696469160262495,
+          3.5244087500032037
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.8602660333177644,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.0178096619989732
+        },
+        "geomean_ratio": 0.9336842175407586,
+        "median_ratio": 0.9299988490954771,
+        "paired_log_ratios": [
+          -0.0806048209925426,
+          -0.1375011509002683,
+          -0.33134318884119746,
+          -0.005468071886542638,
+          0.27132363597980813,
+          0.02077798005878477,
+          -0.22251753156606346,
+          -0.07257193036734619,
+          -0.047640122325645316,
+          -0.12960528568075194,
+          -0.019636455974161728
+        ]
+      },
+      "time": {
+        "baseline_cv_pct": 10.085186316877474,
+        "baseline_median": 3.4871049579815008,
+        "baseline_samples": [
+          3.4187009159941226,
+          3.474270584003534,
+          3.384210542018991,
+          3.4942692919867113,
+          4.636151709011756,
+          3.541497582977172,
+          3.5318664590013213,
+          3.3306242920225486,
+          3.4907879589591175,
+          3.4871049579815008,
+          3.455876916006673
+        ],
+        "candidate_cv_pct": 10.718798955446143,
+        "candidate_median": 3.6611145000206307,
+        "candidate_samples": [
+          3.705675082979724,
+          3.986388583027292,
+          4.713656084029935,
+          3.513428542006295,
+          3.534461709030438,
+          3.4686716250143945,
+          4.412070165970363,
+          3.5813208750332706,
+          3.6611145000206307,
+          3.9696469160262495,
+          3.5244087500032037
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.9825019719696776,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.1624311104832816
+        },
+        "geomean_ratio": 1.0710259220552225,
+        "median_ratio": 1.0752701478852436,
+        "paired_log_ratios": [
+          0.08060482099254254,
+          0.1375011509002682,
+          0.33134318884119746,
+          0.005468071886542571,
+          -0.2713236359798082,
+          -0.02077798005878482,
+          0.2225175315660635,
+          0.07257193036734619,
+          0.047640122325645254,
+          0.12960528568075194,
+          0.019636455974161655
+        ]
+      },
+      "time_comparison_reason": "noise_cv",
+      "time_comparison_status": "inconclusive",
+      "time_samples_s": {
+        "baseline": [
+          3.4187009159941226,
+          3.474270584003534,
+          3.384210542018991,
+          3.4942692919867113,
+          4.636151709011756,
+          3.541497582977172,
+          3.5318664590013213,
+          3.3306242920225486,
+          3.4907879589591175,
+          3.4871049579815008,
+          3.455876916006673
+        ],
+        "candidate": [
+          3.705675082979724,
+          3.986388583027292,
+          4.713656084029935,
+          3.513428542006295,
+          3.534461709030438,
+          3.4686716250143945,
+          4.412070165970363,
+          3.5813208750332706,
+          3.6611145000206307,
+          3.9696469160262495,
+          3.5244087500032037
+        ]
+      },
+      "warmups": 3,
+      "work_units": 32
+    },
+    {
+      "algorithm_id": "scalar-chain.linear.v3",
+      "artifact_bytes": {
+        "baseline": 389824,
+        "candidate": 389824,
+        "comparison_status": "direct_observation",
+        "delta": 0,
+        "origin": "untimed-native-artifact",
+        "ratio": 1.0
+      },
+      "batch": {
+        "calibration_attempts": [
+          {
+            "batch_count": 1,
+            "elapsed_s": {
+              "baseline": 0.06507566600339487,
+              "candidate": 0.046620958019047976
+            }
+          },
+          {
+            "batch_count": 17,
+            "elapsed_s": {
+              "baseline": 0.09567191696260124,
+              "candidate": 0.0994569169706665
+            }
+          },
+          {
+            "batch_count": 134,
+            "elapsed_s": {
+              "baseline": 0.38487020798493177,
+              "candidate": 0.33847545803291723
+            }
+          },
+          {
+            "batch_count": 297,
+            "elapsed_s": {
+              "baseline": 0.7383541250019334,
+              "candidate": 0.711820250027813
+            }
+          },
+          {
+            "batch_count": 313,
+            "elapsed_s": {
+              "baseline": 0.8498234580038115,
+              "candidate": 1.0345837909844704
+            }
+          }
+        ],
+        "count": 313,
+        "equal_work": true,
+        "maximum_count": 20000,
+        "minimum_sample_time_s": 0.5,
+        "retained_floor_met": true,
+        "target_sample_time_s": 0.75
+      },
+      "collection_complete": true,
+      "correctness": {
+        "baseline": true,
+        "candidate": true
+      },
+      "expected_output_digest": "e0a5357a695f17f60852ae8b85911a72d7e76a57e7edb3408fa2b8b282fcae79",
+      "family": "llvm-scalar-chain",
+      "focus_owner": "frontend-parser",
+      "id": "llvm-scalar-chain/smoke/native-run",
+      "input_digest": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4",
+      "measurement_stage": "complete",
+      "pair_orders": [
+        "candidate,baseline",
+        "candidate,baseline",
+        "baseline,candidate",
+        "candidate,baseline",
+        "baseline,candidate",
+        "candidate,baseline",
+        "baseline,candidate",
+        "candidate,baseline",
+        "baseline,candidate",
+        "baseline,candidate",
+        "baseline,candidate"
+      ],
+      "peak_rss": {
+        "baseline_cv_pct": 0.0,
+        "baseline_median": 1440.0,
+        "baseline_samples": [
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0
+        ],
+        "candidate_cv_pct": 0.0,
+        "candidate_median": 1440.0,
+        "candidate_samples": [
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 1.0,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.0
+        },
+        "geomean_ratio": 1.0,
+        "median_ratio": 1.0,
+        "paired_log_ratios": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "peak_rss_samples_kib": {
+        "baseline": [
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0
+        ],
+        "candidate": [
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0,
+          1440.0
+        ]
+      },
+      "raw_batch_time_samples_s": {
+        "baseline": [
+          2.164927000005264,
+          1.3452442499692552,
+          1.1762267499580048,
+          1.0006561249610968,
+          0.9961866670055315,
+          0.9239369580172934,
+          1.0491601249668747,
+          1.3035988330375403,
+          1.227864957996644,
+          1.3525754169677384,
+          1.116790999949444
+        ],
+        "candidate": [
+          1.7774133749771863,
+          2.05794699996477,
+          0.9790084999985993,
+          0.914144208014477,
+          1.0473823749925941,
+          0.9013937920099124,
+          1.0074284590082243,
+          1.1783894170075655,
+          0.8981626250315458,
+          1.475422624964267,
+          0.8029759170021862
+        ]
+      },
+      "reason_codes": [],
+      "repetitions": 11,
+      "required": false,
+      "route": "native-run",
+      "rss_comparison_reason": "interval_contains_one",
+      "rss_comparison_status": "no_detected_change",
+      "sample_schedule": {
+        "ab_count": 6,
+        "ba_count": 5,
+        "schedule_digest": "455a544235c4bbeaeb969bd15badc9eb9141e89d4414d7b9369044cc6d29d8b6",
+        "strategy": "deterministic-random-interleaving-v1"
+      },
+      "scale": "smoke",
+      "side_names": [
+        "baseline",
+        "candidate"
+      ],
+      "source_digests": {
+        "cpp": "4dfa0e48a9dd6bfbfe6539c171c60f1949b2148e4381bb06af9ec8349d0a0cbc",
+        "styio": "35b773efa848f562bbed6c67b8d903bf2a541ab4786c9a153bd79f9179e6bd58"
+      },
+      "status": "pass",
+      "throughput": {
+        "baseline_cv_pct": 27.38131441784723,
+        "baseline_median": 0.003757912939162955,
+        "baseline_samples": [
+          0.0069166996805279995,
+          0.004297904951978451,
+          0.003757912939162955,
+          0.0031969844247958365,
+          0.003182705006407449,
+          0.002951875265230969,
+          0.0033519492810443283,
+          0.004164852501717381,
+          0.003922891239605892,
+          0.004321327210759548,
+          0.003568022364055732
+        ],
+        "candidate_cv_pct": 34.49708213724845,
+        "candidate_median": 0.003218621274786659,
+        "candidate_samples": [
+          0.005678636980757784,
+          0.006574910543018435,
+          0.003127822683701595,
+          0.002920588524007914,
+          0.003346269568666435,
+          0.0028798523706386977,
+          0.003218621274786659,
+          0.0037648224185545223,
+          0.0028695291534554176,
+          0.004713810303400214,
+          0.0025654182651827034
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.9426274579914652,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.191262514708504
+        },
+        "geomean_ratio": 1.0674342568990598,
+        "median_ratio": 1.0946370563726744,
+        "paired_log_ratios": [
+          0.19722749532594833,
+          -0.42513328884776924,
+          0.18352659964207305,
+          0.09042285295757199,
+          -0.05011469761813743,
+          0.024701618880825282,
+          0.04058895922109442,
+          0.10098016748548765,
+          0.31268098477871903,
+          -0.0869339828076782,
+          0.32988995097406554
+        ]
+      },
+      "time": {
+        "baseline_cv_pct": 27.38131441784723,
+        "baseline_median": 0.003757912939162955,
+        "baseline_samples": [
+          0.0069166996805279995,
+          0.004297904951978451,
+          0.003757912939162955,
+          0.0031969844247958365,
+          0.003182705006407449,
+          0.002951875265230969,
+          0.0033519492810443283,
+          0.004164852501717381,
+          0.003922891239605892,
+          0.004321327210759548,
+          0.003568022364055732
+        ],
+        "candidate_cv_pct": 34.49708213724845,
+        "candidate_median": 0.003218621274786659,
+        "candidate_samples": [
+          0.005678636980757784,
+          0.006574910543018435,
+          0.003127822683701595,
+          0.002920588524007914,
+          0.003346269568666435,
+          0.0028798523706386977,
+          0.003218621274786659,
+          0.0037648224185545223,
+          0.0028695291534554176,
+          0.004713810303400214,
+          0.0025654182651827034
+        ],
+        "confidence_interval": {
+          "level": 0.95,
+          "lower": 0.8394455359092661,
+          "method": "paired-hierarchical-percentile-bootstrap",
+          "resamples": 10000,
+          "upper": 1.0608644934421723
+        },
+        "geomean_ratio": 0.9368258452797279,
+        "median_ratio": 0.9135448084625644,
+        "paired_log_ratios": [
+          -0.19722749532594833,
+          0.4251332888477693,
+          -0.18352659964207305,
+          -0.0904228529575719,
+          0.05011469761813732,
+          -0.024701618880825272,
+          -0.04058895922109441,
+          -0.10098016748548752,
+          -0.3126809847787191,
+          0.08693398280767825,
+          -0.32988995097406554
+        ]
+      },
+      "time_comparison_reason": "noise_cv",
+      "time_comparison_status": "inconclusive",
+      "time_samples_s": {
+        "baseline": [
+          0.0069166996805279995,
+          0.004297904951978451,
+          0.003757912939162955,
+          0.0031969844247958365,
+          0.003182705006407449,
+          0.002951875265230969,
+          0.0033519492810443283,
+          0.004164852501717381,
+          0.003922891239605892,
+          0.004321327210759548,
+          0.003568022364055732
+        ],
+        "candidate": [
+          0.005678636980757784,
+          0.006574910543018435,
+          0.003127822683701595,
+          0.002920588524007914,
+          0.003346269568666435,
+          0.0028798523706386977,
+          0.003218621274786659,
+          0.0037648224185545223,
+          0.0028695291534554176,
+          0.004713810303400214,
+          0.0025654182651827034
+        ]
+      },
+      "warmups": 3,
+      "work_units": 32
+    }
+  ],
+  "collection_complete": true,
+  "comparison_kind": "styio-revision",
+  "contract_digest": "ffda1fd9dadb6493c3a722302b7abd823a402ce956f4ccbad6b45c54bdda1e6c",
+  "measurement": {
+    "calibration_target_time_s": 0.75,
+    "confidence_interval": {
+      "level": 0.95,
+      "method": "paired-hierarchical-percentile-bootstrap",
+      "resamples": 10000
+    },
+    "isolated_memory_replay": true,
+    "max_cv_pct": 5.0,
+    "maximum_batch_count": 20000,
+    "minimum_sample_time_s": 0.5,
+    "minimum_time_scope": "workload-route-cells",
+    "native_cache": "disabled",
+    "native_cache_scope": "measured-child-only",
+    "observer_free_timing": true,
+    "pair_order": "deterministic-random-interleaving-v1",
+    "ratio_direction": "candidate_over_baseline",
+    "repetitions": 11,
+    "run_control_class": "development",
+    "sample_policy": "retain-all",
+    "warmups": 3
+  },
+  "performance_claim": "not-evaluated",
+  "runner_version": "styio-analyzer-1",
+  "schema": "styio.analyzer.comparison.v1",
+  "schema_version": 1,
+  "selection": {
+    "families": [
+      "llvm-scalar-chain"
+    ],
+    "incomplete": [],
+    "incomplete_cell_ids": [],
+    "observed_cell_ids": [
+      "llvm-scalar-chain/smoke/compile-and-run",
+      "llvm-scalar-chain/smoke/native-build",
+      "llvm-scalar-chain/smoke/native-run"
+    ],
+    "requested_cell_ids": [
+      "llvm-scalar-chain/smoke/compile-and-run",
+      "llvm-scalar-chain/smoke/native-build",
+      "llvm-scalar-chain/smoke/native-run"
+    ],
+    "scale": "smoke",
+    "scale_official": false,
+    "subset_of_catalog": true
+  },
+  "toolchains": {
+    "baseline": {
+      "artifact_digest": "9480f2523c23658518a684dd3b1de5d6db94b0e56f95bf9188834626fdefc596",
+      "backend": "native-aot",
+      "binding_basis": "native_build_probe",
+      "build_configuration": {
+        "build_type": "Release",
+        "coverage": "OFF",
+        "cxx_flags": [
+          "-O3",
+          "-DNDEBUG"
+        ],
+        "linker_flags": [],
+        "target_architectures": [
+          "compiler-default"
+        ]
+      },
+      "dirty": false,
+      "native_configuration": {
+        "lto": "disabled",
+        "optimization": "O3",
+        "target": "compiler-default"
+      },
+      "native_cxx": {
+        "artifact_digest": "179301dcb41ea78accc3fa0048a7e6f6710d891945a751a34addd622020c1818",
+        "compiler_family": "clang",
+        "compiler_version": "21.0.0",
+        "driver_mode": "clang++",
+        "lto": false,
+        "optimization": "O3",
+        "pinned": true,
+        "present": true,
+        "selection": "path_lookup",
+        "target": "arm64-apple-darwin25.5.0",
+        "threads": 1
+      },
+      "native_cxx_version": "21.0.0",
+      "revision": "ec6ba022519fd960c4457e0c890df2dd65366256",
+      "role": "baseline",
+      "runtime_binding": "confirmed",
+      "runtime_marker": "present",
+      "styio_version": "0.0.1",
+      "traceable": true
+    },
+    "candidate": {
+      "artifact_digest": "9480f2523c23658518a684dd3b1de5d6db94b0e56f95bf9188834626fdefc596",
+      "backend": "native-aot",
+      "binding_basis": "native_build_probe",
+      "build_configuration": {
+        "build_type": "Release",
+        "coverage": "OFF",
+        "cxx_flags": [
+          "-O3",
+          "-DNDEBUG"
+        ],
+        "linker_flags": [],
+        "target_architectures": [
+          "compiler-default"
+        ]
+      },
+      "dirty": false,
+      "native_configuration": {
+        "lto": "disabled",
+        "optimization": "O3",
+        "target": "compiler-default"
+      },
+      "native_cxx": {
+        "artifact_digest": "179301dcb41ea78accc3fa0048a7e6f6710d891945a751a34addd622020c1818",
+        "compiler_family": "clang",
+        "compiler_version": "21.0.0",
+        "driver_mode": "clang++",
+        "lto": false,
+        "optimization": "O3",
+        "pinned": true,
+        "present": true,
+        "selection": "path_lookup",
+        "target": "arm64-apple-darwin25.5.0",
+        "threads": 1
+      },
+      "native_cxx_version": "21.0.0",
+      "revision": "ec6ba022519fd960c4457e0c890df2dd65366256",
+      "role": "candidate",
+      "runtime_binding": "confirmed",
+      "runtime_marker": "present",
+      "styio_version": "0.0.1",
+      "traceable": true
+    },
+    "comparable": true,
+    "external": {
+      "artifact_digest": "179301dcb41ea78accc3fa0048a7e6f6710d891945a751a34addd622020c1818",
+      "compiler_family": "clang",
+      "compiler_version": "21.0.0",
+      "driver_mode": "clang++",
+      "lto": false,
+      "optimization": "O3",
+      "pinned": true,
+      "present": true,
+      "selection": "path_lookup",
+      "target": "arm64-apple-darwin25.5.0",
+      "threads": 1
+    },
+    "incomparable_reasons": []
+  }
+}

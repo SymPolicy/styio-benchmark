@@ -1,7 +1,0 @@
-iterations <- @stdin: i64
-
-accumulator = 17
-[0..iterations-1] >> #(index) => {
-  accumulator = (accumulator * 1103515245 + index * 12345 + 1013904223) % 2147483647
-}
->_(accumulator)
