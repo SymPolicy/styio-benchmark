@@ -227,3 +227,6 @@ __marimo__/
 !/reports/20260429T032953Z-native-extern-raw/**
 /regressions/*
 !/regressions/README.md
+
+# Private General-Auditor source evidence and local reports.
+/.general-auditor/local/
